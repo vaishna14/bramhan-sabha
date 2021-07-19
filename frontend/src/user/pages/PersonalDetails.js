@@ -119,7 +119,7 @@ function PersonalDetails() {
                                     (detailsType === "personal" || detailsType === "family") && (
                                         <div>
                                             <Header as='h1' className="personal-info" >Personal Information</Header>
-                                            <Details />
+                                            <Details type={detailsType}/>
                                         </div>
                                     )
                                 }
@@ -127,7 +127,7 @@ function PersonalDetails() {
                                     detailsType === "parent" && (
                                         <div>
                                             <Header as="h3">Father Information</Header>
-                                            <Details />
+                                            <Details type={detailsType}/>
                                         </div>
                                     )
                                 }
@@ -135,7 +135,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead}</Header>
-                                            <Details />
+                                            <Details type={detailsType}/>
                                             <Button onClick={addChild}>Add Child</Button>
                                         </div>
                                     )
@@ -146,7 +146,7 @@ function PersonalDetails() {
 
                                     <div>
                                         <Header as='h1' className="personal-info" >Partner Information</Header>
-                                        <Details />
+                                        <Details type={detailsType}/>
                                     </div>
                                 )
                             }
@@ -154,7 +154,7 @@ function PersonalDetails() {
                                     detailsType === "parent" && (
                                         <div>
                                             <Header as="h3">Mother Structure</Header>
-                                            <Details />
+                                            <Details type={detailsType}/>
                                         </div>
                                     )
                                 }
@@ -162,7 +162,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead} Spouse</Header>
-                                            <Details />
+                                            <Details type={detailsType}/>
                                         </div>
                                     )
                                 }</Grid.Column>
