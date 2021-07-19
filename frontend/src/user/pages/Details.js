@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Checkbox,
-    Grid,
-    Header,
     Icon,
-    Image,
-    Menu,
-    Segment,
-    Sidebar,
     Input,
     Radio,
     TextArea,
     Dropdown
 
 } from 'semantic-ui-react';
+import { useSelector, useDispatch } from 'react-redux'
 import "./PersonalDetails.css";
 import "./App.css";
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+// import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
-function Details({ type }) {
-    const [detailsType, setDetailsType] = useState("personal");
+function Details() {
+    const dispatch = useDispatch();
+    const detailsType = useSelector((state) => state.personal.displayType)
+
     const [gender, setGender] = useState("");
     const [alive, setAlive] = useState("Yes");
+    const [addPermanent, setAddPermanent] = useState(false);
+    const fatherAlive = useSelector((state) => state.personal.fatherAlive);
+    const motherAlive = useSelector((state) => state.personal.motherAlive);
     const aliveOptions = [
-        { key: "Yes", text: "Yes", value: "Yes" },
-        { key: "No", text: "No", value: "No" },
+        { key: "Yes", text: "Yes", value: true },
+        { key: "No", text: "No", value: false },
     ]
     const bloodGroup = [
         { key: 'A+', text: 'A+', value: 'A+' },
@@ -62,10 +62,44 @@ function Details({ type }) {
         { key: "PhD", text: "PhD", value: "PhD" },
     ]
 
+    const maritalStatus = [
+        { key: "Single", text: "Single", value: "Single" },
+        { key: "Married", text: "Married", value: "Married" },
+        { key: "Widow", text: "Widow", value: "Widow" },
+        { key: "Divorced", text: "Divorced", value: "Divorced" },
+
+    ]
+
     const aliveSelected = (e, { name, value }) => {
-        console.log(value);
-        setAlive(value)
+        setAlive(value);
     }
+
+    const fatherSelected = (e, { name, value }) => {
+        // setFatherAlive(value);
+        dispatch({
+            type: 'display_type',
+            "displayType": "parent"
+        });
+        dispatch(
+            {
+                type: 'fatherAlive',
+                "fatherAlive": value
+            });
+    }
+
+    const motherSelected = (e, { name, value }) => {
+        // setMotherAlive(value);
+        dispatch({
+            type: 'display_type',
+            "displayType": "parent"
+        });
+        dispatch(
+            {
+                type: 'motherAlive',
+                "motherAlive": value
+            });
+    }
+
 
 
 
@@ -105,7 +139,7 @@ function Details({ type }) {
                 />
             </div>
             {
-                gender == "F" && (
+                gender === "F" && (<>
                     <div className="display-flex mb-1p">
                         <h4 className="mx-auto header-title">Maiden name</h4>
                         <div className="mx-5p">
@@ -113,12 +147,62 @@ function Details({ type }) {
                         <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." /> </div>
                         <div className="mx-5p"><Input placeholder="Last Name" type="text" id="last_name" /> </div>
                     </div>
+                    <div className="display-flex mb-1p">
+                        <h4 className="mx-auto header-title">Maiden City</h4>
+                        <div className="mx-5p">
+                            <Input placeholder="Maiden City" type="text" id="first_name" errorText="Please enter a valid title." /> </div>
+                    </div>
+                    </>
                 )
             }
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Alive</h4>
-                <Dropdown placeholder='State' search selection options={aliveOptions} onChange={aliveSelected} />
+                <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={aliveSelected} />
+                <span className="mx-5p"> Marital Status
+                    <Dropdown className="mx-5p" placeholder='Select' search selection options={maritalStatus} />
+
+                </span>
+
             </div>
+            <div className="display-flex mb-1p">
+                <h4 className="header-title">Marrital Status</h4>
+                <Dropdown placeholder='Select' search selection options={maritalStatus} />
+            </div>
+            {
+                detailsType === "personal" && (
+                    <>
+
+                        <div className="display-flex mb-1p">
+                            <h4 className="header-title">Father Alive</h4>
+                            <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={fatherSelected} />
+                            {
+                                fatherAlive && motherAlive && (
+                                    <span className="mx-5p"> Mother Alive
+                                        <Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} onChange={motherSelected} />
+                                    </span>
+                                )}
+                            {!fatherAlive && (
+                                <span className="mx-5p"> Date of Death
+                                    <Input className="mx-5p" type="date" placeholder='Date of Death' />
+                                </span>
+                            )}
+                        </div>
+                        {
+                            (!fatherAlive || !motherAlive) && (
+                                <div className="display-flex mb-1p">
+                                    <h4 className="header-title">Mother Alive</h4>
+                                    <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={motherSelected} />
+                                    {
+                                        !motherAlive && (
+                                            <span className="mx-5p"> Date of Death
+                                                <Input className="mx-5p" type="date" placeholder='Date of Death' />
+                                            </span>
+                                        )}
+                                </div>
+
+                            )
+                        }
+                    </>)}
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Blood Group</h4>
                 <Dropdown placeholder='Select Blood Group' disabled={alive === "No"} clearable search selection options={bloodGroup} />
@@ -148,39 +232,44 @@ function Details({ type }) {
 
             </div>
             {
-                alive === "Yes" && (<>
+                <>
                     <div className="display-flex mb-1p">
-                        <h4 className="header-title">Current Address</h4>
-                        <TextArea className="current-address" placeholder='Add your current address' style={{ minHeight: 100 }} />
+                        <h4 className="header-title">Address</h4>
+                        <TextArea className="current-address" placeholder='Add your address' style={{ minHeight: 100 }} />
                     </div>
                     <div className="margin-title">
                         <Input type="text" className="mx-5p" label="City" placeholder="City" />
                         <Input type="number" className="mx-5p" label="Pin Code" placeholder="Pin-Code" />
                         {
-                            type === "personal" && (
+                            detailsType === "personal" && (
                                 <Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" />
 
                             )
                         }
+                        {
+                            alive === "Yes" && (
+                                <Checkbox label='Add Permanent Address' onChange={() => { setAddPermanent(!addPermanent) }} />
+                            )}
                     </div>
                 </>
-                )}
-            <div className="display-flex mt-1p">
-                <h4 className="header-title">Permanent Address</h4>
-                {
-                    alive === "Yes" && (
-                        <Checkbox label='Same as current address' />
-                    )}
-            </div>
-            <div className="margin-title mb-1p">
-                <TextArea className="current-address" placeholder='Add your permanent address' style={{ minHeight: 100 }} />
-            </div>
+            }
+            {addPermanent && (
 
-            <div className="margin-title mb-1p mt-1p">
-                <Input type="text" className="mx-5p" label="City" placeholder="City" />
-                <Input type="number" className="mx-5p" label="Pin Code" placeholder="000-000" />
-            </div>
-            <div className="display-flex mb-1p">
+                <>
+                    <div className="display-flex mt-1p">
+                        <h4 className="header-title">Permanent Address</h4>
+
+                        <TextArea className="current-address" placeholder='Add your permanent address' style={{ minHeight: 100 }} />
+                    </div>
+
+
+                    <div className="margin-title mb-1p mt-1p">
+                        <Input type="text" className="mx-5p" label="City" placeholder="City" />
+                        <Input type="number" className="mx-5p" label="Pin Code" placeholder="000-000" />
+                    </div>
+                </>
+            )}
+            <div className="display-flex mb-1p mt-1p">
                 <h4 className="header-title">Contact no.</h4>
                 <Input disabled={alive === "No"} iconPosition='left' className="mx-5p" label="Personal" placeholder='Personal no.'>
                     <Icon name='phone' />
@@ -198,6 +287,15 @@ function Details({ type }) {
                 </Input>
             </div>
             <Button>Submit Details</Button>
+            {
+                detailsType !=="personal" && (
+            <Button onClick={()=>{dispatch({
+                type: 'display_type',
+                "displayType": "personal"
+            })}}>Go Back</Button>
+
+                )
+            }
         </div>
 
     )

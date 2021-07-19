@@ -1,32 +1,24 @@
-import React, { useState } from 'react';
+import React, {  useState } from 'react';
 import {
     Button,
-    Checkbox,
     Grid,
     Header,
     Icon,
-    Image,
     Menu,
     Segment,
     Sidebar,
-    Input,
-    Radio,
-    TextArea,
     Divider,
-    Dropdown,
     List
 
 } from 'semantic-ui-react';
+import { useSelector, useDispatch } from 'react-redux';
 import "./PersonalDetails.css";
 import "./App.css";
-import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import Details from './Details';
-import FamilyInfo from './FamilyInfo';
-import FamilyStruc from './FamilyStruc';
 
 function PersonalDetails() {
-    const [detailsType, setDetailsType] = useState("personal");
-    const [gender, setGender] = useState("");
+    const dispatch = useDispatch();
+    const detailsType = useSelector((state) => state.personal.displayType);
     const [childCount, setChildCount] = useState(0);
     const [child, setChild] = useState([]);
     const [childHead, setChildHead] = useState(1);
@@ -38,9 +30,11 @@ function PersonalDetails() {
         setChild(newChild);
     }
 
-    const showChildDetails = (childName)=>{
-        setDetailsType("kids");
-        console.log(childName);
+    const showChildDetails = (childName) => {
+        dispatch({
+            type: 'display_type',
+            "displayType": "kids"
+        });
         setChildHead(childName);
     }
 
@@ -57,19 +51,30 @@ function PersonalDetails() {
                     visible={true}
                     width='thin'
                 >
-                    <Menu.Item as='a' onClick={() => { setDetailsType("personal") }}>
+                    <Menu.Item as='a' onClick={() => {
+                        dispatch({
+                            type: 'display_type',
+                            "displayType": "personal"
+                        });
+                    }}>
                         <Icon name='user' />
                         Personal
                     </Menu.Item>
-                    <Menu.Item as='a' onClick={() => { setDetailsType("family") }}>
+                    <Menu.Item as='a' onClick={() => {
+                        dispatch({
+                            type: 'display_type',
+                            "displayType": "family"
+                        });
+                    }}>
                         <Icon name='home' />
                         Family
                     </Menu.Item>
-                    {/* <Menu.Item as='a' onClick={() => { setDetailsType("family") }}>
-                        <Icon name='home' />
-                        Education and Occupation Details
-                    </Menu.Item> */}
-                    <Menu.Item as='a' onClick={() => { setDetailsType("other") }}>
+                    <Menu.Item as='a' onClick={() => {
+                        dispatch({
+                            type: 'display_type',
+                            "displayType": "other"
+                        });
+                    }}>
                         <Icon name='clipboard list' />
                         Other
                     </Menu.Item>
@@ -84,7 +89,12 @@ function PersonalDetails() {
                     visible={detailsType === "family"}
                     width='thin'
                 >
-                    <Menu.Item as='a' onClick={() => { setDetailsType("parent") }}>
+                    <Menu.Item as='a' onClick={() => {
+                        dispatch({
+                            type: 'display_type',
+                            "displayType": "parent"
+                        });
+                    }}>
 
                         <Icon name='home' />
 
@@ -99,7 +109,7 @@ function PersonalDetails() {
                                 {
                                     child.map((item, index) => {
                                         return (
-                                            <List.Item as='a' onClick={() => { showChildDetails(item)}}>Child {item}</List.Item>)
+                                            <List.Item as='a' onClick={() => { showChildDetails(item) }}>Child {item}</List.Item>)
                                     }
                                     )
                                 }
@@ -119,7 +129,7 @@ function PersonalDetails() {
                                     (detailsType === "personal" || detailsType === "family") && (
                                         <div>
                                             <Header as='h1' className="personal-info" >Personal Information</Header>
-                                            <Details type={detailsType}/>
+                                            <Details />
                                         </div>
                                     )
                                 }
@@ -127,7 +137,7 @@ function PersonalDetails() {
                                     detailsType === "parent" && (
                                         <div>
                                             <Header as="h3">Father Information</Header>
-                                            <Details type={detailsType}/>
+                                            <Details />
                                         </div>
                                     )
                                 }
@@ -135,7 +145,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead}</Header>
-                                            <Details type={detailsType}/>
+                                            <Details />
                                             <Button onClick={addChild}>Add Child</Button>
                                         </div>
                                     )
@@ -146,7 +156,7 @@ function PersonalDetails() {
 
                                     <div>
                                         <Header as='h1' className="personal-info" >Partner Information</Header>
-                                        <Details type={detailsType}/>
+                                        <Details/>
                                     </div>
                                 )
                             }
@@ -154,7 +164,7 @@ function PersonalDetails() {
                                     detailsType === "parent" && (
                                         <div>
                                             <Header as="h3">Mother Structure</Header>
-                                            <Details type={detailsType}/>
+                                            <Details />
                                         </div>
                                     )
                                 }
@@ -162,7 +172,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead} Spouse</Header>
-                                            <Details type={detailsType}/>
+                                            <Details />
                                         </div>
                                     )
                                 }</Grid.Column>
