@@ -1,0 +1,25 @@
+.mx-5p{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.mb-1p{
+    margin-bottom: 1%;
+}
+
+.mt-1p{
+    margin-top: 1%;
+}
+
+.mx-auto{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.header-title{
+    width: 180px;
+}
+
+.width-100{
+    width: 100%;
+}

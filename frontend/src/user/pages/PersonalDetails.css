@@ -1,0 +1,38 @@
+.personal_sidebar{
+    height: 60rem;
+}
+
+.details-list{
+    display: inline-grid;
+    width: 30%;
+}
+
+.menu-item-list{
+    background-color: black;
+}
+
+.menu-item-list >a{
+    color: white;
+    margin: auto;
+}
+
+.current-address{
+    width: 505px;
+}
+
+.margin-title{
+    margin-left: 180px;
+}
+
+.personal-info{
+    text-decoration: underline overline;
+    text-underline-position:under;
+}
+
+.form-segment{
+    height: 60rem;
+}
+
+.right-Menu{
+    height :200px
+}
