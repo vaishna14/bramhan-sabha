@@ -161,6 +161,61 @@ const login = async (req, res, next) => {
   });
 };
 
+const userDetails =async (req, res, next)=>{
+  console.log(req.body);
+  console.log(req.userData.userId);
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError('Invalid inputs passed, please check your data.', 422)
+    );
+  }
+
+  // const { title, description } = req.body;
+  const userId = req.userData.userId;
+
+  let detail;
+  // Create Person model
+  try {
+    detail = await Person.findById(userId);
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update place.',
+      500
+    );
+    return next(error);
+  }
+
+  if (detail.creator.toString() !== userId) {
+    const error = new HttpError('You are not allowed to edit this place.', 401);
+    return next(error);
+  }
+
+  // Updating value logic here 
+
+
+  // place.title = title;
+  // place.description = description;
+
+
+  try {
+    await detail.save();
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update place.',
+      500
+    );
+    return next(error);
+  }
+
+  res
+    .status(201)
+    .json("Data Added successfully ");
+
+}
+
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
+exports.userDetails = userDetails;

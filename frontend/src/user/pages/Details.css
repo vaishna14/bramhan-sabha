@@ -34,3 +34,7 @@
 .abc{
     height: 100px;
 }
+
+.field.mx-5p>.ui.left.icon.input{
+    margin-left: 5px;
+}

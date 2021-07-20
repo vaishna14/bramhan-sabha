@@ -24,5 +24,6 @@ router.post(
 );
 
 router.post('/login', usersController.login);
+router.post('/userDetails', usersController.userDetails);
 
 module.exports = router;

@@ -6,10 +6,11 @@ import {
     Input,
     Radio,
     TextArea,
-    Dropdown
+    Dropdown, Form
 
 } from 'semantic-ui-react';
-import { useSelector, useDispatch } from 'react-redux'
+import {FormData} from "../Services/FormData"
+import { useSelector, useDispatch } from 'react-redux';
 import "./PersonalDetails.css";
 import "./App.css";
 // import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -27,6 +28,7 @@ function Details() {
         { key: "Yes", text: "Yes", value: true },
         { key: "No", text: "No", value: false },
     ]
+    const [formDetails,setFormDetails] = useState({});
     const bloodGroup = [
         { key: 'A+', text: 'A+', value: 'A+' },
         { key: 'A-', text: 'A-', value: 'A-' },
@@ -75,7 +77,6 @@ function Details() {
     }
 
     const fatherSelected = (e, { name, value }) => {
-        // setFatherAlive(value);
         dispatch({
             type: 'display_type',
             "displayType": "parent"
@@ -88,8 +89,8 @@ function Details() {
     }
 
     const motherSelected = (e, { name, value }) => {
-        // setMotherAlive(value);
-        dispatch({
+        dispatch(
+        {
             type: 'display_type',
             "displayType": "parent"
         });
@@ -101,14 +102,54 @@ function Details() {
     }
 
 
+    const formChange = (e,{name, value})=>{
+        let form = formDetails;
+        form[name] = value;
+        console.log(form);
+        setFormDetails(form);
+        if(name === "alive"){
+            setAlive(value)
+        }
+        if(name === "mother_alive"){
+            dispatch(
+                {
+                    type: 'display_type',
+                    "displayType": "parent"
+                });
+                dispatch(
+                    {
+                        type: 'motherAlive',
+                        "motherAlive": value
+                    });
+        }
+        if(name === "father_alive"){
+            dispatch({
+                type: 'display_type',
+                "displayType": "parent"
+            });
+            dispatch(
+                {
+                    type: 'fatherAlive',
+                    "fatherAlive": value
+                });
+        }
+    }
+
+    const formSubmit = (e)=>{
+        e.preventDefault();
+        console.log(formDetails);
+        FormData({form:formDetails,type:"personal"});
+    }
 
 
     return (
         <div>
+            <Form onSubmit={formSubmit}>
+                <Form.Group>
             <div className="display-flex mb-1p">
                 <h4 className="mx-auto header-title">Full name</h4>
                 <div className="mx-5p">
-                    <Input placeholder="First Name" list='languages' type="text" id="first_name" errorText="Please enter a valid title." />
+                    <Form.Input placeholder="First Name"  list='languages' type="text" id="first_name"  errorText="Please enter a valid title." name="first_name" onChange={formChange} />
                     {/* <Input  placeholder='Choose language...' /> */}
                     <datalist id='languages' className="abc">
                         <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (Aruna)</option>
@@ -116,26 +157,28 @@ function Details() {
                         <option value='Vaishnavi'>Dutch</option>
                     </datalist>
                 </div>
-                <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." /> </div>
-                <div className="mx-5p"><Input placeholder="Last Name" type="text" id="last_name" /> </div>
+                <div className="mx-5p"> <Form.Input   placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="middle_name" onChange={formChange} /> </div>
+                <div className="mx-5p"><Form.Input   placeholder="Last Name" type="text" id="last_name" name="last_name" onChange={formChange} /> </div>
             </div>
+            </Form.Group>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Gender</h4>
-                <Radio
+                <Form.Radio
                     className="mx-5p"
                     label='Male'
-                    name='M'
-                    value='this'
+                    name='gender'
+                    value='M'
                     checked={gender === "M"}
-                    onChange={() => { setGender("M") }}
+                    onChange={() => { setGender("M");formChange("e",{name:"gender", value:"M"})}}
+                    
                 />
-                <Radio
+                <Form.Radio
                     className="mx-5p"
                     label='Female'
-                    name='F'
-                    value='this'
+                    name='gender'
+                    value='F'
                     checked={gender === "F"}
-                    onChange={() => { setGender("F") }}
+                    onChange={() => { setGender("F");formChange("e",{name:"gender", value:"F"}) }}
                 />
             </div>
             {
@@ -143,25 +186,25 @@ function Details() {
                     <div className="display-flex mb-1p">
                         <h4 className="mx-auto header-title">Maiden name</h4>
                         <div className="mx-5p">
-                            <Input placeholder="First Name" type="text" id="first_name" errorText="Please enter a valid title." /> </div>
-                        <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." /> </div>
-                        <div className="mx-5p"><Input placeholder="Last Name" type="text" id="last_name" /> </div>
+                            <Form.Input placeholder="First Name" type="text" id="first_name" errorText="Please enter a valid title."  name="maiden_first_name" onChange={formChange} /> </div>
+                        <div className="mx-5p"> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="maiden_middle_name" onChange={formChange}/> </div>
+                        <div className="mx-5p"><Form.Input placeholder="Last Name" type="text" id="last_name" name="maiden_last_name" onChange={formChange}/> </div>
                     </div>
                     <div className="display-flex mb-1p">
                         <h4 className="mx-auto header-title">Maiden City</h4>
                         <div className="mx-5p">
-                            <Input placeholder="Maiden City" type="text" id="first_name" errorText="Please enter a valid title." /> </div>
+                            <Form.Input placeholder="Maiden City" type="text"  errorText="Please enter a valid title." name="maiden_city" onChange={formChange}/> </div>
                     </div>
                 </>
                 )
             }
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Alive</h4>
-                <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={aliveSelected} />
+                <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="alive" onChange={formChange} />
                 {
-                    !alive  && (
+                    !alive && (
                         <span className="mx-5p"> Date of Death
-                            <Input className="mx-5p" type="date" placeholder='Date of Death' />
+                            <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="date_of_death" onChange={formChange} />
                         </span>
                     )
 
@@ -171,7 +214,7 @@ function Details() {
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Marrital Status</h4>
-                <Dropdown placeholder='Select' search selection options={maritalStatus} />
+                <Form.Dropdown placeholder='Select' search selection options={maritalStatus} name="marital_status" onChange={formChange}/>
             </div>
             {
                 detailsType === "personal" && (
@@ -179,16 +222,16 @@ function Details() {
 
                         <div className="display-flex mb-1p">
                             <h4 className="header-title">Father Alive</h4>
-                            <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={fatherSelected} />
+                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="father_alive" onChange={formChange} />
                             {
                                 fatherAlive && motherAlive && (
-                                    <span className="mx-5p"> Mother Alive
-                                        <Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} onChange={motherSelected} />
-                                    </span>
+                                    <div className="mx-5p display-flex"> Mother Alive
+                                        <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange}/>
+                                    </div>
                                 )}
                             {!fatherAlive && (
                                 <span className="mx-5p"> Date of Death
-                                    <Input className="mx-5p" type="date" placeholder='Date of Death' />
+                                    <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} />
                                 </span>
                             )}
                         </div>
@@ -196,11 +239,11 @@ function Details() {
                             (!fatherAlive || !motherAlive) && (
                                 <div className="display-flex mb-1p">
                                     <h4 className="header-title">Mother Alive</h4>
-                                    <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={motherSelected} />
+                                    <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange}/>
                                     {
                                         !motherAlive && (
                                             <span className="mx-5p"> Date of Death
-                                                <Input className="mx-5p" type="date" placeholder='Date of Death' />
+                                                <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="mother_death" onChange={formChange}/>
                                             </span>
                                         )}
                                 </div>
@@ -210,86 +253,96 @@ function Details() {
                     </>)}
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Blood Group</h4>
-                <Dropdown placeholder='Select Blood Group' disabled={!alive} clearable search selection options={bloodGroup} />
+                <Form.Dropdown placeholder='Select Blood Group' disabled={!alive} clearable search selection options={bloodGroup} name="blood_group" onChange={formChange} />
 
                 <span className="mx-5p"> Birth Date
-                    <Input className="mx-5p" type="date" />
+                    <Input className="mx-5p" type="date" name="birth_date" onChange={formChange}/>
 
                 </span>
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Education</h4>
-                <Dropdown disabled={!alive} placeholder='Select Latest Education' clearable search selection options={education} />
+                <Form.Dropdown disabled={!alive} placeholder='Select Latest Education' clearable search selection options={education} name="education" onChange={formChange}/>
                 <span className="mx-5p "> Details{"  "}
-                    <Input disabled={!alive} className="mx-5p" placeholder="Education-detail" type="text" />
+                    <Form.Input disabled={!alive} className="mx-5p" placeholder="Education-detail" type="text" name="education_detail" onChange={formChange}/>
                 </span>
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Occupation/Business</h4>
-                <Dropdown disabled={!alive} placeholder='Select Type' clearable search selection options={occupation} />
+                <Form.Dropdown disabled={!alive} placeholder='Select Type' clearable search selection options={occupation} name="occupation" onChange={formChange}/>
                 <span className="mx-5p"> Name
-                    <Input disabled={!alive} className="mx-5p" placeholder="Name of Occupation/Business " type="string" />
+                    <Form.Input disabled={!alive} className="mx-5p" placeholder="Name of Occupation/Business " type="text" name="occupation_detail" onChange={formChange}/>
                 </span>
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Earnings</h4>
-                <Dropdown disabled={!alive} placeholder='Select Type' clearable search selection options={earnings} />
+                <Form.Dropdown disabled={!alive} placeholder='Select Type' clearable search selection options={earnings} name="earning" onChange={formChange}/>
 
             </div>
             {
                 <>
                     <div className="display-flex mb-1p">
                         <h4 className="header-title">Address</h4>
-                        <TextArea className="current-address" placeholder='Add your address' style={{ minHeight: 100 }} />
+                        <Form.TextArea className="current-address" placeholder='Add your address' style={{ minHeight: 100 }} name="address" onChange={formChange}/>
                     </div>
-                    <div className="margin-title">
-                        <Input type="text" className="mx-5p" label="City" placeholder="City" />
-                        <Input type="number" className="mx-5p" label="Pin Code" placeholder="Pin-Code" />
+                    
+                    <div className="margin-title ">
+                    <Form.Group>
+                        <Form.Input type="text" className="mx-5p" label="City" placeholder="City" name="address_city" onChange={formChange}/>
+                        <Form.Input type="number" className="mx-5p" label="Pin Code" placeholder="Pin-Code" name="address_pincode" onChange={formChange}/>
+                        </Form.Group>
+                        <Form.Group>
                         {
                             detailsType === "personal" && (
-                                <Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" />
+                                <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange}/>
 
                             )
                         }
                         {
                             alive === true && (
-                                <Checkbox label='Add Permanent Address' onChange={() => { setAddPermanent(!addPermanent) }} />
+                                <Form.Checkbox label='Add Permanent Address' onChange={() => { setAddPermanent(!addPermanent) }} />
                             )}
+                            </Form.Group>
                     </div>
+                   
                 </>
             }
             {addPermanent && (
-
                 <>
                     <div className="display-flex mt-1p">
                         <h4 className="header-title">Permanent Address</h4>
 
-                        <TextArea className="current-address" placeholder='Add your permanent address' style={{ minHeight: 100 }} />
+                        <Form.TextArea className="current-address" placeholder='Add your permanent address' style={{ minHeight: 100 }} name="permanent_address" onChange={formChange}/>
                     </div>
-
-
                     <div className="margin-title mb-1p mt-1p">
-                        <Input type="text" className="mx-5p" label="City" placeholder="City" />
-                        <Input type="number" className="mx-5p" label="Pin Code" placeholder="000-000" />
+                        <Form.Input type="text" className="mx-5p" label="City" placeholder="City" name="permanent_city" onChange={formChange}/>
+                        <Form.Input type="number" className="mx-5p" label="Pin Code" placeholder="000-000" name="permanent_pincode" onChange={formChange}/>
                     </div>
                 </>
             )}
+             <Form.Group>
             <div className="display-flex mb-1p mt-1p">
                 <h4 className="header-title">Contact no.</h4>
-                <Input disabled={!alive} iconPosition='left' className="mx-5p" label="Personal" placeholder='Personal no.' type="number">
+               
+                <Form.Input disabled={!alive} iconPosition='left' className="mx-5p" placeholder='Personal no.' type="number" name="personal_number" onChange={formChange}>
                     <Icon name='phone' />
-                    <input />
-                </Input>
-                <Input disabled={!alive} iconPosition='left' className="mx-5p" label="WhatsApp" placeholder='Phone no.' type="number" />
+                    <input   />
+                </Form.Input>
+                <Form.Input disabled={!alive} iconPosition='left' className="mx-5p"  placeholder='WhatsApp no.' type="number" name="whatsapp_number" onChange={formChange}>
+                <Icon className="mx-5p" name='whatsapp' />
+                    <input   className="mx-5p"/>
+                </Form.Input>
             </div>
+            </Form.Group>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Email address</h4>
-                <Input disabled={!alive} iconPosition='left' className="mx-5p" placeholder='Email'>
+                <Form.Input disabled={!alive} iconPosition='left' className="mx-5p" placeholder='Email' type="email" name="email" onChange={formChange}>
                     <Icon name='at' />
-                    <input />
-                </Input>
+                    <input   className="mx-5p"/>
+                </Form.Input>
             </div>
-            <Button>Submit Details</Button>
+            
+            <Form.Button content='Submit' />
             {
                 detailsType !== "personal" && (
                     <Button onClick={() => {
@@ -301,6 +354,7 @@ function Details() {
 
                 )
             }
+            </Form>
         </div>
 
     )
