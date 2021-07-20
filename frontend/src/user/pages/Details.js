@@ -19,7 +19,7 @@ function Details() {
     const detailsType = useSelector((state) => state.personal.displayType)
 
     const [gender, setGender] = useState("");
-    const [alive, setAlive] = useState("Yes");
+    const [alive, setAlive] = useState(true);
     const [addPermanent, setAddPermanent] = useState(false);
     const fatherAlive = useSelector((state) => state.personal.fatherAlive);
     const motherAlive = useSelector((state) => state.personal.motherAlive);
@@ -152,16 +152,21 @@ function Details() {
                         <div className="mx-5p">
                             <Input placeholder="Maiden City" type="text" id="first_name" errorText="Please enter a valid title." /> </div>
                     </div>
-                    </>
+                </>
                 )
             }
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Alive</h4>
                 <Dropdown placeholder='Select' search selection options={aliveOptions} onChange={aliveSelected} />
-                <span className="mx-5p"> Marital Status
-                    <Dropdown className="mx-5p" placeholder='Select' search selection options={maritalStatus} />
+                {
+                    !alive  && (
+                        <span className="mx-5p"> Date of Death
+                            <Input className="mx-5p" type="date" placeholder='Date of Death' />
+                        </span>
+                    )
 
-                </span>
+                }
+
 
             </div>
             <div className="display-flex mb-1p">
@@ -205,7 +210,7 @@ function Details() {
                     </>)}
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Blood Group</h4>
-                <Dropdown placeholder='Select Blood Group' disabled={alive === "No"} clearable search selection options={bloodGroup} />
+                <Dropdown placeholder='Select Blood Group' disabled={!alive} clearable search selection options={bloodGroup} />
 
                 <span className="mx-5p"> Birth Date
                     <Input className="mx-5p" type="date" />
@@ -214,21 +219,21 @@ function Details() {
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Education</h4>
-                <Dropdown disabled={alive === "No"} placeholder='Select Latest Education' clearable search selection options={education} />
+                <Dropdown disabled={!alive} placeholder='Select Latest Education' clearable search selection options={education} />
                 <span className="mx-5p "> Details{"  "}
-                    <Input disabled={alive === "No"} className="mx-5p" placeholder="Education-detail" type="text" />
+                    <Input disabled={!alive} className="mx-5p" placeholder="Education-detail" type="text" />
                 </span>
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Occupation/Business</h4>
-                <Dropdown disabled={alive === "No"} placeholder='Select Type' clearable search selection options={occupation} />
+                <Dropdown disabled={!alive} placeholder='Select Type' clearable search selection options={occupation} />
                 <span className="mx-5p"> Name
-                    <Input disabled={alive === "No"} className="mx-5p" placeholder="Name of Occupation/Business " type="string" />
+                    <Input disabled={!alive} className="mx-5p" placeholder="Name of Occupation/Business " type="string" />
                 </span>
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Earnings</h4>
-                <Dropdown disabled={alive === "No"} placeholder='Select Type' clearable search selection options={earnings} />
+                <Dropdown disabled={!alive} placeholder='Select Type' clearable search selection options={earnings} />
 
             </div>
             {
@@ -247,7 +252,7 @@ function Details() {
                             )
                         }
                         {
-                            alive === "Yes" && (
+                            alive === true && (
                                 <Checkbox label='Add Permanent Address' onChange={() => { setAddPermanent(!addPermanent) }} />
                             )}
                     </div>
@@ -271,28 +276,28 @@ function Details() {
             )}
             <div className="display-flex mb-1p mt-1p">
                 <h4 className="header-title">Contact no.</h4>
-                <Input disabled={alive === "No"} iconPosition='left' className="mx-5p" label="Personal" placeholder='Personal no.'>
+                <Input disabled={!alive} iconPosition='left' className="mx-5p" label="Personal" placeholder='Personal no.' type="number">
                     <Icon name='phone' />
                     <input />
                 </Input>
-                <Input disabled={alive === "No"} iconPosition='left' className="mx-5p" label="WhatsApp" placeholder='Phone no.' />
-
-
+                <Input disabled={!alive} iconPosition='left' className="mx-5p" label="WhatsApp" placeholder='Phone no.' type="number" />
             </div>
             <div className="display-flex mb-1p">
                 <h4 className="header-title">Email address</h4>
-                <Input disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='Email'>
+                <Input disabled={!alive} iconPosition='left' className="mx-5p" placeholder='Email'>
                     <Icon name='at' />
                     <input />
                 </Input>
             </div>
             <Button>Submit Details</Button>
             {
-                detailsType !=="personal" && (
-            <Button onClick={()=>{dispatch({
-                type: 'display_type',
-                "displayType": "personal"
-            })}}>Go Back</Button>
+                detailsType !== "personal" && (
+                    <Button onClick={() => {
+                        dispatch({
+                            type: 'display_type',
+                            "displayType": "personal"
+                        })
+                    }}>Go Back</Button>
 
                 )
             }

@@ -27,6 +27,8 @@
 .personal-info{
     text-decoration: underline overline;
     text-underline-position:under;
+    /* background-color: darkred;
+    color: wheat !important; */
 }
 
 .form-segment{
