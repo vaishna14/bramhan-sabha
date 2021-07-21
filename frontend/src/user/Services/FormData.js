@@ -4,10 +4,9 @@ import axios from "axios";
 
 export const FormData = (props)=>{
     console.log(props);
-    // console.log(type);
+    props.form["type"] = props.type;
     let body =props.form;
     let token = props.token
-    console.log(token);
     axios({
         method: 'post',
         url: 'http://localhost:5000/api/users/userDetails',

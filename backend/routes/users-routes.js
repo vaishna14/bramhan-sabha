@@ -28,6 +28,6 @@ router.post(
 router.post('/login', usersController.login);
 router.use(checkAuth);
 
-router.post('/userDetails', usersController.userDetails);
+router.post('/userDetails', usersController.addUserDetails);
 
 module.exports = router;

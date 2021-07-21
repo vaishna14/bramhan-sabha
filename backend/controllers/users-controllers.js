@@ -162,7 +162,7 @@ const login = async (req, res, next) => {
   });
 };
 
-const userDetails = async (req, res, next) => {
+const addUserDetails = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -191,6 +191,7 @@ const userDetails = async (req, res, next) => {
   exist = await User.where('person').exists();
   if (exist.length === 0) {
     console.log("Create Value");
+    if(req.body.type == "personal"){
     const createPerson = new Person({
       first_name: req.body.first_name,
       middle_name: req.body.middle_name,
@@ -227,6 +228,7 @@ const userDetails = async (req, res, next) => {
       userId: req.userData.userId,
       creator: req.userData.userId
     })
+  }
 
     let user;
     try {
@@ -300,7 +302,9 @@ const userDetails = async (req, res, next) => {
 
     let place;
     try {
+      if (req.body.type === "personal"){
       place = await Person.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+      }
     } catch (err) {
 
       const error = new HttpError(
@@ -319,4 +323,4 @@ const userDetails = async (req, res, next) => {
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
-exports.userDetails = userDetails;
+exports.addUserDetails = addUserDetails;
