@@ -27,7 +27,7 @@ router.post(
 
 router.post('/login', usersController.login);
 router.use(checkAuth);
-
-router.post('/userDetails', usersController.addUserDetails);
+router.post('/addUserDetails', usersController.addUserDetails);
+router.get('/getUserDetails/:detailsType', usersController.getUserDetails);
 
 module.exports = router;

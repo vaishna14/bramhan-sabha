@@ -9,7 +9,7 @@ export const FormData = (props)=>{
     let token = props.token
     axios({
         method: 'post',
-        url: 'http://localhost:5000/api/users/userDetails',
+        url: 'http://localhost:5000/api/users/addUserDetails',
         data: body,
         headers: {
             Authorization: 'Bearer ' + token

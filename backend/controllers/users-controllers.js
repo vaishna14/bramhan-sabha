@@ -320,7 +320,35 @@ const addUserDetails = async (req, res, next) => {
 }
 
 
+
+const getUserDetails = async (req, res,next)=>{
+  let detail;
+  try {
+    detail = await Person.find({userId : req.userData.userId});
+    console.log(detail)
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not find a place.',
+      500
+    );
+    return next(error);
+  }
+
+  if (!detail) {
+    const error = new HttpError(
+      'Could not find detail for the provided id.',
+      404
+    );
+    return next(error);
+  }
+
+  console.log(req.params.detailsType)
+  res.status(200).json({ detail: detail[0], type:req.params.detailsType||""});
+}
+
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
 exports.addUserDetails = addUserDetails;
+exports.getUserDetails = getUserDetails;

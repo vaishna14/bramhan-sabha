@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState,useContext, useEffect } from 'react';
 import {
     Button,
     Checkbox,
@@ -12,6 +12,7 @@ import {
 import {FormData} from "../Services/FormData";
 import { AuthContext } from '../../shared/context/auth-context';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from "axios";
 import "./PersonalDetails.css";
 import "./App.css";
 // import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -74,6 +75,20 @@ function Details() {
         { key: "Divorced", text: "Divorced", value: "Divorced" },
 
     ]
+
+    useEffect(()=>{
+        axios({
+            method:"get",
+            url:`http://localhost:5000/api/users/getUserDetails/${detailsType}`,
+            headers: {
+                Authorization: 'Bearer ' + auth.token
+            }
+        }).then((response)=>{
+            console.log(response.data)
+        }).catch((err)=>{
+            console.log(err)
+        })
+    },[])
 
     const aliveSelected = (e, { name, value }) => {
         setAlive(value);
