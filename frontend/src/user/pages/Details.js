@@ -1,16 +1,8 @@
 import React, { useState,useContext, useEffect } from 'react';
-import {
-    Button,
-    Checkbox,
-    Icon,
-    Input,
-    Radio,
-    TextArea,
-    Dropdown, Form
-
-} from 'semantic-ui-react';
+import {Button,Icon,Input,Form,Dimmer,Loader} from 'semantic-ui-react';
 import {FormData} from "../Services/FormData";
 import { AuthContext } from '../../shared/context/auth-context';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from "axios";
 import "./PersonalDetails.css";
@@ -20,12 +12,11 @@ import "./App.css";
 function Details() {
     const dispatch = useDispatch();
     const auth = useContext(AuthContext);
-
     const detailsType = useSelector((state) => state.personal.displayType)
-
     const [gender, setGender] = useState("");
     const [alive, setAlive] = useState(true);
     const [addPermanent, setAddPermanent] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const fatherAlive = useSelector((state) => state.personal.fatherAlive);
     const motherAlive = useSelector((state) => state.personal.motherAlive);
     const aliveOptions = [
@@ -77,6 +68,7 @@ function Details() {
     ]
 
     useEffect(()=>{
+        setIsLoading(true);
         axios({
             method:"get",
             url:`http://localhost:5000/api/users/getUserDetails/${detailsType}`,
@@ -87,6 +79,8 @@ function Details() {
             console.log(response.data)
         }).catch((err)=>{
             console.log(err)
+        }).finally(()=>{
+        setIsLoading(false);
         })
     },[])
 
@@ -162,6 +156,13 @@ function Details() {
 
     return (
         <div>
+         {/* <Segment> */}
+      <Dimmer active={isLoading} inverted>
+        <Loader size='large'>Loading</Loader>
+      </Dimmer>
+
+      {/* <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+    </Segment> */}
             <Form onSubmit={formSubmit}>
                 <Form.Group>
             <div className="display-flex mb-1p">
