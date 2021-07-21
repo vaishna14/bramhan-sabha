@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import {
     Button,
     Checkbox,
@@ -9,7 +9,8 @@ import {
     Dropdown, Form
 
 } from 'semantic-ui-react';
-import {FormData} from "../Services/FormData"
+import {FormData} from "../Services/FormData";
+import { AuthContext } from '../../shared/context/auth-context';
 import { useSelector, useDispatch } from 'react-redux';
 import "./PersonalDetails.css";
 import "./App.css";
@@ -17,6 +18,8 @@ import "./App.css";
 
 function Details() {
     const dispatch = useDispatch();
+    const auth = useContext(AuthContext);
+
     const detailsType = useSelector((state) => state.personal.displayType)
 
     const [gender, setGender] = useState("");
@@ -138,7 +141,7 @@ function Details() {
     const formSubmit = (e)=>{
         e.preventDefault();
         console.log(formDetails);
-        FormData({form:formDetails,type:"personal"});
+        FormData({form:formDetails,type:"personal",token:auth.token});
     }
 
 

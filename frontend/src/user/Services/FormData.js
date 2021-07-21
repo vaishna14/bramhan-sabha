@@ -6,11 +6,16 @@ export const FormData = (props)=>{
     console.log(props);
     // console.log(type);
     let body =props.form;
-    console.log(body);
+    let token = props.token
+    console.log(token);
     axios({
         method: 'post',
         url: 'http://localhost:5000/api/users/userDetails',
-        data: body
+        data: body,
+        headers: {
+            Authorization: 'Bearer ' + token
+          }
+        // Authorization: 'Bearer ' + token
       }).then(function (response) {
         return(response.data)
     //   response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
