@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import {
     Button,
     Grid,
@@ -129,7 +129,7 @@ function PersonalDetails() {
                                     (detailsType === "personal" || detailsType === "family") && (
                                         <div>
                                             <Header as='h1' className="personal-info" >Personal Information</Header>
-                                            <Details />
+                                            <Details type="personal" />
                                         </div>
                                     )
                                 }
@@ -156,7 +156,7 @@ function PersonalDetails() {
 
                                     <div>
                                         <Header as='h1' className="personal-info" >Partner Information</Header>
-                                        <Details/>
+                                        <Details type="partner" />
                                     </div>
                                 )
                             }

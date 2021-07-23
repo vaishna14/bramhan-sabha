@@ -4,9 +4,11 @@
 const INITIAL_STATE = {
 
     count: 0,
-    fatherAlive:true,
-    motherAlive:true,
-    displayType:"personal"
+    fatherAlive:"Yes",
+    motherAlive:"Yes",
+    displayType:"personal",
+    partnerFatherAlive: "Yes",
+    partnerMotherAlive:"Yes"
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -34,6 +36,21 @@ const reducer = (state = INITIAL_STATE, action) => {
              ...state, motherAlive: action.motherAlive,
 
            };
+
+           case "partnerFatherAlive":
+
+            return {
+ 
+              ...state, partnerFatherAlive: action.partnerFatherAlive,
+ 
+            };
+            case "partnerMotherAlive":
+
+            return {
+ 
+              ...state, partnerMotherAlive: action.partnerMotherAlive,
+ 
+            };
 
         case "DECREMENT":
 

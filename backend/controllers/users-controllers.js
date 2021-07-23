@@ -197,6 +197,7 @@ const addUserDetails = async (req, res, next) => {
       middle_name: req.body.middle_name,
       last_name: req.body.last_name,
       gender: req.body.gender,
+      gotra: req.body.gotra,
       maiden_first_name: req.body.maiden_first_name,
       maiden_middle_name: req.body.maiden_middle_name,
       maiden_last_name: req.body.maiden_last_name,
@@ -270,6 +271,7 @@ const addUserDetails = async (req, res, next) => {
       middle_name: req.body.middle_name || "",
       last_name: req.body.last_name || "",
       gender: req.body.gender || "",
+      gotra:req.body.gotra || "",
       maiden_first_name: req.body.maiden_first_name || "",
       maiden_middle_name: req.body.maiden_middle_name || "",
       maiden_last_name: req.body.maiden_last_name || "",
@@ -323,6 +325,7 @@ const addUserDetails = async (req, res, next) => {
 
 const getUserDetails = async (req, res,next)=>{
   let detail;
+  if(req.params.detailsType === "personal"){
   try {
     detail = await Person.find({userId : req.userData.userId});
     console.log(detail)
@@ -333,6 +336,7 @@ const getUserDetails = async (req, res,next)=>{
     );
     return next(error);
   }
+}
 
   if (!detail) {
     const error = new HttpError(

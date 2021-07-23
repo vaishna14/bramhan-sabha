@@ -7,6 +7,7 @@ const personSchema = new Schema({
   middle_name: { type: String, required: true },
   last_name: { type: String,  required: true},
   gender: { type: String },
+  gotra: { type: String },
   maiden_first_name: { type: String },
   maiden_middle_name: { type: String },
   maiden_last_name: { type: String },
