@@ -270,6 +270,7 @@ const addUserDetails = async (req, res, next) => {
       }
       else {
         let typeVal = req.body.type
+        console.log("here");
         if (req.body.type == "personal") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist) });
         }
@@ -336,9 +337,28 @@ const addUserDetails = async (req, res, next) => {
     try {
       if (req.body.type === "personal") {
         if (req.body.isExist !== "") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { _id: toId(req.body.isExist) });
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { personal: toId(req.body.isExist) });
+          user2 = await User.findOne({ "_id": req.userData.userId });
+           if (req.body.gender == "M") {
+            let checkPartner = await Male.findOne({ "_id": user2.personal });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+            }
+
+          }
+          if (req.body.gender == "F") {
+            let checkPartner = await Female.findOne({ "_id": user2.personal });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+            }
+          }
         } else {
-          place = await Person.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+          user2 = await User.findOne({ "_id": req.userData.userId });
+          place = await Partner.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
         }
       }
       if (req.body.type === "partner") {
