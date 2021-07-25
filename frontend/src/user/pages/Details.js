@@ -89,7 +89,9 @@ function Details(props) {
             }
         }).then((response) => {
             if (props.type === response.data.type) {
+                if(response?.data?.detail){
                 setFormDetails(response?.data?.detail);
+                }
                 console.log(response?.data?.detail?.alive)
             }
         }).catch((err) => {
@@ -148,6 +150,7 @@ function Details(props) {
 
 
     const formChange = (e, { name, value }) => {
+        console.log(formDetails);
         let form = formDetails;
         if (!form[name]) {
             form[name] = value;
@@ -162,6 +165,10 @@ function Details(props) {
             })
         }
         setFormDetails(form);
+        if (name === "gender"){
+            (props.type === "father")?form[name] = "M" : form[name] = "F" 
+        }
+
         if (name === "alive") {
             setAlive(value)
         }
@@ -230,7 +237,7 @@ function Details(props) {
 
     const formSubmit = (e) => {
         e.preventDefault();
-        FormData({ form: formDetails, type: "personal", token: auth.token });
+        FormData({ form: formDetails, type: props.type, token: auth.token });
     }
 
 
@@ -264,7 +271,8 @@ function Details(props) {
                         label='Male'
                         name='gender'
                         value='M'
-                        checked={gender === "M"}
+                        disabled={detailsType === "parent"}
+                        checked={gender === "M" || props.type === "father"}
                         onChange={() => { setGender("M"); formChange("e", { name: "gender", value: "M" }) }}
 
                     />
@@ -273,7 +281,9 @@ function Details(props) {
                         label='Female'
                         name='gender'
                         value='F'
-                        checked={gender === "F"}
+                        disabled={detailsType === "parent"}
+
+                        checked={gender === "F" || props.type === "mother"}
                         onChange={() => { setGender("F"); formChange("e", { name: "gender", value: "F" }) }}
                     />
                     </div>

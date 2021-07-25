@@ -137,7 +137,7 @@ function PersonalDetails() {
                                     detailsType === "parent" && (
                                         <div>
                                             <Header as="h3">Father Information</Header>
-                                            <Details />
+                                            <Details type="father"/>
                                         </div>
                                     )
                                 }
@@ -164,7 +164,7 @@ function PersonalDetails() {
                                     detailsType === "parent" && (
                                         <div>
                                             <Header as="h3">Mother Structure</Header>
-                                            <Details />
+                                            <Details type="mother"/>
                                         </div>
                                     )
                                 }

@@ -5,6 +5,9 @@ const mongoose = require('mongoose');
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
 const Person = require('../models/person');
+const Partner = require('../models/partner');
+const Father = require('../models/father');
+const Mother = require('../models/mother');
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -34,6 +37,8 @@ const signup = async (req, res, next) => {
   try {
     existingUser = await User.findOne({ email: email });
   } catch (err) {
+    console.log(err)
+    console.log("here")
     const error = new HttpError(
       'Signing up failed, please try again later.',
       500
@@ -71,6 +76,8 @@ const signup = async (req, res, next) => {
   try {
     await createdUser.save();
   } catch (err) {
+    console.log(err);
+    console.log("1");
     const error = new HttpError(
       'Signing up failed, please try again later.',
       500
@@ -86,6 +93,8 @@ const signup = async (req, res, next) => {
       { expiresIn: '1h' }
     );
   } catch (err) {
+    console.log(err);
+    console.log("2")
     const error = new HttpError(
       'Signing up failed, please try again later.',
       500
@@ -188,11 +197,13 @@ const addUserDetails = async (req, res, next) => {
   // }
 
   let exist;
-  exist = await User.where('person').exists();
-  if (exist.length === 0) {
+  exist = await User.find({ "_id": req.userData.userId });
+  let dbValue = exist[0];
+  console.log(req.body.type);
+  if (!dbValue[req.body.type]) {
     console.log("Create Value");
-    if(req.body.type == "personal"){
-    const createPerson = new Person({
+    let createPerson;
+    let newBody = {
       first_name: req.body.first_name,
       middle_name: req.body.middle_name,
       last_name: req.body.last_name,
@@ -228,8 +239,18 @@ const addUserDetails = async (req, res, next) => {
       email: req.body.email,
       userId: req.userData.userId,
       creator: req.userData.userId
-    })
-  }
+    }
+    if (req.body.type === "personal") {
+      createPerson = new Person(newBody)
+    }
+    if (req.body.type === "partner") {
+      createPerson = new Partner(newBody)
+    }
+    if (req.body.type === "father") {
+      createPerson = new Father(newBody)
+    } if (req.body.type === "mother") {
+      createPerson = new Mother(newBody)
+    }
 
     let user;
     try {
@@ -251,10 +272,23 @@ const addUserDetails = async (req, res, next) => {
       const sess = await mongoose.startSession();
       sess.startTransaction();
       await createPerson.save({ session: sess });
-      user.person = createPerson;
+      console.log(req.body.type);
+      if (req.body.type == "personal") {
+        user.person = createPerson;
+      }
+      if (req.body.type == "partner") {
+        user.partner = createPerson;
+      }
+      if (req.body.type == "father") {
+        user.father = createPerson;
+      }
+      if (req.body.type == "mother") {
+        user.mother = createPerson;
+      }
       await user.save({ session: sess });
       await sess.commitTransaction();
     } catch (err) {
+      console.log(err)
       const error = new HttpError(
         'Adding data failed, please try again.',
         500
@@ -271,7 +305,7 @@ const addUserDetails = async (req, res, next) => {
       middle_name: req.body.middle_name || "",
       last_name: req.body.last_name || "",
       gender: req.body.gender || "",
-      gotra:req.body.gotra || "",
+      gotra: req.body.gotra || "",
       maiden_first_name: req.body.maiden_first_name || "",
       maiden_middle_name: req.body.maiden_middle_name || "",
       maiden_last_name: req.body.maiden_last_name || "",
@@ -304,8 +338,17 @@ const addUserDetails = async (req, res, next) => {
 
     let place;
     try {
-      if (req.body.type === "personal"){
-      place = await Person.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+      if (req.body.type === "personal") {
+        place = await Person.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+      }
+      if (req.body.type === "partner") {
+        place = await Partner.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+      }
+      if (req.body.type === "father") {
+        place = await Father.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+      }
+      if (req.body.type === "mother") {
+        place = await Mother.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
       }
     } catch (err) {
 
@@ -323,11 +366,20 @@ const addUserDetails = async (req, res, next) => {
 
 
 
-const getUserDetails = async (req, res,next)=>{
+const getUserDetails = async (req, res, next) => {
   let detail;
-  if(req.params.detailsType === "personal"){
+
   try {
-    detail = await Person.find({userId : req.userData.userId});
+    if (req.params.detailsType === "personal") {
+      detail = await Person.find({ userId: req.userData.userId });
+    }
+    if (req.params.detailsType === "partner") {
+      detail = await Partner.find({ userId: req.userData.userId });
+    } if (req.params.detailsType === "mother") {
+      detail = await Mother.find({ userId: req.userData.userId });
+    } if (req.params.detailsType === "father") {
+      detail = await Father.find({ userId: req.userData.userId });
+    }
     console.log(detail)
   } catch (err) {
     const error = new HttpError(
@@ -336,7 +388,7 @@ const getUserDetails = async (req, res,next)=>{
     );
     return next(error);
   }
-}
+
 
   if (!detail) {
     const error = new HttpError(
@@ -347,7 +399,7 @@ const getUserDetails = async (req, res,next)=>{
   }
 
   console.log(req.params.detailsType)
-  res.status(200).json({ detail: detail[0], type:req.params.detailsType||""});
+  res.status(200).json({ detail: detail[0], type: req.params.detailsType || "" });
 }
 
 
