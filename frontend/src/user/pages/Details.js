@@ -26,9 +26,8 @@ function Details(props) {
     const [bloodGroup, setBloodGroup] = useState("");
     const [occupation, setOccupation] = useState("");
     const [earning, setEarnings] = useState("");
-    useEffect(() => {
-        console.log(fatherAlive);
-    }, [fatherAlive])
+    const [suggestions, setSuggestions] = useState([]);
+    const [dataListSelect, setDataListSelect] = useState(false);
 
     const aliveOptions = [
         { text: "Yes", value: "Yes" },
@@ -92,18 +91,47 @@ function Details(props) {
                 if(response?.data?.detail){
                 setFormDetails(response?.data?.detail);
                 }
-                console.log(response?.data?.detail?.alive)
             }
         }).catch((err) => {
             console.log(err)
         }).finally(() => {
             setIsLoading(false);
         })
+
     }, [])
+
+
+    useEffect(()=>{
+        axios({
+            method: "get",
+            url: `http://localhost:5000/api/users/suggestions`,
+            headers: {
+                Authorization: 'Bearer ' + auth.token
+            }
+        }).then((response) => {
+           console.log(response);
+           let arr =[];
+           response.data.list.map(item=>{
+               let obj ={};
+               obj.key = item._id;
+               obj.name = item.first_name + " " +item.middle_name+ " "+ item.last_name
+               obj.first_name = item.first_name
+               arr.push(obj);
+               return;
+           })
+           setSuggestions(arr);
+
+        }).catch((err) => {
+            console.log(err);
+        })
+        // .finally(() => {
+        //     setIsLoading(false);
+        // })
+    },[])
+
 
     useEffect(() => {
         console.log(formDetails);
-        console.log("Changed");
         setGender(formDetails?.gender);
         setAlive(formDetails?.alive);
         setBloodGroup(formDetails?.blood_group);
@@ -150,7 +178,7 @@ function Details(props) {
 
 
     const formChange = (e, { name, value }) => {
-        console.log(formDetails);
+        console.log("Changed")
         let form = formDetails;
         if (!form[name]) {
             form[name] = value;
@@ -233,7 +261,21 @@ function Details(props) {
 
     const formSubmit = (e) => {
         e.preventDefault();
-        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:"",});
+        let existId = "";
+        if (dataListSelect){
+            console.log("here");
+            let Name = formDetails.first_name + " " +formDetails.middle_name+ " "+ formDetails.last_name
+            suggestions.map(item =>{
+              if(item.name == Name){
+                existId = item.key
+              }
+            })       
+        }
+        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:existId,});
+    }
+
+    const datListClicked = ()=>{
+        setDataListSelect(true);
     }
 
 
@@ -247,12 +289,16 @@ function Details(props) {
                     <div className="display-flex mb-1p">
                         <h4 className="mx-auto header-title">Full name</h4>
                         <div className="mx-5p">
-                            <Form.Input placeholder="First Name" list='languages' type="text" id="first_name" errorText="Please enter a valid title." name="first_name" onChange={formChange} defaultValue={formDetails?.first_name} />
+                            <Form.Input onInput={datListClicked} placeholder="First Name" list='languages' type="text" id="first_name" errorText="Please enter a valid title." name="first_name" onChange={formChange} defaultValue={formDetails?.first_name} />
                             {/* <Input  placeholder='Choose language...' /> */}
                             <datalist id='languages' className="abc">
-                                <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (Aruna)</option>
-                                <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (ABC)</option>
-                                <option value='Vaishnavi'>Dutch</option>
+                                {
+                                    suggestions.map(item =>{
+                                return (<option onSelect={datListClicked} onChange={datListClicked} text={item.key} value={item.first_name}>{item.name}</option>)
+                                    })
+                                }
+                                {/* <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (ABC)</option>
+                                <option value='Vaishnavi'>Dutch</option> */}
                             </datalist>
                         </div>
                         <div className="mx-5p"> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="middle_name" onChange={formChange} defaultValue={formDetails?.middle_name} /> </div>

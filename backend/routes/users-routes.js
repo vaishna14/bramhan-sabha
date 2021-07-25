@@ -29,5 +29,6 @@ router.post('/login', usersController.login);
 router.use(checkAuth);
 router.post('/addUserDetails', usersController.addUserDetails);
 router.get('/getUserDetails/:detailsType', usersController.getUserDetails);
+router.get('/suggestions', usersController.getSuggestions);
 
 module.exports = router;

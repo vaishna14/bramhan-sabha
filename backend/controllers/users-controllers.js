@@ -409,7 +409,6 @@ const addUserDetails = async (req, res, next) => {
             } else {
               updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
             }
-
           }
           if (req.body.gender == "F") {
             let checkPartner = await Female.findOne({ "_id": user2.partner });
@@ -471,9 +470,30 @@ const getUserDetails = async (req, res, next) => {
   res.status(200).json({ detail: detail[0], type: req.params.detailsType || "" });
 }
 
+const getSuggestions = async (req, res, next)=>{
+  let arr = [] ;
+  try{
+  male = Male.find({}).select("first_name middle_name last_name");
+  male.exec(function (err, someValue) {
+    if (err) return next(err);
+    arr = someValue
+    res.status(200).json({ list: someValue });
+});
+  }catch (err) {
+    const error = new HttpError(
+      'No data found.',
+      500
+    );
+    return next(error);
+  }
+
+  // res.status(200).json({list:arr});
+}
+
 
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
 exports.addUserDetails = addUserDetails;
 exports.getUserDetails = getUserDetails;
+exports.getSuggestions = getSuggestions;
