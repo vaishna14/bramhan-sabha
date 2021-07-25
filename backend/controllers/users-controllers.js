@@ -177,7 +177,6 @@ const addUserDetails = async (req, res, next) => {
     );
   }
 
-  let detail;
   try {
     detail = await Person.find({ 'userId': req.userData.userId });
   } catch (err) {
@@ -217,6 +216,9 @@ const addUserDetails = async (req, res, next) => {
 
     try {
       if (req.body.isExist === "") {
+        console.log("Does not exist");
+        console.log(req.body.type);
+
         let createPerson;
         let newBody = {
           first_name: req.body.first_name,
@@ -269,8 +271,9 @@ const addUserDetails = async (req, res, next) => {
         await sess.commitTransaction();
       }
       else {
-        let typeVal = req.body.type
-        console.log("here");
+        console.log("Already exist");
+        console.log(req.body.type);
+
         if (req.body.type == "personal") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist) });
         }

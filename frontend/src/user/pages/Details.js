@@ -109,7 +109,6 @@ function Details(props) {
                 Authorization: 'Bearer ' + auth.token
             }
         }).then((response) => {
-           console.log(response);
            let arr =[];
            response.data.list.map(item=>{
                let obj ={};
