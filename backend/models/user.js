@@ -9,7 +9,7 @@ const userSchema = new Schema({
   password: { type: String, required: true, minlength: 6 },
   image: { type: String, required: true },
   places: [{ type: mongoose.Types.ObjectId, ref: 'Place' }],
-  person:{ type: mongoose.Types.ObjectId,  ref: 'Person' },
+  personal:{ type: mongoose.Types.ObjectId,  ref: 'Person' },
   partner:{ type: mongoose.Types.ObjectId, ref: 'Partner' },
   father:{ type: mongoose.Types.ObjectId, ref: 'Father' },
   mother:{ type: mongoose.Types.ObjectId, ref: 'Mother' }
