@@ -8,6 +8,7 @@ const Person = require('../models/person');
 const Partner = require('../models/partner');
 const Father = require('../models/father');
 const Mother = require('../models/mother');
+const user = require('../models/user');
 const toId = mongoose.Types.ObjectId;
 
 const getUsers = async (req, res, next) => {
@@ -266,7 +267,6 @@ const addUserDetails = async (req, res, next) => {
       const sess = await mongoose.startSession();
       sess.startTransaction();
       await createPerson.save({ session: sess });
-      console.log(req.body.type);
       if (req.body.type == "personal") {
         user.personal = createPerson;
       }
@@ -282,7 +282,6 @@ const addUserDetails = async (req, res, next) => {
       await user.save({ session: sess });
       await sess.commitTransaction();
     } catch (err) {
-      console.log(err)
       const error = new HttpError(
         'Adding data failed, please try again.',
         500
@@ -330,32 +329,39 @@ const addUserDetails = async (req, res, next) => {
       email: req.body.email || ""
     }
 
-    let father ={
-      father:"60fc285c9db34e122ccab85uyjgjd"
-    }
-
     let place;
     try {
       if (req.body.type === "personal") {
-        console.log("her111")
-        // place = await Person.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
-        let fat = toId("60fa702c87014480150594ec");
-        // place = await Person.find({ "userId": req.userData.userId });
-        // place.father = fat
-        // place.save();
-
-        console.log(fat);
-        place = await User.findOneAndUpdate( {"_id": req.userData.userId }, {father:fat});
-        console.log(place)
+        if (req.body.isExist !== "") {
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { _id: toId(req.body.isExist) });
+        } else {
+          place = await Person.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+        }
       }
       if (req.body.type === "partner") {
-        place = await Partner.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+        if (req.body.isExist !== "") {
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { partner: toId(req.body.isExist) });
+        } else {
+          user2 = await User.findOne({ "_id": req.userData.userId });
+          place = await Partner.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+        }
+
       }
       if (req.body.type === "father") {
-        place = await Father.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+        if (req.body.isExist !== "") {
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { father: toId(req.body.isExist) });
+        } else {
+          user2 = await User.findOne({ "_id": req.userData.userId });
+          place = await Father.findOneAndUpdate({ "_id": user2.father }, updateDetails);
+        }
       }
       if (req.body.type === "mother") {
-        place = await Mother.findOneAndUpdate({ "userId": req.userData.userId }, updateDetails);
+        if (req.body.isExist !== "") {
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist) });
+        } else {
+          user2 = await User.findOne({ "_id": req.userData.userId });
+          place = await Mother.findOneAndUpdate({ "_id": user2.mother }, updateDetails);
+        }
       }
     } catch (err) {
       console.log(err)
@@ -365,6 +371,7 @@ const addUserDetails = async (req, res, next) => {
       );
       return next(error);
     }
+
     res
       .status(201)
       .json("Data Updated successfully ");

@@ -5,6 +5,7 @@ import axios from "axios";
 export const FormData = (props)=>{
     console.log(props);
     props.form["type"] = props.type;
+    props.form["isExist"] = props.isExist
     let body =props.form;
     let token = props.token
     axios({
