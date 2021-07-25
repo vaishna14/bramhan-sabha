@@ -165,7 +165,7 @@ function Details(props) {
             })
         }
         setFormDetails(form);
-        if (name === "gender"){
+        if (name === "gender" && detailsType === "parent"){
             (props.type === "father")?form[name] = "M" : form[name] = "F" 
         }
 
@@ -183,11 +183,7 @@ function Details(props) {
         }
 
         if (name === "mother_alive") {
-            // dispatch(
-            //     {
-            //         type: 'display_type',
-            //         "displayType": "parent"
-            //     });
+
             if (props.type === "personal"){
             dispatch(
                 {
@@ -237,8 +233,7 @@ function Details(props) {
 
     const formSubmit = (e) => {
         e.preventDefault();
-        console.log("here")
-        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:"",});
+        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:"60fd5db31e26806cdc29f1c4",});
     }
 
 
