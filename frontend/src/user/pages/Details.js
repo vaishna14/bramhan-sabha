@@ -233,7 +233,7 @@ function Details(props) {
 
     const formSubmit = (e) => {
         e.preventDefault();
-        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:"60fd5db31e26806cdc29f1c4",});
+        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:"",});
     }
 
 

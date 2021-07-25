@@ -199,52 +199,6 @@ const addUserDetails = async (req, res, next) => {
   let dbValue = exist[0];
   if (!dbValue[req.body.type]) {
     console.log("Create Value");
-    let createPerson;
-    let newBody = {
-      first_name: req.body.first_name,
-      middle_name: req.body.middle_name,
-      last_name: req.body.last_name,
-      gender: req.body.gender,
-      gotra: req.body.gotra,
-      maiden_first_name: req.body.maiden_first_name,
-      maiden_middle_name: req.body.maiden_middle_name,
-      maiden_last_name: req.body.maiden_last_name,
-      maiden_city: req.body.maiden_city,
-      alive: req.body.alive,
-      date_of_death: req.body.date_of_death,
-      marital_status: req.body.marital_status,
-      father_alive: req.body.father_alive,
-      father_death: req.body.father_death,
-      mother_alive: req.body.mother_alive,
-      mother_death: req.body.mother_death,
-      blood_group: req.body.blood_group,
-      birth_date: req.body.birth_date,
-      education: req.body.education,
-      education_detail: req.body.education_detail,
-      occupation: req.body.occupation,
-      occupation_detail: req.body.occupation_detail,
-      earning: req.body.earning,
-      address: req.body.address,
-      address_city: req.body.address_city,
-      address_pincode: req.body.address_pincode,
-      address_ward: req.body.address_ward,
-      permanent_address: req.body.permanent_address,
-      permanent_city: req.body.permanent_city,
-      permanent_pincode: req.body.permanent_pincode,
-      personal_number: req.body.personal_number,
-      whatsapp_number: req.body.whatsapp_number,
-      email: req.body.email,
-      userId: req.userData.userId,
-      creator: req.userData.userId
-    }
-
-    if(req.body.gender === "F"){
-      createPerson = new Female(newBody)
-    }
-    if(req.body.gender === "M"){
-      createPerson = new Male(newBody)
-    }
-
     let user;
     try {
       user = await User.findById(req.userData.userId);
@@ -262,25 +216,59 @@ const addUserDetails = async (req, res, next) => {
     }
 
     try {
-      if(req.body.isExist === ""){
-      const sess = await mongoose.startSession();
-      sess.startTransaction();
-      await createPerson.save({ session: sess });
-      if (req.body.type == "personal") {
-        user.personal = createPerson;
+      if (req.body.isExist === "") {
+        let createPerson;
+        let newBody = {
+          first_name: req.body.first_name,
+          middle_name: req.body.middle_name,
+          last_name: req.body.last_name,
+          gender: req.body.gender,
+          gotra: req.body.gotra,
+          maiden_first_name: req.body.maiden_first_name,
+          maiden_middle_name: req.body.maiden_middle_name,
+          maiden_last_name: req.body.maiden_last_name,
+          maiden_city: req.body.maiden_city,
+          alive: req.body.alive,
+          date_of_death: req.body.date_of_death,
+          marital_status: req.body.marital_status,
+          father_alive: req.body.father_alive,
+          father_death: req.body.father_death,
+          mother_alive: req.body.mother_alive,
+          mother_death: req.body.mother_death,
+          blood_group: req.body.blood_group,
+          birth_date: req.body.birth_date,
+          education: req.body.education,
+          education_detail: req.body.education_detail,
+          occupation: req.body.occupation,
+          occupation_detail: req.body.occupation_detail,
+          earning: req.body.earning,
+          address: req.body.address,
+          address_city: req.body.address_city,
+          address_pincode: req.body.address_pincode,
+          address_ward: req.body.address_ward,
+          permanent_address: req.body.permanent_address,
+          permanent_city: req.body.permanent_city,
+          permanent_pincode: req.body.permanent_pincode,
+          personal_number: req.body.personal_number,
+          whatsapp_number: req.body.whatsapp_number,
+          email: req.body.email,
+          userId: req.userData.userId,
+          creator: req.userData.userId
+        }
+        if (req.body.gender === "F" || req.body.type == "mother") {
+          createPerson = new Female(newBody)
+        }
+        if (req.body.gender === "M" || req.body.type == "father") {
+          createPerson = new Male(newBody)
+        }
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createPerson.save({ session: sess });
+        user[req.body.type] = createPerson;
+        await user.save({ session: sess });
+        await sess.commitTransaction();
       }
-      if (req.body.type == "partner") {
-        user.partner = createPerson;
-      }
-      if (req.body.type == "father") {
-        user.father = createPerson;
-      }
-      if (req.body.type == "mother") {
-        user.mother = createPerson;
-      }
-      await user.save({ session: sess });
-      await sess.commitTransaction();}
-      else{
+      else {
         let typeVal = req.body.type
         if (req.body.type == "personal") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist) });
@@ -296,6 +284,7 @@ const addUserDetails = async (req, res, next) => {
         }
       }
     } catch (err) {
+      console.log(err)
       const error = new HttpError(
         'Adding data failed, please try again.',
         500
@@ -354,11 +343,8 @@ const addUserDetails = async (req, res, next) => {
       }
       if (req.body.type === "partner") {
         if (req.body.isExist !== "") {
-          console.log("here");
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { partner: toId(req.body.isExist) });
           user2 = await User.findOne({ "_id": req.userData.userId });
-          console.log(req.body.gender)
-          let updateValue;
 
           if (req.body.gender == "M") {
             let checkPartner = await Male.findOne({ "_id": user2.partner });
@@ -377,9 +363,6 @@ const addUserDetails = async (req, res, next) => {
               updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
             }
           }
-          // updateValue = await Partner.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-
-          console.log(updateValue)
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
           place = await Partner.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
@@ -390,7 +373,6 @@ const addUserDetails = async (req, res, next) => {
         if (req.body.isExist !== "") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { father: toId(req.body.isExist) });
           user2 = await User.findOne({ "_id": req.userData.userId });
-          console.log(req.body.gender)
           let updateValue;
 
           if (req.body.gender == "M") {
@@ -419,8 +401,6 @@ const addUserDetails = async (req, res, next) => {
         if (req.body.isExist !== "") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist) });
           user2 = await User.findOne({ "_id": req.userData.userId });
-          console.log(req.body.gender)
-          let updateValue;
 
           if (req.body.gender == "M") {
             let checkPartner = await Male.findOne({ "_id": user2.partner });
@@ -465,18 +445,11 @@ const getUserDetails = async (req, res, next) => {
   let detail;
 
   try {
-    console.log(req.params.detailsType)
     userVal = await User.find({ "_id": toId(req.userData.userId) });
-    if (req.params.detailsType === "personal") {
-      detail = await Male.find({ "_id": toId(userVal[0].personal)});
-    }
-    if (req.params.detailsType === "partner") {
-      detail = await Female.find({ "_id": toId(userVal[0].partner)});
-
-    } if (req.params.detailsType === "mother") {
-      detail = await Female.find({ "_id": toId(userVal[0].mother)});
-    } if (req.params.detailsType === "father") {
-      detail = await Male.find({ "_id": toId(userVal[0].father)});
+    var type = req.params.detailsType;
+    detail = await Male.find({ "_id": toId(userVal[0][type]) });
+    if (detail.length === 0) {
+      detail = await Female.find({ "_id": toId(userVal[0][type]) });
     }
   } catch (err) {
     const error = new HttpError(
