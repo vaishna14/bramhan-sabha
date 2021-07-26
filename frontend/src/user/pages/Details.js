@@ -23,6 +23,7 @@ function Details(props) {
     const motherAlive = useSelector((state) => state.personal.motherAlive);
     const partnerMotherAlive = useSelector((state) => state.personal.partnerMotherAlive);
     const isLoading = useSelector((state) => state.personal.loading);
+    const child_count = useSelector((state) => state.personal.child_count);
     const [bloodGroup, setBloodGroup] = useState("");
     const [occupation, setOccupation] = useState("");
     const [earning, setEarnings] = useState("");
@@ -31,6 +32,10 @@ function Details(props) {
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleValue] = useState("");
     const [lastName, setLastValue] = useState("");
+
+    useEffect(()=>{
+        console.log(child_count);
+    },[child_count])
 
     const aliveOptions = [
         { text: "Yes", value: "Yes" },
@@ -81,6 +86,24 @@ function Details(props) {
 
     ]
 
+
+    useEffect(()=>{
+        if(detailsType=== "family"){
+            axios({
+                method: "get",
+                url: `http://localhost:5000/api/users/kids`,
+                headers: {
+                    Authorization: 'Bearer ' + auth.token
+                }
+            }).then((response) => {
+               console.log(response.data);    
+            }).catch((err) => {
+                console.log(err);
+            }) 
+        }
+
+    },[detailsType])
+
     useEffect(() => {
         // setIsLoading(true);
         dispatch(
@@ -90,7 +113,7 @@ function Details(props) {
             });
         axios({
             method: "get",
-            url: `http://localhost:5102/api/users/getUserDetails/${props.type}`,
+            url: `http://localhost:5000/api/users/getUserDetails/${props.type}/${child_count}`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }
@@ -117,7 +140,7 @@ function Details(props) {
     useEffect(() => {
         axios({
             method: "get",
-            url: `http://localhost:5102/api/users/suggestions`,
+            url: `http://localhost:5000/api/users/suggestions`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }
@@ -128,7 +151,7 @@ function Details(props) {
                 obj.key = item._id;
                 obj.text = item.first_name + " " + item.middle_name + " " + item.last_name
                 obj.value = item.first_name + " " + item.middle_name + " " + item.last_name
-                   obj.first_name = item.first_name
+                obj.first_name = item.first_name
                 arr.push(obj);
                 return;
             })
@@ -144,7 +167,7 @@ function Details(props) {
 
 
     useEffect(() => {
-        console.log(formDetails);
+        // console.log(formDetails);
         setGender(formDetails?.gender);
         setAlive(formDetails?.alive);
         setBloodGroup(formDetails?.blood_group);
@@ -198,38 +221,66 @@ function Details(props) {
         let form = formDetails;
         if (!form[name]) {
             form[name] = value;
-            if (name === "first_name"){
+            if (name === "first_name") {
                 let val = value.split(" ");
                 form[name] = val[0];
                 setFirstName(val[0]);
             }
-            if (name === "middle_name"){
+            if (name === "middle_name") {
                 let val = value.split(" ");
-                form[name] = val[1];
-                setMiddleValue(val[1]);
+                if (!val[1]) {
+                    form[name] = value;
+                    setLastValue(value);
+
+                } else {
+                    form[name] = val[1];
+                    setMiddleValue(val[1]);
+
+                }
             }
-            if (name === "last_name"){
+            if (name === "last_name") {
                 let val = value.split(" ");
-                form[name] = val[2];
-                setLastValue(val[2]);
+                if (!val[2]) {
+                    form[name] = value;
+                    setLastValue(value);
+
+                } else {
+                    form[name] = val[2];
+                    setLastValue(val[2]);
+
+                }
             }
         } else {
             var newForm = {};
             newForm[name] = value;
-            if (name === "first_name"){
+            if (name === "first_name") {
                 let val = value.split(" ");
                 newForm[name] = val[0];
                 setFirstName(val[0]);
             }
-            if (name === "middle_name"){
+            if (name === "middle_name") {
                 let val = value.split(" ");
-                newForm[name] = val[1];
-                setFirstName(val[1]);
+                if (!val[1]) {
+                    newForm[name] = value;
+                    setFirstName(value);
+
+                } else {
+                    newForm[name] = val[1];
+                    setFirstName(val[1]);
+
+                }
             }
-            if (name === "last_name"){
+            if (name === "last_name") {
                 let val = value.split(" ");
-                newForm[name] = val[2];
-                setFirstName(val[2]);
+                if (!val[2]) {
+                    newForm[name] = value;
+                    setFirstName(value);
+
+                } else {
+                    newForm[name] = val[2];
+                    setFirstName(val[2]);
+
+                }
             }
 
             let keys = Object.keys(newForm)
@@ -310,15 +361,15 @@ function Details(props) {
     const formSubmit = async (e) => {
         e.preventDefault();
         let existId = "";
-        // if (dataListSelect) {
-            console.log("here");
-            let Name = formDetails.first_name + " " + formDetails.middle_name + " " + formDetails.last_name
-            suggestions.map(item => {
-                if (item.name == Name) {
-                    existId = item.key
-                }
-            })
-        // }
+        console.log("here");
+        let Name = formDetails.first_name + " " + formDetails.middle_name + " " + formDetails.last_name
+        suggestions.map(item => {
+            console.log(Name);
+            console.log(item.text);
+            if (item.text == Name) {
+                existId = item.key
+            }
+        })
         dispatch(
             {
                 type: 'loading',
@@ -334,8 +385,6 @@ function Details(props) {
 
     const datListClicked = (e, { name, value }) => {
         setDataListSelect(true);
-        console.log(name);
-        console.log(value);
         // setCurrentValue(value)
     }
 
@@ -370,21 +419,21 @@ function Details(props) {
                             />
                         </div>
                         <div className="mx-5p"> <Form.Dropdown
-                                options={suggestions}
-                                placeholder='Middle Name'
-                                search
-                                selection
-                                fluid
-                                allowAdditions
-                                value={formDetails?.middle_name}
-                                text={formDetails?.middle_name}
-                                id="middle_name"
-                                name="middle_name"
-                                onAddItem={handleAddition}
-                                onChange={formChange}
-                                />
-                                </div>
-                             {/* /> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="middle_name" onChange={formChange} defaultValue={formDetails?.middle_name} /> </div> */}
+                            options={suggestions}
+                            placeholder='Middle Name'
+                            search
+                            selection
+                            fluid
+                            allowAdditions
+                            value={formDetails?.middle_name}
+                            text={formDetails?.middle_name}
+                            id="middle_name"
+                            name="middle_name"
+                            onAddItem={handleAddition}
+                            onChange={formChange}
+                        />
+                        </div>
+                        {/* /> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="middle_name" onChange={formChange} defaultValue={formDetails?.middle_name} /> </div> */}
                         <div className="mx-5p">
                             {/* <Form.Input placeholder="Last Name" type="text" id="last_name" name="last_name" onChange={formChange} defaultValue={formDetails?.last_name} />  */}
                             <Form.Dropdown
@@ -400,8 +449,8 @@ function Details(props) {
                                 name="last_name"
                                 onAddItem={handleAddition}
                                 onChange={formChange}
-                                />
-                                </div>
+                            />
+                        </div>
                     </div>
                 </Form.Group>
                 <div className="display-flex mb-1p">

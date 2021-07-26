@@ -28,7 +28,8 @@ router.post(
 router.post('/login', usersController.login);
 router.use(checkAuth);
 router.post('/addUserDetails', usersController.addUserDetails);
-router.get('/getUserDetails/:detailsType', usersController.getUserDetails);
+router.get('/getUserDetails/:detailsType/:childCount', usersController.getUserDetails);
 router.get('/suggestions', usersController.getSuggestions);
+router.get('/kids', usersController.getUserKids);
 
 module.exports = router;

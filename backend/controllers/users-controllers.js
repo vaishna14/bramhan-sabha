@@ -217,7 +217,6 @@ const addUserDetails = async (req, res, next) => {
     try {
       if (req.body.isExist === "") {
         console.log("Does not exist");
-        console.log(req.body.type);
 
         let createPerson;
         let newBody = {
@@ -266,7 +265,13 @@ const addUserDetails = async (req, res, next) => {
         const sess = await mongoose.startSession();
         sess.startTransaction();
         await createPerson.save({ session: sess });
+        let reqType = req.body.type
+        if(reqType.includes("kids")){
+          console.log("includes kids")
+          user.kids.push(createPerson);
+        }else{
         user[req.body.type] = createPerson;
+        }
         await user.save({ session: sess });
         await sess.commitTransaction();
       }
@@ -285,6 +290,14 @@ const addUserDetails = async (req, res, next) => {
         }
         if (req.body.type == "mother") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "mother": toId(req.body.isExist) });
+        }
+        let reqType = req.body.type;
+        if(reqType.includes("kids")){
+          console.log("includes kids")
+          // user.kids.push(createPerson);
+          // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "kids": toId(req.body.isExist) });
+          place = await User.find({ "_id": req.userData.userId });
+          console.log(place)
         }
       }
     } catch (err) {
@@ -481,6 +494,44 @@ const addUserDetails = async (req, res, next) => {
   }
 }
 
+const getUserKids = async (req, res, next) =>{
+  console.log("api ----------------------------------------------------------------------------------")
+  var value ;
+
+  try {
+  kidsList =[];
+    userVal = await User.find({ "_id": toId(req.userData.userId) });
+    kids = userVal[0].kids;
+    kids.map(async (item) =>{
+      console.log(item);
+      value = await Male.find({ "_id": toId(item)});
+      if(!value){
+        value = await Female.find({ "_id": toId(item)});
+      }
+      kidsList.push(value);
+      return value;
+    })
+    console.log(kidsList)
+  res.status(200).json({ kidsList: kidsList});
+  } catch (err) {
+    console.log(err)
+    const error = new HttpError(
+      'Something went wrong, could not find a place.',
+      500
+    );
+    return next(error);
+  }
+
+
+  if (!kids) {
+    const error = new HttpError(
+      'Could not find detail for the provided id.',
+      404
+    );
+    return next(error);
+  }
+
+}
 
 
 const getUserDetails = async (req, res, next) => {
@@ -489,11 +540,21 @@ const getUserDetails = async (req, res, next) => {
   try {
     userVal = await User.find({ "_id": toId(req.userData.userId) });
     var type = req.params.detailsType;
-    detail = await Male.find({ "_id": toId(userVal[0][type]) });
-    if (detail.length === 0) {
-      detail = await Female.find({ "_id": toId(userVal[0][type]) });
+    var findId ;
+    if(type === "kids"){
+    var childCount = req.params.childCount;
+      console.log(userVal[0].kids[childCount-1]);
+      findId = userVal[0].kids[childCount-1];
+    }else{
+    findId = userVal[0][type];
     }
+    detail = await Male.find({ "_id": toId(findId) });
+    if (detail.length === 0) {
+      detail = await Female.find({ "_id": toId(findId) });
+    }
+  
   } catch (err) {
+    console.log(err)
     const error = new HttpError(
       'Something went wrong, could not find a place.',
       500
@@ -540,3 +601,4 @@ exports.login = login;
 exports.addUserDetails = addUserDetails;
 exports.getUserDetails = getUserDetails;
 exports.getSuggestions = getSuggestions;
+exports.getUserKids = getUserKids;

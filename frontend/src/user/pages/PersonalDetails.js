@@ -35,6 +35,11 @@ function PersonalDetails() {
             type: 'display_type',
             "displayType": "kids"
         });
+        dispatch({
+            type: 'child_count',
+            "child_count": childName
+        });
+        console.log(childName)
         setChildHead(childName);
     }
 
@@ -145,7 +150,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead}</Header>
-                                            <Details />
+                                            <Details type="kids"/>
                                             <Button onClick={addChild}>Add Child</Button>
                                         </div>
                                     )
@@ -172,7 +177,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead} Spouse</Header>
-                                            <Details />
+                                            <Details type="kids"/>
                                         </div>
                                     )
                                 }</Grid.Column>
