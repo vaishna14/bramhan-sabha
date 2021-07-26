@@ -1,8 +1,9 @@
 import React from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
 // import { pure } from 'recompose';
 import axios from "axios";
 
-export const FormData = (props)=>{
+export const FormData = (props)=>{  
     console.log(props);
     props.form["type"] = props.type;
     props.form["isExist"] = props.isExist
@@ -10,7 +11,7 @@ export const FormData = (props)=>{
     let token = props.token
     axios({
         method: 'post',
-        url: 'http://localhost:5000/api/users/addUserDetails',
+        url: 'http://localhost:5102/api/users/addUserDetails',
         data: body,
         headers: {
             Authorization: 'Bearer ' + token
@@ -27,7 +28,7 @@ export const FormData = (props)=>{
 
     // axios({
     //     method: 'post',
-    //     url: 'http://localhost:5000/api/users/userDetails',
+    //     url: 'http://localhost:5102/api/users/userDetails',
     //     ...body
     //   })
     //     .then(function (response) {

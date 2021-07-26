@@ -51,3 +51,7 @@ input[list] + div[list] span:hover {
  border-radius: 15px;
  background-color: red;
 }
+
+.ui.fluid.search.selection.dropdown{
+    width: 150px;
+}

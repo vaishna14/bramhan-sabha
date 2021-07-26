@@ -361,7 +361,15 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          place = await Partner.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+            let checkPartner = await Male.findOne({ "_id": user2.personal });
+            if (!checkPartner) {
+              updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+            }
+
+          
+          console.log(place);
         }
       }
       if (req.body.type === "partner") {
@@ -388,7 +396,12 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          place = await Partner.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+          let checkPartner = await Male.findOne({ "_id": user2.partner });
+            if (!checkPartner) {
+              updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+            }
         }
 
       }
@@ -417,7 +430,12 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          place = await Father.findOneAndUpdate({ "_id": user2.father }, updateDetails);
+          let checkPartner = await Male.findOne({ "_id": user2.personal });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": user2.father }, updateDetails);
+            }
         }
       }
       if (req.body.type === "mother") {
@@ -443,7 +461,12 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          place = await Mother.findOneAndUpdate({ "_id": user2.mother }, updateDetails);
+          let checkPartner = await Female.findOne({ "_id": user2.personal });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+            }
         }
       }
     } catch (err) {

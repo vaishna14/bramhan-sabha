@@ -3,65 +3,73 @@
 
 const INITIAL_STATE = {
 
-    count: 0,
-    fatherAlive:"Yes",
-    motherAlive:"Yes",
-    displayType:"personal",
-    partnerFatherAlive: "Yes",
-    partnerMotherAlive:"Yes"
+  count: 0,
+  fatherAlive: "Yes",
+  motherAlive: "Yes",
+  displayType: "personal",
+  partnerFatherAlive: "Yes",
+  partnerMotherAlive: "Yes",
+  loading: false
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
-    switch (action.type) {
+  switch (action.type) {
 
-        case "display_type":
+    case "display_type":
 
-           return {
-             ...state, displayType: action.displayType,
+      return {
+        ...state, displayType: action.displayType,
 
-           };
-        
-           case "fatherAlive":
+      };
 
-            return {
- 
-              ...state, fatherAlive: action.fatherAlive,
- 
-            };
+    case "fatherAlive":
 
-        case "motherAlive":
+      return {
 
-           return {
+        ...state, fatherAlive: action.fatherAlive,
 
-             ...state, motherAlive: action.motherAlive,
+      };
 
-           };
+    case "motherAlive":
 
-           case "partnerFatherAlive":
+      return {
 
-            return {
- 
-              ...state, partnerFatherAlive: action.partnerFatherAlive,
- 
-            };
-            case "partnerMotherAlive":
+        ...state, motherAlive: action.motherAlive,
 
-            return {
- 
-              ...state, partnerMotherAlive: action.partnerMotherAlive,
- 
-            };
+      };
 
-        case "DECREMENT":
+    case "partnerFatherAlive":
 
-           return {
-              ...state, count: state.count - 1,
+      return {
 
-           };
+        ...state, partnerFatherAlive: action.partnerFatherAlive,
 
-         default: return state;
+      };
+    case "partnerMotherAlive":
 
-    }
+      return {
+
+        ...state, partnerMotherAlive: action.partnerMotherAlive,
+
+      };
+    case "loading":
+
+      return {
+
+        ...state, loading: action.loading,
+
+      };
+
+    case "DECREMENT":
+
+      return {
+        ...state, count: state.count - 1,
+
+      };
+
+    default: return state;
+
+  }
 
 };
 
