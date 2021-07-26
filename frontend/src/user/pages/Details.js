@@ -16,7 +16,6 @@ function Details(props) {
     const [gender, setGender] = useState("");
     const [alive, setAlive] = useState("Yes");
     const [addPermanent, setAddPermanent] = useState(false);
-    // const [isLoading, setIsLoading] = useState(false);
     const [education, setEducation] = useState("");
     const [formDetails, setFormDetails] = useState({});
     const fatherAlive = useSelector((state) => state.personal.fatherAlive);
@@ -129,7 +128,7 @@ function Details(props) {
                 obj.key = item._id;
                 obj.text = item.first_name + " " + item.middle_name + " " + item.last_name
                 obj.value = item.first_name + " " + item.middle_name + " " + item.last_name
-                //    obj.first_name = item.first_name
+                   obj.first_name = item.first_name
                 arr.push(obj);
                 return;
             })
@@ -152,8 +151,9 @@ function Details(props) {
         setEducation(formDetails?.education);
         setEarnings(formDetails?.earning)
         setOccupation(formDetails?.occupation);
-        setFirstName(formDetails?.first_name)
-        console.log(formDetails?.first_name);
+        setFirstName(formDetails?.first_name);
+        setMiddleValue(formDetails?.middle_name);
+        setLastValue(formDetails?.last_name);
         dispatch(
             {
                 type: 'fatherAlive',
@@ -195,22 +195,42 @@ function Details(props) {
 
     const formChange = (e, { name, value }) => {
         console.log("Changed")
-        switch(name){
-            case "first_name":
-                setFirstName(value);
-            case "middle_name":
-                setMiddleValue(value);
-            case "last_name":
-                setLastValue(value);
-        }
-        console.log(name);
-        console.log(value);
         let form = formDetails;
         if (!form[name]) {
             form[name] = value;
+            if (name === "first_name"){
+                let val = value.split(" ");
+                form[name] = val[0];
+                setFirstName(val[0]);
+            }
+            if (name === "middle_name"){
+                let val = value.split(" ");
+                form[name] = val[1];
+                setMiddleValue(val[1]);
+            }
+            if (name === "last_name"){
+                let val = value.split(" ");
+                form[name] = val[2];
+                setLastValue(val[2]);
+            }
         } else {
             var newForm = {};
             newForm[name] = value;
+            if (name === "first_name"){
+                let val = value.split(" ");
+                newForm[name] = val[0];
+                setFirstName(val[0]);
+            }
+            if (name === "middle_name"){
+                let val = value.split(" ");
+                newForm[name] = val[1];
+                setFirstName(val[1]);
+            }
+            if (name === "last_name"){
+                let val = value.split(" ");
+                newForm[name] = val[2];
+                setFirstName(val[2]);
+            }
 
             let keys = Object.keys(newForm)
 
@@ -322,20 +342,7 @@ function Details(props) {
     const handleAddition = (e, { name, value }) => {
         let suggList = suggestions;
         setSuggestions([{ text: value, value }, ...suggList],);
-        switch(name){
-            case "first_name":
-                setFirstName(value);
-            case "middle_name":
-                setMiddleValue(value);
-            case "last_name":
-                setLastValue(value);
-        }
-
     }
-
-    useEffect(() => {
-        console.log(firstName);
-    }, [firstName])
 
 
     return (

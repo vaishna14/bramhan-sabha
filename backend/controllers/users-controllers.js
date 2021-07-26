@@ -367,9 +367,6 @@ const addUserDetails = async (req, res, next) => {
             } else {
               updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
             }
-
-          
-          console.log(place);
         }
       }
       if (req.body.type === "partner") {
