@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Icon, Input, Form, Dimmer, Loader } from 'semantic-ui-react';
+import { Button, Icon, Input, Form, Dimmer, Loader, Dropdown } from 'semantic-ui-react';
 import { FormData } from "../Services/FormData";
 import { AuthContext } from '../../shared/context/auth-context';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
@@ -28,6 +28,9 @@ function Details(props) {
     const [earning, setEarnings] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [dataListSelect, setDataListSelect] = useState(false);
+    const [firstName, setFirstName] = useState("");
+    const [middleName, setMiddleValue] = useState("");
+    const [lastName, setLastValue] = useState("");
 
     const aliveOptions = [
         { text: "Yes", value: "Yes" },
@@ -88,8 +91,8 @@ function Details(props) {
             }
         }).then((response) => {
             if (props.type === response.data.type) {
-                if(response?.data?.detail){
-                setFormDetails(response?.data?.detail);
+                if (response?.data?.detail) {
+                    setFormDetails(response?.data?.detail);
                 }
             }
         }).catch((err) => {
@@ -101,7 +104,7 @@ function Details(props) {
     }, [])
 
 
-    useEffect(()=>{
+    useEffect(() => {
         axios({
             method: "get",
             url: `http://localhost:5000/api/users/suggestions`,
@@ -109,16 +112,17 @@ function Details(props) {
                 Authorization: 'Bearer ' + auth.token
             }
         }).then((response) => {
-           let arr =[];
-           response.data.list.map(item=>{
-               let obj ={};
-               obj.key = item._id;
-               obj.name = item.first_name + " " +item.middle_name+ " "+ item.last_name
-               obj.first_name = item.first_name
-               arr.push(obj);
-               return;
-           })
-           setSuggestions(arr);
+            let arr = [];
+            response.data.list.map(item => {
+                let obj = {};
+                obj.key = item._id;
+                obj.text = item.first_name + " " + item.middle_name + " " + item.last_name
+                obj.value = item.first_name + " " + item.middle_name + " " + item.last_name
+                //    obj.first_name = item.first_name
+                arr.push(obj);
+                return;
+            })
+            setSuggestions(arr);
 
         }).catch((err) => {
             console.log(err);
@@ -126,7 +130,7 @@ function Details(props) {
         // .finally(() => {
         //     setIsLoading(false);
         // })
-    },[])
+    }, [])
 
 
     useEffect(() => {
@@ -136,7 +140,9 @@ function Details(props) {
         setBloodGroup(formDetails?.blood_group);
         setEducation(formDetails?.education);
         setEarnings(formDetails?.earning)
-        setOccupation(formDetails?.occupation)
+        setOccupation(formDetails?.occupation);
+        setFirstName(formDetails?.first_name)
+        console.log(formDetails?.first_name);
         dispatch(
             {
                 type: 'fatherAlive',
@@ -178,6 +184,11 @@ function Details(props) {
 
     const formChange = (e, { name, value }) => {
         console.log("Changed")
+        if (name === "first_name") {
+            setFirstName(value);
+        }
+        console.log(name);
+        console.log(value);
         let form = formDetails;
         if (!form[name]) {
             form[name] = value;
@@ -192,90 +203,106 @@ function Details(props) {
             })
         }
         setFormDetails(form);
-        if (name === "gender" && detailsType === "parent"){
-            (props.type === "father")?form[name] = "M" : form[name] = "F" 
+        if (name === "gender" && detailsType === "parent") {
+            (props.type === "father") ? form[name] = "M" : form[name] = "F"
         }
+
+
 
         if (name === "alive") {
             setAlive(value)
         }
-        else if (name === "blood_group"){
+        else if (name === "blood_group") {
             setBloodGroup(value);
-        }else if (name === "occupation"){
+        } else if (name === "occupation") {
             setOccupation(value);
-        }else if (name === "education"){
+        } else if (name === "education") {
             setEducation(value)
-        }else if (name === "earning"){
+        } else if (name === "earning") {
             setEarnings(value);
         }
 
         if (name === "mother_alive") {
 
-            if (props.type === "personal"){
-            dispatch(
-                {
-                    type: 'motherAlive',
-                    "motherAlive": value
-                });
+            if (props.type === "personal") {
+                dispatch(
+                    {
+                        type: 'motherAlive',
+                        "motherAlive": value
+                    });
             }
-            if (props.type === "partner"){
+            if (props.type === "partner") {
                 dispatch(
                     {
                         type: 'partnerMotherAlive',
                         "partnerMotherAlive": value
                     });
-                }
             }
-        
+        }
+
         if (name === "father_alive") {
             // dispatch({
             //     type: 'display_type',
             //     "displayType": "parent"
             // });
-            if (props.type === "personal"){
-        
-            dispatch(
-                {
-                    type: 'fatherAlive',
-                    "fatherAlive": value
-                });
-            }
-                if (props.type === "partner"){
-                    dispatch(
-                        {
-                            type: 'partnerFatherAlive',
-                            "partnerFatherAlive": value
-                        });
-                    }
-                }
-        }
-    
+            if (props.type === "personal") {
 
-    useEffect(()=>{
-        if(occupation === "" || occupation === "None"){
+                dispatch(
+                    {
+                        type: 'fatherAlive',
+                        "fatherAlive": value
+                    });
+            }
+            if (props.type === "partner") {
+                dispatch(
+                    {
+                        type: 'partnerFatherAlive',
+                        "partnerFatherAlive": value
+                    });
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        if (occupation === "" || occupation === "None") {
             setEarnings("")
         }
-    },[occupation])
+    }, [occupation])
 
 
     const formSubmit = (e) => {
         e.preventDefault();
         let existId = "";
-        if (dataListSelect){
+        if (dataListSelect) {
             console.log("here");
-            let Name = formDetails.first_name + " " +formDetails.middle_name+ " "+ formDetails.last_name
-            suggestions.map(item =>{
-              if(item.name == Name){
-                existId = item.key
-              }
-            })       
+            let Name = formDetails.first_name + " " + formDetails.middle_name + " " + formDetails.last_name
+            suggestions.map(item => {
+                if (item.name == Name) {
+                    existId = item.key
+                }
+            })
         }
-        FormData({ form: formDetails, type: props.type, token: auth.token, isExist:existId,});
+        FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, });
     }
 
-    const datListClicked = ()=>{
+    const datListClicked = (e, { name, value }) => {
         setDataListSelect(true);
+        console.log(name);
+        console.log(value);
+        // setCurrentValue(value)
     }
+
+    const handleAddition = (e, { name, value }) => {
+        let suggList = suggestions;
+        setSuggestions([{ text: value, value }, ...suggList],);
+        setFirstName(value)
+
+    }
+
+    useEffect(() => {
+        console.log(firstName);
+    }, [firstName])
 
 
     return (
@@ -288,17 +315,30 @@ function Details(props) {
                     <div className="display-flex mb-1p">
                         <h4 className="mx-auto header-title">Full name</h4>
                         <div className="mx-5p">
-                            <Form.Input onInput={datListClicked} placeholder="First Name" list='languages' type="text" id="first_name" errorText="Please enter a valid title." name="first_name" onChange={formChange} defaultValue={formDetails?.first_name} />
+                            {/* <Form.Input onInput={datListClicked} placeholder="First Name" list='languages' type="text" id="first_name" errorText="Please enter a valid title." name="first_name" onChange={formChange} defaultValue={formDetails?.first_name} /> */}
                             {/* <Input  placeholder='Choose language...' /> */}
-                            <datalist id='languages' className="abc">
+                            {/* <datalist id='languages' className="abc">
                                 {
                                     suggestions.map(item =>{
                                 return (<option onSelect={datListClicked} onChange={datListClicked} text={item.key} value={item.first_name}>{item.name}</option>)
                                     })
-                                }
-                                {/* <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (ABC)</option>
+                                } */}
+                            {/* <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (ABC)</option>
                                 <option value='Vaishnavi'>Dutch</option> */}
-                            </datalist>
+                            {/* </datalist> */}
+                            <Form.Dropdown
+                                options={suggestions}
+                                placeholder='FirstName'
+                                search
+                                selection
+                                fluid
+                                allowAdditions
+                                value={firstName}
+                                text={firstName}
+                                name="first_name"
+                                onAddItem={handleAddition}
+                                onChange={formChange}
+                            />
                         </div>
                         <div className="mx-5p"> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="middle_name" onChange={formChange} defaultValue={formDetails?.middle_name} /> </div>
                         <div className="mx-5p"><Form.Input placeholder="Last Name" type="text" id="last_name" name="last_name" onChange={formChange} defaultValue={formDetails?.last_name} /> </div>
@@ -306,31 +346,31 @@ function Details(props) {
                 </Form.Group>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Gender</h4>
-                    <div className="display-flex" style={{"width":"200px"}}>
-                    <Form.Radio
-                        className="mx-5p"
-                        label='Male'
-                        name='gender'
-                        value='M'
-                        disabled={detailsType === "parent"}
-                        checked={gender === "M" || props.type === "father"}
-                        onChange={() => { setGender("M"); formChange("e", { name: "gender", value: "M" }) }}
+                    <div className="display-flex" style={{ "width": "200px" }}>
+                        <Form.Radio
+                            className="mx-5p"
+                            label='Male'
+                            name='gender'
+                            value='M'
+                            disabled={detailsType === "parent"}
+                            checked={gender === "M" || props.type === "father"}
+                            onChange={() => { setGender("M"); formChange("e", { name: "gender", value: "M" }) }}
 
-                    />
-                    <Form.Radio
-                        className="mx-5p"
-                        label='Female'
-                        name='gender'
-                        value='F'
-                        disabled={detailsType === "parent"}
+                        />
+                        <Form.Radio
+                            className="mx-5p"
+                            label='Female'
+                            name='gender'
+                            value='F'
+                            disabled={detailsType === "parent"}
 
-                        checked={gender === "F" || props.type === "mother"}
-                        onChange={() => { setGender("F"); formChange("e", { name: "gender", value: "F" }) }}
-                    />
+                            checked={gender === "F" || props.type === "mother"}
+                            onChange={() => { setGender("F"); formChange("e", { name: "gender", value: "F" }) }}
+                        />
                     </div>
                     <div className="display-flex mx-5p">
                         <h4>Gotra</h4>
-                        <Form.Input type="text" placeholder="Gotra" className="mx-5p" onChange={formChange} name="gotra" defaultValue={formDetails?.gotra}/>
+                        <Form.Input type="text" placeholder="Gotra" className="mx-5p" onChange={formChange} name="gotra" defaultValue={formDetails?.gotra} />
                     </div>
                 </div>
                 {
@@ -374,40 +414,40 @@ function Details(props) {
 
                             <div className="display-flex mb-1p">
                                 <h4 className="header-title">Father Alive</h4>
-                                <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="father_alive" onChange={formChange} value={props.type === "partner" ? partnerFatherAlive :fatherAlive  } />
+                                <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="father_alive" onChange={formChange} value={props.type === "partner" ? partnerFatherAlive : fatherAlive} />
                                 {
                                     props.type === "personal" ? (<>{
                                         fatherAlive === "Yes" && motherAlive === "Yes" && (
                                             <div className="mx-5p display-flex"><h4> Mother Alive</h4>
-                                                <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive:motherAlive} />
+                                                <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
                                             </div>
                                         )}
-                                        
-                                    {fatherAlive === "No" && (
-                                        <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                            <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
-                                        </div>
-                                    )}</>):(<>{
-                                        partnerFatherAlive === "Yes" && partnerMotherAlive === "Yes" && (
-                                            <div className="mx-5p display-flex"><h4> Mother Alive</h4>
-                                                <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive:motherAlive} />
+
+                                        {fatherAlive === "No" && (
+                                            <div className="display-flex mx-5p"><h4> Date of Death</h4>
+                                                <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
                                             </div>
-                                        )}
-                                        
-                                    {partnerFatherAlive === "No" && (
-                                        <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                            <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
-                                        </div>
-                                    )}</>)
+                                        )}</>) : (<>{
+                                            partnerFatherAlive === "Yes" && partnerMotherAlive === "Yes" && (
+                                                <div className="mx-5p display-flex"><h4> Mother Alive</h4>
+                                                    <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
+                                                </div>
+                                            )}
+
+                                            {partnerFatherAlive === "No" && (
+                                                <div className="display-flex mx-5p"><h4> Date of Death</h4>
+                                                    <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
+                                                </div>
+                                            )}</>)
                                 }
-                                
+
                             </div>
                             {
                                 props.type === "personal" ? (<>{
                                     (fatherAlive === "No" || motherAlive === "No") && (
                                         <div className="display-flex mb-1p">
                                             <h4 className="header-title">Mother Alive</h4>
-                                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive:motherAlive} />
+                                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
                                             {
                                                 motherAlive === "No" && (
                                                     <div className="display-flex mx-5p"><h4> Date of Death</h4>
@@ -415,13 +455,13 @@ function Details(props) {
                                                     </div>
                                                 )}
                                         </div>
-    
+
                                     )
                                 } </>) : (<> {
                                     (partnerFatherAlive === "No" || partnerMotherAlive === "No") && (
                                         <div className="display-flex mb-1p">
                                             <h4 className="header-title">Mother Alive</h4>
-                                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive:motherAlive} />
+                                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
                                             {
                                                 partnerMotherAlive === "No" && (
                                                     <div className="display-flex mx-5p"><h4> Date of Death</h4>
@@ -429,11 +469,11 @@ function Details(props) {
                                                     </div>
                                                 )}
                                         </div>
-    
+
                                     )
                                 }</>)
                             }
-                            
+
                         </>)}
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Blood Group</h4>
@@ -448,14 +488,14 @@ function Details(props) {
                     <h4 className="header-title">Education</h4>
                     <Form.Dropdown disabled={alive === "No"} placeholder='Select Latest Education' clearable search selection options={educationOptions} name="education" onChange={formChange} value={education} />
                     <div className="display-flex mx-5p "><h4> Details</h4>
-                        <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Education-detail" type="text" name="education_detail" onChange={formChange} defaultValue={education === "" ? "": formDetails?.education_detail} />
+                        <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Education-detail" type="text" name="education_detail" onChange={formChange} defaultValue={education === "" ? "" : formDetails?.education_detail} />
                     </div>
                 </div>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Occupation/Business</h4>
                     <Form.Dropdown disabled={alive === "No"} placeholder='Select Type' clearable search selection options={occupationOptions} name="occupation" onChange={formChange} value={occupation} />
                     <div className="display-flex mx-5p"><h4 > Name</h4>
-                        <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Name of Occupation/Business " type="text" name="occupation_detail" onChange={formChange} defaultValue={occupation === "" ? "":formDetails?.occupation_detail} />
+                        <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Name of Occupation/Business " type="text" name="occupation_detail" onChange={formChange} defaultValue={occupation === "" ? "" : formDetails?.occupation_detail} />
                     </div>
                 </div>
                 <div className="display-flex mb-1p">

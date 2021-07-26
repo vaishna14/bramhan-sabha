@@ -38,3 +38,16 @@
 .right-Menu{
     height :200px
 }
+
+input[list] + div[list] span:hover {
+    background: rgba(170, 7, 7, 0.2);
+}
+.mx-5p>#languages{
+    height: 10px !important;
+}
+
+#languages *
+{
+ border-radius: 15px;
+ background-color: red;
+}
