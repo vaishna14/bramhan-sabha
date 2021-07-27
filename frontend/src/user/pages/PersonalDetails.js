@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Button,
     Grid,
@@ -12,32 +12,77 @@ import {
 
 } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
+import { AuthContext } from '../../shared/context/auth-context';
 import "./PersonalDetails.css";
 import "./App.css";
 import Details from './Details';
+import axios from "axios";
+
 
 function PersonalDetails() {
     const dispatch = useDispatch();
+    const auth = useContext(AuthContext);
     const detailsType = useSelector((state) => state.personal.displayType);
-    const [childCount, setChildCount] = useState(0);
+    const [childCount, setChildCount] = useState([]);
     const [child, setChild] = useState([]);
+    const [childDetails, setChildDetails] = useState([]);
     const [childHead, setChildHead] = useState(1);
 
     const addChild = () => {
         setChildCount(childCount + 1);
         let newChild = child
         newChild.push(childCount + 1);
-        setChild(newChild);
+
     }
 
-    const showChildDetails = (childName) => {
+    useEffect(()=>{
+        if(detailsType=== "family"){
+            axios({
+                method: "get",
+                url: `http://localhost:5000/api/users/kids`,
+                headers: {
+                    Authorization: 'Bearer ' + auth.token
+                }
+            }).then((response) => {
+               console.log(response.data); 
+               setChild(response.data.kidCount);
+               setChildCount(response.data.kidCount.length);
+                let kids = response.data.kidCount;
+                let maleChild = response.data.kidsListMale;
+                let femalChild = response.data.kidsListFemale;
+                let childDetailsList =[];
+                kids.map(item =>{
+                    maleChild.map(male =>{
+                        if(item == male._id){
+                            childDetailsList.push(male);
+                        }else{
+                            femalChild.map(female =>{
+                                if (item == female._id){
+                                childDetailsList.push(female); 
+                                }
+                            })
+                        }
+                    })
+                })
+               setChildDetails(childDetailsList);
+                console.log(childDetailsList);
+
+
+            }).catch((err) => {
+                console.log(err);
+            }) 
+        }
+
+    },[detailsType])
+
+    const showChildDetails = (childId, childName, childCount) => {
         dispatch({
             type: 'display_type',
             "displayType": "kids"
         });
         dispatch({
             type: 'child_count',
-            "child_count": childName
+            "child_count": childCount
         });
         console.log(childName)
         setChildHead(childName);
@@ -112,9 +157,9 @@ function PersonalDetails() {
                         {
                             childCount > 0 && (<List as='ol'>
                                 {
-                                    child.map((item, index) => {
+                                    childDetails.map((item, index) => {
                                         return (
-                                            <List.Item as='a' onClick={() => { showChildDetails(item) }}>Child {item}</List.Item>)
+                                            <List.Item as='a' onClick={() => { showChildDetails(item._id, item.first_name, index+1) }}>{item.first_name}</List.Item>)
                                     }
                                     )
                                 }

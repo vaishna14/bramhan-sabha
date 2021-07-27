@@ -495,24 +495,13 @@ const addUserDetails = async (req, res, next) => {
 }
 
 const getUserKids = async (req, res, next) =>{
-  console.log("api ----------------------------------------------------------------------------------")
-  var value ;
-
   try {
-  kidsList =[];
     userVal = await User.find({ "_id": toId(req.userData.userId) });
     kids = userVal[0].kids;
-    kids.map(async (item) =>{
-      console.log(item);
-      value = await Male.find({ "_id": toId(item)});
-      if(!value){
-        value = await Female.find({ "_id": toId(item)});
-      }
-      kidsList.push(value);
-      return value;
-    })
-    console.log(kidsList)
-  res.status(200).json({ kidsList: kidsList});
+    console.log(kids); 
+    const kidsListMale = await Male.find().where('_id').in(kids).exec();
+    const kidsListFemale = await Female.find().where('_id').in(kids).exec();
+  res.status(200).json({ kidCount: kids,kidsListMale:kidsListMale, kidsListFemale:kidsListFemale});
   } catch (err) {
     console.log(err)
     const error = new HttpError(

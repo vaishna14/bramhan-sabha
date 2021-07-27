@@ -87,22 +87,7 @@ function Details(props) {
     ]
 
 
-    useEffect(()=>{
-        if(detailsType=== "family"){
-            axios({
-                method: "get",
-                url: `http://localhost:5000/api/users/kids`,
-                headers: {
-                    Authorization: 'Bearer ' + auth.token
-                }
-            }).then((response) => {
-               console.log(response.data);    
-            }).catch((err) => {
-                console.log(err);
-            }) 
-        }
-
-    },[detailsType])
+   
 
     useEffect(() => {
         // setIsLoading(true);
