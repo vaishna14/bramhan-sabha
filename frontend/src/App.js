@@ -15,6 +15,7 @@ import Auth from './user/pages/Auth';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
+import Requests from './user/pages/Requests';
 
 const App = () => {
   const { token, login, logout, userId } = useAuth();
@@ -32,6 +33,9 @@ const App = () => {
         </Route>
         <Route path="/places/new" exact>
           <NewPlace />
+        </Route>
+        <Route path="/request" exact>
+          <Requests />
         </Route>
         <Route path="/places/:placeId">
           <UpdatePlace />

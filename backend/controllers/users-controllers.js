@@ -583,6 +583,29 @@ const getSuggestions = async (req, res, next)=>{
   // res.status(200).json({list:arr});
 }
 
+const getApprovals = async (req, res, next)=>{
+try{
+  let arr =[];
+  male = Male.find({});
+  console.log(male)
+  const maleListVal = male.exec(function (err, someValue) {
+    if (err) return next(err);
+    arr.push(someValue)
+    return
+});
+res.status(200).json({ list: maleListVal });
+
+// res.status(200).json("pulled");
+}catch(err){
+  console.log(err);
+  const error = new HttpError(
+    'No data found.',
+    500
+  );
+  return next(error);
+}
+}
+
 
 exports.getUsers = getUsers;
 exports.signup = signup;
@@ -591,3 +614,4 @@ exports.addUserDetails = addUserDetails;
 exports.getUserDetails = getUserDetails;
 exports.getSuggestions = getSuggestions;
 exports.getUserKids = getUserKids;
+exports.getApprovals = getApprovals;
