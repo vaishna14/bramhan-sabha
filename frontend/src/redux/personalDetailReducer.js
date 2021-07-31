@@ -10,7 +10,8 @@ const INITIAL_STATE = {
   partnerFatherAlive: "Yes",
   partnerMotherAlive: "Yes",
   loading: false,
-  child_count:1
+  child_count:1,
+  child_id:""
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -68,6 +69,13 @@ const reducer = (state = INITIAL_STATE, action) => {
           ...state, child_count: action.child_count,
   
         };
+        case "child_id":
+
+          return {
+    
+            ...state, child_id: action.child_id,
+    
+          };
 
     case "DECREMENT":
 

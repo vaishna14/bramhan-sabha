@@ -84,6 +84,10 @@ function PersonalDetails() {
             type: 'child_count',
             "child_count": childCount
         });
+        dispatch({
+            type: 'child_id',
+            "child_id": childId
+        });
         console.log(childName)
         setChildHead(childName);
     }

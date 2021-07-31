@@ -24,6 +24,7 @@ function Details(props) {
     const partnerMotherAlive = useSelector((state) => state.personal.partnerMotherAlive);
     const isLoading = useSelector((state) => state.personal.loading);
     const child_count = useSelector((state) => state.personal.child_count);
+    const childId = useSelector((state) => state.personal.child_id);
     const [bloodGroup, setBloodGroup] = useState("");
     const [occupation, setOccupation] = useState("");
     const [earning, setEarnings] = useState("");
@@ -360,7 +361,7 @@ function Details(props) {
                 type: 'loading',
                 "loading": true
             });
-        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, });
+        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, kidId: childId});
         dispatch(
             {
                 type: 'loading',

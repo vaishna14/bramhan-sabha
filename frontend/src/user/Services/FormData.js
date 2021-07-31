@@ -9,6 +9,9 @@ export const FormData = (props)=>{
     props.form["isExist"] = props.isExist
     let body =props.form;
     let token = props.token
+    if(props.kidId){
+      props.form["kidId"] = props.kidId
+    }
     axios({
         method: 'post',
         url: 'http://localhost:5000/api/users/addUserDetails',

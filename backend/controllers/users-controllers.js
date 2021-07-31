@@ -479,6 +479,43 @@ const addUserDetails = async (req, res, next) => {
             }
         }
       }
+      let reqType = req.body.type;
+        if(reqType.includes("kids")){
+        if (req.body.isExist !== "") {
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist) });
+          user2 = await User.findOne({ "_id": req.userData.userId });
+
+          if (req.body.gender == "M") {
+            let checkPartner = await Male.findOne({ "_id": user2.partner });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+            }
+          }
+          if (req.body.gender == "F") {
+            let checkPartner = await Female.findOne({ "_id": user2.partner });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+            }
+          }
+        } else {
+          user2 = await User.findOne({ "_id": req.userData.userId });
+          console.log("not exists");
+          console.log(req.body);
+          let checkPartner = await Male.findOne({ "_id": req.body.kidId });
+            if (!checkPartner) {
+              updateValue = await Female.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
+            }
+        }
+      }
+
+
+
     } catch (err) {
       console.log(err)
       const error = new HttpError(
