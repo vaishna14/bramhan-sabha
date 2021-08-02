@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
+import { Icon, Label, Menu } from 'semantic-ui-react'
 
 import { AuthContext } from '../../context/auth-context';
 import './NavLinks.css';
@@ -9,11 +10,13 @@ const NavLinks = props => {
 
   return (
     <ul className="nav-links">
-      {/* <li>
+      {auth.isLoggedIn && (
+      <li>
         <NavLink to="/" exact>
-          ALL USERS
+          HOME
         </NavLink>
-      </li> */}
+      </li>
+      )}
       {/* {auth.isLoggedIn && (
         <li>
           <NavLink to={`/${auth.userId}/places`}>MY DETAILS</NavLink>
@@ -27,7 +30,9 @@ const NavLinks = props => {
 
       {auth.isLoggedIn && (
         <li>
-          <NavLink to="/request">REQUEST</NavLink>
+          <NavLink to="/request"> 4 REQUEST
+     
+        </NavLink>
         </li>
       )}
 

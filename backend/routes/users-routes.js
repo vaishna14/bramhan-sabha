@@ -32,5 +32,6 @@ router.get('/getUserDetails/:detailsType/:childCount', usersController.getUserDe
 router.get('/suggestions', usersController.getSuggestions);
 router.get('/kids', usersController.getUserKids);
 router.get('/requests', usersController.getApprovals);
+router.post('/requestsUsers', usersController.getApprovalsList);
 
 module.exports = router;

@@ -13,7 +13,8 @@ const userSchema = new Schema({
   personal:{ type: mongoose.Types.ObjectId,  ref: 'Person' },
   partner:{ type: mongoose.Types.ObjectId, ref: 'Partner' },
   father:{ type: mongoose.Types.ObjectId, ref: 'Father' },
-  mother:{ type: mongoose.Types.ObjectId, ref: 'Mother' }
+  mother:{ type: mongoose.Types.ObjectId, ref: 'Mother' },
+  approve:{type:Boolean},
 });
 
 userSchema.plugin(uniqueValidator);
