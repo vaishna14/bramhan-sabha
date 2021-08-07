@@ -8,6 +8,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
   image: { type: String, required: true },
+  isAdmin:{type: String},
   places: [{ type: mongoose.Types.ObjectId, ref: 'Place' }],
   kids: [{ type: mongoose.Types.ObjectId, ref: 'Place' }],
   personal:{ type: mongoose.Types.ObjectId,  ref: 'Person' },

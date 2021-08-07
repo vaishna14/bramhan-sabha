@@ -52,7 +52,7 @@ mongoose
     `mongodb+srv://root:root@cluster0.bodqv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
   )
   .then(() => {
-    app.listen(5000);
+    app.listen(4000);
   })
   .catch(err => {
     console.log(err);

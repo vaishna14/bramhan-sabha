@@ -34,9 +34,6 @@ function Details(props) {
     const [middleName, setMiddleValue] = useState("");
     const [lastName, setLastValue] = useState("");
 
-    useEffect(()=>{
-        console.log(child_count);
-    },[child_count])
 
     const aliveOptions = [
         { text: "Yes", value: "Yes" },
@@ -99,7 +96,7 @@ function Details(props) {
             });
         axios({
             method: "get",
-            url: `http://localhost:5000/api/users/getUserDetails/${props.type}/${child_count}`,
+            url: `http://localhost:4000/api/users/getUserDetails/${props.type}/${child_count}`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }
@@ -126,7 +123,7 @@ function Details(props) {
     useEffect(() => {
         axios({
             method: "get",
-            url: `http://localhost:5000/api/users/suggestions`,
+            url: `http://localhost:4000/api/users/suggestions`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }
@@ -203,7 +200,6 @@ function Details(props) {
 
 
     const formChange = (e, { name, value }) => {
-        console.log("Changed")
         let form = formDetails;
         if (!form[name]) {
             form[name] = value;
@@ -350,8 +346,6 @@ function Details(props) {
         console.log("here");
         let Name = formDetails.first_name + " " + formDetails.middle_name + " " + formDetails.last_name
         suggestions.map(item => {
-            console.log(Name);
-            console.log(item.text);
             if (item.text == Name) {
                 existId = item.key
             }

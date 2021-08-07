@@ -39,7 +39,7 @@ function PersonalDetails() {
         if(detailsType=== "family"){
             axios({
                 method: "get",
-                url: `http://localhost:5000/api/users/kids`,
+                url: `http://localhost:4000/api/users/kids`,
                 headers: {
                     Authorization: 'Bearer ' + auth.token
                 }

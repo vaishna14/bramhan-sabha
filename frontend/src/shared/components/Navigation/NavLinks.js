@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { NavLink} from 'react-router-dom';
 import { Icon, Label, Menu } from 'semantic-ui-react'
 
@@ -7,6 +7,11 @@ import './NavLinks.css';
 
 const NavLinks = props => {
   const auth = useContext(AuthContext);
+
+  useEffect(()=>{
+    console.log(auth);
+  },[auth])
+  
 
   return (
     <ul className="nav-links">
@@ -28,7 +33,7 @@ const NavLinks = props => {
         </li>
       )} */}
 
-      {auth.isLoggedIn && (
+      {auth.isLoggedIn && auth.admin && (
         <li>
           <NavLink to="/request"> 4 REQUEST
      

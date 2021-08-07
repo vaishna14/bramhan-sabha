@@ -161,11 +161,20 @@ const login = async (req, res, next) => {
     );
     return next(error);
   }
+  console.log("--------------------------");
+  console.log(existingUser.isAdmin)
+  // console.log(existingUser)
+  console.log(existingUser.id);
+  console.log(existingUser.name);
+  console.log("--------------------------");
+
 
   res.json({
     userId: existingUser.id,
     email: existingUser.email,
-    token: token
+    token: token,
+    isAdmin: existingUser.isAdmin,
+
   });
 };
 
@@ -378,7 +387,7 @@ const addUserDetails = async (req, res, next) => {
         } else {
           console.log("Does exist");
           user2 = await User.findOne({ "_id": req.userData.userId });
-          updateUser = await User.findByOneAndUpdate({ "_id": req.userData.userId },{"approve":false})
+          updateUser = await User.findOneAndUpdate({ "_id": req.userData.userId },{"approve":false})
             let checkPartner = await Male.findOne({ "_id": user2.personal });
             if (!checkPartner) {
               updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);

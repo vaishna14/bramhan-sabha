@@ -70,7 +70,7 @@ const Auth = () => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          'http://localhost:5000/api/users/login',
+          'http://localhost:4000/api/users/login',
           'POST',
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -80,7 +80,7 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         );
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.userId, responseData.token, responseData.isAdmin);
       } catch (err) {}
     } else {
       try {
@@ -90,12 +90,12 @@ const Auth = () => {
         formData.append('password', formState.inputs.password.value);
         formData.append('image', formState.inputs.image.value);
         const responseData = await sendRequest(
-          'http://localhost:5000/api/users/signup',
+          'http://localhost:4000/api/users/signup',
           'POST',
           formData
         );
 
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.userId, responseData.token, responseData.isAdmin);
       } catch (err) {}
     }
   };

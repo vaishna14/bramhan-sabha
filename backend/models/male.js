@@ -37,6 +37,7 @@ const maleSchema = new Schema({
   whatsapp_number: { type: String },
   email: { type: String },
   userId:{type: String},
+  approve:{type:Boolean},
   creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
 });
 
