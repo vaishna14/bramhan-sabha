@@ -641,7 +641,7 @@ const getSuggestions = async (req, res, next)=>{
 const getApprovals = async (req, res, next)=>{
 try{
   let arr =[];
-  male = Male.find({}).select("first_name middle_name last_name address_ward");
+  male = Male.find({}).select("first_name middle_name last_name address_ward approve");
   male.exec(function (err, someValue) {
     if (err) return next(err);
     arr = someValue

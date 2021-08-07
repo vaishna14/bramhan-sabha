@@ -12,6 +12,11 @@ function Requests() {
   const [id, setId] = useState("");
 
   useEffect(() => {
+    getRequests();    
+  }, [])
+
+
+  const getRequests = ()=>{
     axios({
       method: "get",
       url: `http://localhost:4000/api/users/requests`,
@@ -24,25 +29,25 @@ function Requests() {
     }).catch((err) => {
       console.log(err);
     })
-  }, [])
+  }
 
-  useEffect(() => {
-    console.log(requestUser)
-    if (requestUser.length > 0) {
-      axios({
-        method: "post",
-        url: `http://localhost:4000/api/users/requestsUsers`,
-        data: requestUser,
-        headers: {
-          Authorization: 'Bearer ' + auth.token
-        }
-      }).then((response) => {
-        console.log(response.data);
-      }).catch((err) => {
-        console.log(err);
-      })
-    }
-  }, [requestUser])
+  // useEffect(() => {
+  //   console.log(requestUser)
+  //   if (requestUser.length > 0) {
+  //     axios({
+  //       method: "post",
+  //       url: `http://localhost:4000/api/users/requestsUsers`,
+  //       data: requestUser,
+  //       headers: {
+  //         Authorization: 'Bearer ' + auth.token
+  //       }
+  //     }).then((response) => {
+  //       console.log(response.data);
+  //     }).catch((err) => {
+  //       console.log(err);
+  //     })
+  //   }
+  // }, [requestUser])
 
 
   const showDetails = (id)=>{
@@ -78,8 +83,13 @@ function Requests() {
       console.log(err);
     }).finally(()=>{
       setId("");
+      getRequests(); 
     })
   }
+
+  useEffect(()=>{
+    console.log(requestUser)
+  },[requestUser])
 
 
   return (
@@ -98,26 +108,32 @@ function Requests() {
           {
             requestUser.map(item => {
               return (
-                <Table.Row>
-                  <Table.Cell>{item.first_name} {item.middle_name}  {item.last_name}</Table.Cell>
-                  <Table.Cell>{item.address_ward || ""}</Table.Cell>
-                  {
-                    (item.address_ward !== "Vivek Nagar") ?
-                      (
-                        <Table.HeaderCell disabled>Approved by Sunil Purankar on 22-07-2021
-                        </Table.HeaderCell>
-                      )
-                      : (
+                !item.approve && (
+                  
+                    <Table.Row>
+                      <Table.Cell>{item.first_name} {item.middle_name}  {item.last_name}</Table.Cell>
+                      <Table.Cell>{item.address_ward || ""}</Table.Cell>
+                      {
+                        (item.address_ward !== "Vivek Nagar") ?
+                          (
+                            <Table.HeaderCell disabled>Approved by Sunil Purankar on 22-07-2021
+                            </Table.HeaderCell>
+                          )
+                          : (
+    
+    
+                            <Table.HeaderCell disabled={item.address_ward !== "Vivek Nagar"} >
+                              <Button negative>Decline</Button>
+                              <Button positive onClick={()=>showDetails(item._id)}>Show</Button>
+                            </Table.HeaderCell>
+                          )
+                      }
+                    </Table.Row>
+                  
 
-
-                        <Table.HeaderCell disabled={item.address_ward !== "Vivek Nagar"} >
-                          <Button negative>Decline</Button>
-                          <Button positive onClick={()=>showDetails(item._id)}>Show</Button>
-                        </Table.HeaderCell>
-                      )
-                  }
-                </Table.Row>
+                )
               )
+             
             })
           }
 
