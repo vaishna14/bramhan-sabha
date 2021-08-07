@@ -13,6 +13,7 @@ const maleSchema = new Schema({
   maiden_last_name: { type: String },
   maiden_city: { type: String },
   alive: { type: String },
+  date_of_marriage: { type: String },
   date_of_death: { type: String },
   marital_status: { type: String },
   father_alive: { type: String },

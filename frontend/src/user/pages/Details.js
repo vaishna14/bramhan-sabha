@@ -514,6 +514,16 @@ function Details(props) {
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Marrital Status</h4>
                     <Form.Dropdown placeholder='Select' search selection options={maritalStatus} name="marital_status" onChange={formChange} value={formDetails?.marital_status} />
+                   
+                   {
+                       formDetails.marital_status !== "Single" && (
+
+                       
+                    <div className="display-flex mx-5p"><h4> Date of Marriage</h4>
+                                <Form.Input className="mx-5p" type="date" placeholder='Date of Marriage' name="date_of_marriage" onChange={formChange} defaultValue={formDetails?.date_of_marriage} />
+                            </div>
+                            ) 
+                        }
                 </div>
                 {
                     detailsType === "personal" && (

@@ -240,6 +240,7 @@ const addUserDetails = async (req, res, next) => {
           maiden_city: req.body.maiden_city,
           alive: req.body.alive,
           date_of_death: req.body.date_of_death,
+          date_of_marriage: req.body.date_of_marriage,
           marital_status: req.body.marital_status,
           father_alive: req.body.father_alive,
           father_death: req.body.father_death,
@@ -262,7 +263,7 @@ const addUserDetails = async (req, res, next) => {
           personal_number: req.body.personal_number,
           whatsapp_number: req.body.whatsapp_number,
           email: req.body.email,
-          approve:false,
+          approve: false,
           userId: req.userData.userId,
           creator: req.userData.userId
         }
@@ -276,11 +277,11 @@ const addUserDetails = async (req, res, next) => {
         sess.startTransaction();
         await createPerson.save({ session: sess });
         let reqType = req.body.type
-        if(reqType.includes("kids")){
+        if (reqType.includes("kids")) {
           console.log("includes kids")
           user.kids.push(createPerson);
-        }else{
-        user[req.body.type] = createPerson;
+        } else {
+          user[req.body.type] = createPerson;
         }
         await user.save({ session: sess });
         await sess.commitTransaction();
@@ -290,7 +291,7 @@ const addUserDetails = async (req, res, next) => {
         console.log(req.body.type);
 
         if (req.body.type == "personal") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist), "approve":false });
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist), "approve": false });
         }
         if (req.body.type == "partner") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "partner": toId(req.body.isExist) });
@@ -302,7 +303,7 @@ const addUserDetails = async (req, res, next) => {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "mother": toId(req.body.isExist) });
         }
         let reqType = req.body.type;
-        if(reqType.includes("kids")){
+        if (reqType.includes("kids")) {
           console.log("includes kids")
           // user.kids.push(createPerson);
           // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "kids": toId(req.body.isExist) });
@@ -335,6 +336,7 @@ const addUserDetails = async (req, res, next) => {
       maiden_city: req.body.maiden_city || "",
       alive: req.body.alive || "",
       date_of_death: req.body.date_of_death || "",
+      date_of_marriage: req.body.date_of_marriage || "",
       marital_status: req.body.marital_status || "",
       father_alive: req.body.father_alive || "",
       father_death: req.body.father_death || "",
@@ -356,7 +358,7 @@ const addUserDetails = async (req, res, next) => {
       permanent_pincode: req.body.permanent_pincode || "",
       personal_number: req.body.personal_number || "",
       whatsapp_number: req.body.whatsapp_number || "",
-      approve:false,
+      approve: false,
       email: req.body.email || ""
     }
 
@@ -365,9 +367,9 @@ const addUserDetails = async (req, res, next) => {
       if (req.body.type === "personal") {
         if (req.body.isExist !== "") {
           console.log("Does not exist");
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { personal: toId(req.body.isExist) , "approve":false });
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { personal: toId(req.body.isExist), "approve": false });
           user2 = await User.findOne({ "_id": req.userData.userId });
-           if (req.body.gender == "M") {
+          if (req.body.gender == "M") {
             let checkPartner = await Male.findOne({ "_id": user2.personal });
             if (!checkPartner) {
               return;
@@ -387,18 +389,18 @@ const addUserDetails = async (req, res, next) => {
         } else {
           console.log("Does exist");
           user2 = await User.findOne({ "_id": req.userData.userId });
-          updateUser = await User.findOneAndUpdate({ "_id": req.userData.userId },{"approve":false})
-            let checkPartner = await Male.findOne({ "_id": user2.personal });
-            if (!checkPartner) {
-              updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-            }
+          updateUser = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false })
+          let checkPartner = await Male.findOne({ "_id": user2.personal });
+          if (!checkPartner) {
+            updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+          } else {
+            updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+          }
         }
       }
       if (req.body.type === "partner") {
         if (req.body.isExist !== "") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { partner: toId(req.body.isExist),"approve":false });
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { partner: toId(req.body.isExist), "approve": false });
           user2 = await User.findOne({ "_id": req.userData.userId });
 
           if (req.body.gender == "M") {
@@ -420,19 +422,19 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId },{"approve":false});          
+          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
           let checkPartner = await Male.findOne({ "_id": user2.partner });
-            if (!checkPartner) {
-              updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-            }
+          if (!checkPartner) {
+            updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+          } else {
+            updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+          }
         }
 
       }
       if (req.body.type === "father") {
         if (req.body.isExist !== "") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { father: toId(req.body.isExist) ,"approve":false});
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { father: toId(req.body.isExist), "approve": false });
           user2 = await User.findOne({ "_id": req.userData.userId });
           let updateValue;
 
@@ -455,18 +457,18 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId },{"approve":false});          
+          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
           let checkPartner = await Male.findOne({ "_id": user2.personal });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": user2.father }, updateDetails);
-            }
+          if (!checkPartner) {
+            return;
+          } else {
+            updateValue = await Male.findOneAndUpdate({ "_id": user2.father }, updateDetails);
+          }
         }
       }
       if (req.body.type === "mother") {
         if (req.body.isExist !== "") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist),"approve":false });
+          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist), "approve": false });
           user2 = await User.findOne({ "_id": req.userData.userId });
 
           if (req.body.gender == "M") {
@@ -487,17 +489,17 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId },{"approve":false});          
+          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
           let checkPartner = await Female.findOne({ "_id": user2.personal });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-            }
+          if (!checkPartner) {
+            return;
+          } else {
+            updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
+          }
         }
       }
       let reqType = req.body.type;
-        if(reqType.includes("kids")){
+      if (reqType.includes("kids")) {
         if (req.body.isExist !== "") {
           console.log("Does Exist");
           // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist),"approve":false });
@@ -522,15 +524,15 @@ const addUserDetails = async (req, res, next) => {
           }
         } else {
           user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId },{"approve":false});          
+          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
           console.log("not exists");
           console.log(req.body);
           let checkPartner = await Male.findOne({ "_id": req.body.kidId });
-            if (!checkPartner) {
-              updateValue = await Female.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
-            }
+          if (!checkPartner) {
+            updateValue = await Female.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
+          } else {
+            updateValue = await Male.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
+          }
         }
       }
 
@@ -551,14 +553,14 @@ const addUserDetails = async (req, res, next) => {
   }
 }
 
-const getUserKids = async (req, res, next) =>{
+const getUserKids = async (req, res, next) => {
   try {
     userVal = await User.find({ "_id": toId(req.userData.userId) });
     kids = userVal[0].kids;
-    console.log(kids); 
+    console.log(kids);
     const kidsListMale = await Male.find().where('_id').in(kids).exec();
     const kidsListFemale = await Female.find().where('_id').in(kids).exec();
-  res.status(200).json({ kidCount: kids,kidsListMale:kidsListMale, kidsListFemale:kidsListFemale});
+    res.status(200).json({ kidCount: kids, kidsListMale: kidsListMale, kidsListFemale: kidsListFemale });
   } catch (err) {
     console.log(err)
     const error = new HttpError(
@@ -586,19 +588,19 @@ const getUserDetails = async (req, res, next) => {
   try {
     userVal = await User.find({ "_id": toId(req.userData.userId) });
     var type = req.params.detailsType;
-    var findId ;
-    if(type === "kids"){
-    var childCount = req.params.childCount;
-      console.log(userVal[0].kids[childCount-1]);
-      findId = userVal[0].kids[childCount-1];
-    }else{
-    findId = userVal[0][type];
+    var findId;
+    if (type === "kids") {
+      var childCount = req.params.childCount;
+      console.log(userVal[0].kids[childCount - 1]);
+      findId = userVal[0].kids[childCount - 1];
+    } else {
+      findId = userVal[0][type];
     }
     detail = await Male.find({ "_id": toId(findId) });
     if (detail.length === 0) {
       detail = await Female.find({ "_id": toId(findId) });
     }
-  
+
   } catch (err) {
     console.log(err)
     const error = new HttpError(
@@ -620,16 +622,16 @@ const getUserDetails = async (req, res, next) => {
   res.status(200).json({ detail: detail[0], type: req.params.detailsType || "" });
 }
 
-const getSuggestions = async (req, res, next)=>{
-  let arr = [] ;
-  try{
-  male = Male.find({}).select("first_name middle_name last_name");
-  male.exec(function (err, someValue) {
-    if (err) return next(err);
-    arr = someValue
-    res.status(200).json({ list: someValue });
-});
-  }catch (err) {
+const getSuggestions = async (req, res, next) => {
+  let arr = [];
+  try {
+    male = Male.find({}).select("first_name middle_name last_name");
+    male.exec(function (err, someValue) {
+      if (err) return next(err);
+      arr = someValue
+      res.status(200).json({ list: someValue });
+    });
+  } catch (err) {
     const error = new HttpError(
       'No data found.',
       500
@@ -640,41 +642,19 @@ const getSuggestions = async (req, res, next)=>{
   // res.status(200).json({list:arr});
 }
 
-const getApprovals = async (req, res, next)=>{
-try{
-  let arr =[];
-  male = Male.find({}).select("first_name middle_name last_name address_ward approve approveTime personal_number");
-  male.exec(function (err, someValue) {
-    if (err) return next(err);
-    arr = someValue
-    res.status(200).json({ list: someValue });
-});
-// res.status(200).json({ list: male });
+const getApprovals = async (req, res, next) => {
+  try {
+    let arr = [];
+    male = Male.find({}).select("first_name middle_name last_name address_ward approve approveTime personal_number");
+    male.exec(function (err, someValue) {
+      if (err) return next(err);
+      arr = someValue
+      res.status(200).json({ list: someValue });
+    });
+    // res.status(200).json({ list: male });
 
-// res.status(200).json("pulled");
-}catch(err){
-  console.log(err);
-  const error = new HttpError(
-    'No data found.',
-    500
-  );
-  return next(error);
-}
-}
-
-
-const getApprovalsList = async (req, res, next)=>{
-  try{
-    userVal = await User.find({ "_id": toId(req.userData.userId) });
-    console.log(req.body)
-    kids = req.body.requestUser;
-    console.log(kids); 
-    const kidsListMale = await Male.find().where('_id').in(kids).exec();
-  res.status(200).json({approvalList:kidsListMale});
-  // res.status(200).json({ list: male });
-  
-  // res.status(200).json("pulled");
-  }catch(err){
+    // res.status(200).json("pulled");
+  } catch (err) {
     console.log(err);
     const error = new HttpError(
       'No data found.',
@@ -685,59 +665,37 @@ const getApprovalsList = async (req, res, next)=>{
 }
 
 
-const getShowDetails = async (req, res, next)=>{
-  const findId = req.params.id;
-  let detail;
-  try{
-  detail = await Male.find({ "_id": toId(findId) });
-  if (detail.length === 0) {
-    detail = await Female.find({ "_id": toId(findId) });
+const getApprovalsList = async (req, res, next) => {
+  try {
+    userVal = await User.find({ "_id": toId(req.userData.userId) });
+    console.log(req.body)
+    kids = req.body.requestUser;
+    console.log(kids);
+    const kidsListMale = await Male.find().where('_id').in(kids).exec();
+    res.status(200).json({ approvalList: kidsListMale });
+    // res.status(200).json({ list: male });
+
+    // res.status(200).json("pulled");
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'No data found.',
+      500
+    );
+    return next(error);
   }
-
-} catch (err) {
-  console.log(err)
-  const error = new HttpError(
-    'Something went wrong, could not find a place.',
-    500
-  );
-  return next(error);
 }
 
 
-if (!detail) {
-  const error = new HttpError(
-    'Could not find detail for the provided id.',
-    404
-  );
-  return next(error);
-}
-
-res.status(200).json({ detail: detail[0]});
-
-}
-
-
-const approveUser = async (req, res, next)=>{
-  let detail;
+const getShowDetails = async (req, res, next) => {
   const findId = req.params.id;
-  var currentdate = new Date(); 
-  var datetime = currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
-                + currentdate.getSeconds();
-  
-  try{
+  let detail;
+  try {
     detail = await Male.find({ "_id": toId(findId) });
-    
     if (detail.length === 0) {
-      detail = await Female.findOneAndUpdate({ "_id": toId(findId) },{approve:true, approveTime:datetime});
-      
-    }else{
-      detail = await Male.findOneAndUpdate({ "_id": toId(findId) },{approve:true, approveTime:datetime});
+      detail = await Female.find({ "_id": toId(findId) });
     }
-  
+
   } catch (err) {
     console.log(err)
     const error = new HttpError(
@@ -746,8 +704,8 @@ const approveUser = async (req, res, next)=>{
     );
     return next(error);
   }
-  
-  
+
+
   if (!detail) {
     const error = new HttpError(
       'Could not find detail for the provided id.',
@@ -755,7 +713,51 @@ const approveUser = async (req, res, next)=>{
     );
     return next(error);
   }
-  
+
+  res.status(200).json({ detail: detail[0] });
+
+}
+
+
+const approveUser = async (req, res, next) => {
+  let detail;
+  const findId = req.params.id;
+  var currentdate = new Date();
+  var datetime = currentdate.getDate() + "/"
+    + (currentdate.getMonth() + 1) + "/"
+    + currentdate.getFullYear() + " @ "
+    + currentdate.getHours() + ":"
+    + currentdate.getMinutes() + ":"
+    + currentdate.getSeconds();
+
+  try {
+    detail = await Male.find({ "_id": toId(findId) });
+
+    if (detail.length === 0) {
+      detail = await Female.findOneAndUpdate({ "_id": toId(findId) }, { approve: true, approveTime: datetime });
+
+    } else {
+      detail = await Male.findOneAndUpdate({ "_id": toId(findId) }, { approve: true, approveTime: datetime });
+    }
+
+  } catch (err) {
+    console.log(err)
+    const error = new HttpError(
+      'Something went wrong, could not find a place.',
+      500
+    );
+    return next(error);
+  }
+
+
+  if (!detail) {
+    const error = new HttpError(
+      'Could not find detail for the provided id.',
+      404
+    );
+    return next(error);
+  }
+
   res.status(200).json("Successfully approved the user");
 
 }
@@ -770,6 +772,6 @@ exports.getSuggestions = getSuggestions;
 exports.getUserKids = getUserKids;
 exports.getApprovals = getApprovals;
 exports.getApprovalsList = getApprovalsList;
-exports.getShowDetails= getShowDetails;
+exports.getShowDetails = getShowDetails;
 exports.approveUser = approveUser;
 
