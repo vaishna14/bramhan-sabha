@@ -641,7 +641,7 @@ const getSuggestions = async (req, res, next)=>{
 const getApprovals = async (req, res, next)=>{
 try{
   let arr =[];
-  male = Male.find({}).select("first_name middle_name last_name address_ward approve");
+  male = Male.find({}).select("first_name middle_name last_name address_ward approve approveTime");
   male.exec(function (err, someValue) {
     if (err) return next(err);
     arr = someValue
@@ -718,15 +718,22 @@ res.status(200).json({ detail: detail[0]});
 const approveUser = async (req, res, next)=>{
   let detail;
   const findId = req.params.id;
+  var currentdate = new Date(); 
+  var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
   
   try{
     detail = await Male.find({ "_id": toId(findId) });
     
     if (detail.length === 0) {
-      detail = await Female.findOneAndUpdate({ "_id": toId(findId) },{approve:true});
+      detail = await Female.findOneAndUpdate({ "_id": toId(findId) },{approve:true, approveTime:datetime});
       
     }else{
-      detail = await Male.findOneAndUpdate({ "_id": toId(findId) },{approve:true});
+      detail = await Male.findOneAndUpdate({ "_id": toId(findId) },{approve:true, approveTime:datetime});
     }
   
   } catch (err) {

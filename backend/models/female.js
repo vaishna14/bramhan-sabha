@@ -38,6 +38,7 @@ const femaleSchema = new Schema({
   email: { type: String },
   userId:{type: String},
   approve:{type:Boolean},
+  approveTime:{type:String},
   creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
 });
 

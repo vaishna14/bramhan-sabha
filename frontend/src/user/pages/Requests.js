@@ -108,23 +108,22 @@ function Requests() {
           {
             requestUser.map(item => {
               return (
-                !item.approve && (
+              (item.address_ward == "Vivek Nagar") && (
                   
                     <Table.Row>
                       <Table.Cell>{item.first_name} {item.middle_name}  {item.last_name}</Table.Cell>
                       <Table.Cell>{item.address_ward || ""}</Table.Cell>
                       {
-                        (item.address_ward !== "Vivek Nagar") ?
+                        (!item.approve) ?
                           (
-                            <Table.HeaderCell disabled>Approved by Sunil Purankar on 22-07-2021
-                            </Table.HeaderCell>
+                            <Table.HeaderCell disabled={item.address_ward !== "Vivek Nagar"} >
+                            <Button negative>Decline</Button>
+                            <Button positive onClick={()=>showDetails(item._id)}>Show</Button>
+                          </Table.HeaderCell>
+                            
                           )
                           : (
-    
-    
-                            <Table.HeaderCell disabled={item.address_ward !== "Vivek Nagar"} >
-                              <Button negative>Decline</Button>
-                              <Button positive onClick={()=>showDetails(item._id)}>Show</Button>
+                            <Table.HeaderCell disabled>Approved on {item.approveTime}
                             </Table.HeaderCell>
                           )
                       }
@@ -144,7 +143,7 @@ function Requests() {
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell colSpan='3'>
-              <Menu floated='right' pagination>
+              {/* <Menu floated='right' pagination>
                 <Menu.Item as='a' icon>
                   <Icon name='chevron left' />
                 </Menu.Item>
@@ -155,7 +154,7 @@ function Requests() {
                 <Menu.Item as='a' icon>
                   <Icon name='chevron right' />
                 </Menu.Item>
-              </Menu>
+              </Menu> */}
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>

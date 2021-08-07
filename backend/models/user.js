@@ -16,6 +16,8 @@ const userSchema = new Schema({
   father:{ type: mongoose.Types.ObjectId, ref: 'Father' },
   mother:{ type: mongoose.Types.ObjectId, ref: 'Mother' },
   approve:{type:Boolean},
+  approveTime:{type:Date},
+
 });
 
 userSchema.plugin(uniqueValidator);
