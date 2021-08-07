@@ -499,23 +499,25 @@ const addUserDetails = async (req, res, next) => {
       let reqType = req.body.type;
         if(reqType.includes("kids")){
         if (req.body.isExist !== "") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist),"approve":false });
-          user2 = await User.findOne({ "_id": req.userData.userId });
-
+          console.log("Does Exist");
+          // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist),"approve":false });
+          // user2 = await User.findOne({ "_id": req.userData.userId });
+          // console.log(place);
+          // console.log(user2);
           if (req.body.gender == "M") {
-            let checkPartner = await Male.findOne({ "_id": user2.partner });
+            let checkPartner = await Male.findOne({ "_id": req.body.kidId });
             if (!checkPartner) {
               return;
             } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+              updateValue = await Male.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
             }
           }
           if (req.body.gender == "F") {
-            let checkPartner = await Female.findOne({ "_id": user2.partner });
+            let checkPartner = await Female.findOne({ "_id": req.body.kidId });
             if (!checkPartner) {
               return;
             } else {
-              updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
+              updateValue = await Female.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
             }
           }
         } else {
@@ -641,7 +643,7 @@ const getSuggestions = async (req, res, next)=>{
 const getApprovals = async (req, res, next)=>{
 try{
   let arr =[];
-  male = Male.find({}).select("first_name middle_name last_name address_ward approve approveTime");
+  male = Male.find({}).select("first_name middle_name last_name address_ward approve approveTime personal_number");
   male.exec(function (err, someValue) {
     if (err) return next(err);
     arr = someValue

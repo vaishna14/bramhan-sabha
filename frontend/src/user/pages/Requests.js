@@ -99,7 +99,7 @@ function Requests() {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
-            <Table.HeaderCell>Area</Table.HeaderCell>
+            <Table.HeaderCell>Contact No.</Table.HeaderCell>
             <Table.HeaderCell>Approval</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -112,7 +112,7 @@ function Requests() {
                   
                     <Table.Row>
                       <Table.Cell>{item.first_name} {item.middle_name}  {item.last_name}</Table.Cell>
-                      <Table.Cell>{item.address_ward || ""}</Table.Cell>
+                      <Table.Cell>{item.personal_number || ""}</Table.Cell>
                       {
                         (!item.approve) ?
                           (

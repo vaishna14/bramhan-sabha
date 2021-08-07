@@ -19,8 +19,8 @@ function Details(props) {
     const [education, setEducation] = useState("");
     const [formDetails, setFormDetails] = useState({});
     const fatherAlive = useSelector((state) => state.personal.fatherAlive);
-    const partnerFatherAlive = useSelector((state) => state.personal.partnerFatherAlive);
     const motherAlive = useSelector((state) => state.personal.motherAlive);
+    const partnerFatherAlive = useSelector((state) => state.personal.partnerFatherAlive);
     const partnerMotherAlive = useSelector((state) => state.personal.partnerMotherAlive);
     const isLoading = useSelector((state) => state.personal.loading);
     const child_count = useSelector((state) => state.personal.child_count);
@@ -297,14 +297,14 @@ function Details(props) {
                 dispatch(
                     {
                         type: 'motherAlive',
-                        "motherAlive": value
+                        "motherAlive": value || "No"
                     });
             }
             if (props.type === "partner") {
                 dispatch(
                     {
                         type: 'partnerMotherAlive',
-                        "partnerMotherAlive": value
+                        "partnerMotherAlive": value || "No"
                     });
             }
         }
@@ -332,6 +332,13 @@ function Details(props) {
         }
     }
 
+    useEffect(()=>{
+        console.log(motherAlive);
+        console.log(fatherAlive);
+        console.log(props);
+        console.log(detailsType);
+    },[motherAlive])
+
 
     useEffect(() => {
         if (occupation === "" || occupation === "None") {
@@ -355,6 +362,7 @@ function Details(props) {
                 type: 'loading',
                 "loading": true
             });
+            console.log(formDetails)
         await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, kidId: childId });
         dispatch(
             {
@@ -515,18 +523,26 @@ function Details(props) {
                                 <h4 className="header-title">Father Alive</h4>
                                 <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="father_alive" onChange={formChange} value={props.type === "partner" ? partnerFatherAlive : fatherAlive} />
                                 {
-                                    props.type === "personal" ? (<>{
-                                        fatherAlive === "Yes" && motherAlive === "Yes" && (
+                                    props.type === "personal" ? 
+                                    
+                                    (<>
+                                    
+                                    {
+                                        formDetails?.father_alive == "Yes"  && formDetails?.mother_alive == "Yes" && (
                                             <div className="mx-5p display-flex"><h4> Mother Alive</h4>
-                                                <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
+                                                <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange}  />
                                             </div>
-                                        )}
+                                         )} 
 
-                                        {fatherAlive === "No" && (
+                                        {formDetails?.father_alive === "No" && (
+                                            <>
                                             <div className="display-flex mx-5p"><h4> Date of Death</h4>
                                                 <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
                                             </div>
-                                        )}</>) : (<>{
+                                         </>
+                                        )}
+                                        </>) 
+                                    : (<>{
                                             partnerFatherAlive === "Yes" && partnerMotherAlive === "Yes" && (
                                                 <div className="mx-5p display-flex"><h4> Mother Alive</h4>
                                                     <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
@@ -616,10 +632,10 @@ function Details(props) {
                             </Form.Group>
                             <Form.Group>
                                 {
-                                    detailsType === "personal" && (
+                                    // detailsType === "personal" && (
                                         <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange} defaultValue={formDetails?.address_ward} />
 
-                                    )
+                                    // )
                                 }
                                 {
                                     alive === "Yes" && (
@@ -665,7 +681,9 @@ function Details(props) {
                     </Form.Input>
                 </div>
 
-                <Form.Button disabled={!(formDetails?.approve)} content='Submit' />
+                <Form.Button 
+                disabled={!(formDetails?.approve)} 
+                content='Submit' />
                 {
                     detailsType !== "personal" && (
                         <Button onClick={() => {
