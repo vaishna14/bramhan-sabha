@@ -33,5 +33,7 @@ router.get('/suggestions', usersController.getSuggestions);
 router.get('/kids', usersController.getUserKids);
 router.get('/requests', usersController.getApprovals);
 router.post('/requestsUsers', usersController.getApprovalsList);
+router.get('/showDetails/:id', usersController.getShowDetails);
+router.post('/approveUser/:id', usersController.approveUser);
 
 module.exports = router;

@@ -683,6 +683,75 @@ const getApprovalsList = async (req, res, next)=>{
 }
 
 
+const getShowDetails = async (req, res, next)=>{
+  const findId = req.params.id;
+  let detail;
+  try{
+  detail = await Male.find({ "_id": toId(findId) });
+  if (detail.length === 0) {
+    detail = await Female.find({ "_id": toId(findId) });
+  }
+
+} catch (err) {
+  console.log(err)
+  const error = new HttpError(
+    'Something went wrong, could not find a place.',
+    500
+  );
+  return next(error);
+}
+
+
+if (!detail) {
+  const error = new HttpError(
+    'Could not find detail for the provided id.',
+    404
+  );
+  return next(error);
+}
+
+res.status(200).json({ detail: detail[0]});
+
+}
+
+
+const approveUser = async (req, res, next)=>{
+  let detail;
+  const findId = req.params.id;
+  
+  try{
+    detail = await Male.find({ "_id": toId(findId) });
+    
+    if (detail.length === 0) {
+      detail = await Female.findOneAndUpdate({ "_id": toId(findId) },{approve:true});
+      
+    }else{
+      detail = await Male.findOneAndUpdate({ "_id": toId(findId) },{approve:true});
+    }
+  
+  } catch (err) {
+    console.log(err)
+    const error = new HttpError(
+      'Something went wrong, could not find a place.',
+      500
+    );
+    return next(error);
+  }
+  
+  
+  if (!detail) {
+    const error = new HttpError(
+      'Could not find detail for the provided id.',
+      404
+    );
+    return next(error);
+  }
+  
+  res.status(200).json("Successfully approved the user");
+
+}
+
+
 exports.getUsers = getUsers;
 exports.signup = signup;
 exports.login = login;
@@ -692,3 +761,6 @@ exports.getSuggestions = getSuggestions;
 exports.getUserKids = getUserKids;
 exports.getApprovals = getApprovals;
 exports.getApprovalsList = getApprovalsList;
+exports.getShowDetails= getShowDetails;
+exports.approveUser = approveUser;
+

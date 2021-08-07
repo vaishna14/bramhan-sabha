@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Icon, Input, Form, Dimmer, Loader, Dropdown } from 'semantic-ui-react';
+import { Button, Icon, Input, Form, Dimmer, Loader, Message, Dropdown } from 'semantic-ui-react';
 import { FormData } from "../Services/FormData";
 import { AuthContext } from '../../shared/context/auth-context';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
@@ -85,7 +85,7 @@ function Details(props) {
     ]
 
 
-   
+
 
     useEffect(() => {
         // setIsLoading(true);
@@ -355,7 +355,7 @@ function Details(props) {
                 type: 'loading',
                 "loading": true
             });
-        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, kidId: childId});
+        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, kidId: childId });
         dispatch(
             {
                 type: 'loading',
@@ -379,6 +379,16 @@ function Details(props) {
             <Dimmer active={isLoading} inverted>
                 <Loader size='large'>Loading</Loader>
             </Dimmer>
+            {
+                !(formDetails?.approve) && (
+                    <Message negative>
+                        <Message.Header>Admin needs to approve in order to edit your data</Message.Header>
+                        {/* <p>That offer has expired</p> */}
+                    </Message>
+
+                )
+            }
+
             <Form onSubmit={formSubmit}>
                 <Form.Group>
                     <div className="display-flex mb-1p">
@@ -655,7 +665,7 @@ function Details(props) {
                     </Form.Input>
                 </div>
 
-                <Form.Button content='Submit' />
+                <Form.Button disabled={!(formDetails?.approve)} content='Submit' />
                 {
                     detailsType !== "personal" && (
                         <Button onClick={() => {

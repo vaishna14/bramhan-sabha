@@ -8,11 +8,6 @@ import './NavLinks.css';
 const NavLinks = props => {
   const auth = useContext(AuthContext);
 
-  useEffect(()=>{
-    console.log(auth);
-  },[auth])
-  
-
   return (
     <ul className="nav-links">
       {auth.isLoggedIn && (
@@ -35,7 +30,7 @@ const NavLinks = props => {
 
       {auth.isLoggedIn && auth.admin && (
         <li>
-          <NavLink to="/request"> 4 REQUEST
+          <NavLink to="/request"> REQUEST
      
         </NavLink>
         </li>
