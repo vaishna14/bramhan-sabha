@@ -372,6 +372,13 @@ const addUserDetails = async (req, res, next) => {
         if (req.body.type == "mother") {
           abc  =  req.body.formId + "/4"
         }
+        if (req.body.type == "kids") {
+          var childCount = req.body.kidCount;
+          console.log(childCount);
+          console.log(req.body);
+          abc  =  req.body.formId + "/1/" + childCount
+        }
+
     console.log(abc);
     let updateDetails = {
       first_name: req.body.first_name || "",

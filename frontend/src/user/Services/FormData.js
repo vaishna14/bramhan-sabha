@@ -12,6 +12,7 @@ export const FormData = (props)=>{
     let token = props.token
     if(props.kidId){
       props.form["kidId"] = props.kidId
+      props.form["kidCount"] = props.kidCount
     }
     axios({
         method: 'post',

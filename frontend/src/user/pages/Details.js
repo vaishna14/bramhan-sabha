@@ -363,7 +363,7 @@ function Details(props) {
                 "loading": true
             });
             console.log(formDetails)
-        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, formId : auth.formId, kidId: childId });
+        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, formId : auth.formId, kidId: childId , kidCount: child_count });
         dispatch(
             {
                 type: 'loading',
