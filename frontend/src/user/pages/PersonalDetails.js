@@ -226,7 +226,7 @@ function PersonalDetails() {
                                     detailsType === "kids" && (
                                         <div>
                                             <Header as="h3" className="personal-info">Child {childHead} Spouse</Header>
-                                            <Details type="kids"/>
+                                            <Details type="kids_spouse"/>
                                         </div>
                                     )
                                 }</Grid.Column>
