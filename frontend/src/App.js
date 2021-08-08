@@ -18,7 +18,7 @@ import { useAuth } from './shared/hooks/auth-hook';
 import Requests from './user/pages/Requests';
 
 const App = () => {
-  const { token, login, logout, userId, admin, formId } = useAuth();
+  const { token, login, logout, userId, admin, formId , adminArea } = useAuth();
 
   let routes;
 
@@ -70,6 +70,7 @@ const App = () => {
         logout: logout,
         admin:admin,
         formId:formId,
+        adminArea:adminArea
       }}
     >
       <Router>

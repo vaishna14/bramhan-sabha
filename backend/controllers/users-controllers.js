@@ -175,6 +175,7 @@ const login = async (req, res, next) => {
     token: token,
     isAdmin: existingUser.isAdmin,
     formId: existingUser.formId,
+    adminArea: existingUser.adminArea,
 
   });
 };
@@ -716,14 +717,15 @@ const getApprovals = async (req, res, next) => {
 }
 
 
-const getApprovalsList = async (req, res, next) => {
+const getApprovalsFemale = async (req,res,next)=>{
   try {
-    userVal = await User.find({ "_id": toId(req.userData.userId) });
-    console.log(req.body)
-    kids = req.body.requestUser;
-    console.log(kids);
-    const kidsListMale = await Male.find().where('_id').in(kids).exec();
-    res.status(200).json({ approvalList: kidsListMale });
+    let arr = [];
+    female = Female.find({}).select("first_name middle_name last_name address_ward approve approveTime personal_number");
+    female.exec(function (err, someValue) {
+      if (err) return next(err);
+      arr = someValue
+      res.status(200).json({ femalelist: someValue });
+    });
     // res.status(200).json({ list: male });
 
     // res.status(200).json("pulled");
@@ -736,6 +738,27 @@ const getApprovalsList = async (req, res, next) => {
     return next(error);
   }
 }
+
+// const getApprovalsFemale = async (req, res, next) => {
+//   try {
+//     userVal = await User.find({ "_id": toId(req.userData.userId) });
+//     console.log(req.body)
+//     kids = req.body.requestUser;
+//     console.log(kids);
+//     const kidsListMale = await Male.find().where('_id').in(kids).exec();
+//     res.status(200).json({ approvalList: kidsListMale });
+//     // res.status(200).json({ list: male });
+
+//     // res.status(200).json("pulled");
+//   } catch (err) {
+//     console.log(err);
+//     const error = new HttpError(
+//       'No data found.',
+//       500
+//     );
+//     return next(error);
+//   }
+// }
 
 
 const getShowDetails = async (req, res, next) => {
@@ -822,7 +845,7 @@ exports.getUserDetails = getUserDetails;
 exports.getSuggestions = getSuggestions;
 exports.getUserKids = getUserKids;
 exports.getApprovals = getApprovals;
-exports.getApprovalsList = getApprovalsList;
+exports.getApprovalsFemale = getApprovalsFemale;
 exports.getShowDetails = getShowDetails;
 exports.approveUser = approveUser;
 

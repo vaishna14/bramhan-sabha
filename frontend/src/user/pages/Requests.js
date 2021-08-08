@@ -7,6 +7,7 @@ import "./Requests.css"
 function Requests() {
   const auth = useContext(AuthContext);
   const [requestUser, setRequestUser] = useState([]);
+  const [requestUserFemale, setRequestUserFemale] = useState([]);
   const [open, setOpen] = useState(false);
   const [formDetails, setFormDetails] = useState({});
   const [id, setId] = useState("");
@@ -16,16 +17,29 @@ function Requests() {
   }, [])
 
 
-  const getRequests = ()=>{
-    axios({
+  const getRequests = async ()=>{
+    await axios({
       method: "get",
       url: `http://localhost:4000/api/users/requests`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
     }).then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       setRequestUser(response.data.list);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    await axios({
+      method: "get",
+      url: `http://localhost:4000/api/users/requestsFemale`,
+      headers: {
+        Authorization: 'Bearer ' + auth.token
+      }
+    }).then((response) => {
+      // console.log(response.data);
+      setRequestUserFemale(response.data.femalelist);
     }).catch((err) => {
       console.log(err);
     })
@@ -61,7 +75,7 @@ function Requests() {
         Authorization: 'Bearer ' + auth.token
       }
     }).then((response) => {
-      console.log(response.data.detail);
+      // console.log(response.data.detail);
       setFormDetails(response.data.detail);
     }).catch((err) => {
       console.log(err);
@@ -88,8 +102,11 @@ function Requests() {
   }
 
   useEffect(()=>{
-    console.log(requestUser)
-  },[requestUser])
+    console.log(requestUser);
+    console.log(requestUserFemale);
+    // console.log(auth);
+    console.log(auth.adminArea)
+  },[requestUser,requestUserFemale])
 
 
   return (
@@ -108,7 +125,37 @@ function Requests() {
           {
             requestUser.map(item => {
               return (
-              (item.address_ward == "Vivek Nagar") && (
+              (item.address_ward == auth.adminArea) && (
+                  
+                    <Table.Row>
+                      <Table.Cell>{item.first_name} {item.middle_name}  {item.last_name}</Table.Cell>
+                      <Table.Cell>{item.personal_number || ""}</Table.Cell>
+                      {
+                        (!item.approve) ?
+                          (
+                            <Table.HeaderCell disabled={item.address_ward !== "Vivek Nagar"} >
+                            <Button negative>Decline</Button>
+                            <Button positive onClick={()=>showDetails(item._id)}>Show</Button>
+                          </Table.HeaderCell>
+                            
+                          )
+                          : (
+                            <Table.HeaderCell disabled>Approved on {item.approveTime}
+                            </Table.HeaderCell>
+                          )
+                      }
+                    </Table.Row>
+                  
+
+                )
+              )
+             
+            })
+          }
+           {
+            requestUserFemale.map(item => {
+              return (
+              (item.address_ward == auth.adminArea) && (
                   
                     <Table.Row>
                       <Table.Cell>{item.first_name} {item.middle_name}  {item.last_name}</Table.Cell>

@@ -18,7 +18,7 @@ const userSchema = new Schema({
   approve:{type:Boolean},
   approveTime:{type:Date},
   formId:{type:String},
-
+  adminArea:{type:String},
 });
 
 userSchema.plugin(uniqueValidator);
