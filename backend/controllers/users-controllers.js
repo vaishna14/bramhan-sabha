@@ -284,7 +284,9 @@ const addUserDetails = async (req, res, next) => {
           formId :abc
         }
         console.log(newBody);
+        console.log(req.body.type);
         if (req.body.gender === "F" || req.body.type == "mother") {
+          console.log("here")
           createPerson = new Female(newBody)
         }
         if (req.body.gender === "M" || req.body.type == "father") {
