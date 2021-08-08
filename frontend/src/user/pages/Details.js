@@ -363,7 +363,7 @@ function Details(props) {
                 "loading": true
             });
             console.log(formDetails)
-        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, kidId: childId });
+        await FormData({ form: formDetails, type: props.type, token: auth.token, isExist: existId, formId : auth.formId, kidId: childId });
         dispatch(
             {
                 type: 'loading',
@@ -387,6 +387,9 @@ function Details(props) {
             <Dimmer active={isLoading} inverted>
                 <Loader size='large'>Loading</Loader>
             </Dimmer>
+            
+
+            <Form onSubmit={formSubmit}>
             {
                 !(formDetails?.approve) && (
                     <Message negative>
@@ -396,10 +399,15 @@ function Details(props) {
 
                 )
             }
-
-            <Form onSubmit={formSubmit}>
+                
+                    <div className="display-flex mb-1p mt-1p">
+                        <h4 className="mx-auto header-title">Form No.</h4>
+                        <div className="mx-5p">
+                        <h4 className="mx-auto header-title danger">{formDetails?.formId || " "}</h4>
+                        </div>
+                    </div>
                 <Form.Group>
-                    <div className="display-flex mb-1p">
+                    <div className="display-flex mb-1p mt-1p">
                         <h4 className="mx-auto header-title">Full name</h4>
                         <div className="mx-5p">
                             <Form.Dropdown
@@ -692,7 +700,7 @@ function Details(props) {
                 </div>
 
                 <Form.Button 
-                disabled={!(formDetails?.approve)} 
+                // disabled={!(formDetails?.approve)} 
                 content='Submit' />
                 {
                     detailsType !== "personal" && (

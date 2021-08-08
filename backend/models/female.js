@@ -40,6 +40,7 @@ const femaleSchema = new Schema({
   userId:{type: String},
   approve:{type:Boolean},
   approveTime:{type:String},
+  formId:{type:String},
   creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' }
 });
 

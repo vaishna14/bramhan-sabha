@@ -1,5 +1,5 @@
 .personal_sidebar{
-    height: 80rem;
+    height: 100rem;
 }
 
 .details-list{
@@ -54,4 +54,12 @@ input[list] + div[list] span:hover {
 
 .ui.fluid.search.selection.dropdown{
     width: 150px;
+}
+
+.danger{
+    color: red;
+}
+
+.ui.segment.form-segment{
+    height: 100rem;
 }

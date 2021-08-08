@@ -7,6 +7,7 @@ export const FormData = (props)=>{
     console.log(props);
     props.form["type"] = props.type;
     props.form["isExist"] = props.isExist
+    props.form["formId"] = props.formId
     let body =props.form;
     let token = props.token
     if(props.kidId){

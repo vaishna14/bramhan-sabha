@@ -7,4 +7,5 @@ export const AuthContext = createContext({
   login: () => {},
   logout: () => {},
   admin:false,
+  formId: null,
 });

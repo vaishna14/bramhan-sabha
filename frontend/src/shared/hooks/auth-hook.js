@@ -7,11 +7,13 @@ export const useAuth = () => {
   const [tokenExpirationDate, setTokenExpirationDate] = useState();
   const [userId, setUserId] = useState(false);
   const [admin, setAdmin] = useState(false);
+  const [formId, setFormId] = useState("");
 
-  const login = useCallback((uid, token,isAdmin, expirationDate) => {
+  const login = useCallback((uid, token,isAdmin, form, expirationDate) => {
     setToken(token);
     setUserId(uid);
     setAdmin(isAdmin == "true"|| isAdmin == true);
+    setFormId(form)
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpirationDate(tokenExpirationDate);
@@ -21,6 +23,7 @@ export const useAuth = () => {
         userId: uid,
         token: token,
         admin: isAdmin == "true" || isAdmin == true,
+        formId : form,
         expiration: tokenExpirationDate.toISOString()
       })
     );
@@ -50,9 +53,9 @@ export const useAuth = () => {
       storedData.token &&
       new Date(storedData.expiration) > new Date()
     ) {
-      login(storedData.userId, storedData.token,storedData.admin, new Date(storedData.expiration) );
+      login(storedData.userId, storedData.token,storedData.admin, storedData.formId, new Date(storedData.expiration) );
     }
   }, [login]);
 
-  return { token, login, logout, userId, admin };
+  return { token, login, logout, userId, admin, formId };
 };
