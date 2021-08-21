@@ -207,7 +207,8 @@ const addUserDetails = async (req, res, next) => {
   let exist;
   exist = await User.find({ "_id": req.userData.userId });
   let dbValue = exist[0];
-  if (!dbValue[req.body.type]) {
+  console.log(req.body)
+  if (!dbValue[req.body.type] || (req.body.type == "kids" && req.body.isExist == "")) {
     console.log("Create Value");
     let user;
     try {
@@ -311,12 +312,13 @@ const addUserDetails = async (req, res, next) => {
             place = await Female.findById(req.body.kidId);
             place["partnerId"] = createPerson;
           }
+        await place.save({ session: sess });
+
         }
         else {
           user[req.body.type] = createPerson;
         }
         await user.save({ session: sess });
-        await place.save({ session: sess });
         await sess.commitTransaction();
       }
       else {
