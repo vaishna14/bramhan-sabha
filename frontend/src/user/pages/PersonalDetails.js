@@ -32,8 +32,20 @@ function PersonalDetails() {
         setChildCount(childCount + 1);
         let newChild = child
         newChild.push(childCount + 1);
+        console.log(child)
+        console.log(childDetails);
+        let childDetailsList = childDetails;
+        let count = childCount+1
+        let obj = {first_name: "Child"+ count,
+                    _id:"" }
+        childDetailsList.push(obj);
+        console.log(childDetailsList);
 
     }
+
+    useEffect(()=>{
+        console.log(childCount)
+    },[childCount])
 
     useEffect(()=>{
         if(detailsType=== "family"){
@@ -51,17 +63,19 @@ function PersonalDetails() {
                 let maleChild = response.data.kidsListMale;
                 let femalChild = response.data.kidsListFemale;
                 let childDetailsList =[];
+                console.log(kids)
                 kids.map(item =>{
                     maleChild.map(male =>{
                         if(item == male._id){
                             childDetailsList.push(male);
-                        }else{
-                            femalChild.map(female =>{
-                                if (item == female._id){
-                                childDetailsList.push(female); 
-                                }
-                            })
                         }
+                        return;
+                    })
+                    femalChild.map(female =>{
+                        if (item == female._id){
+                        childDetailsList.push(female); 
+                        }
+                        return;
                     })
                 })
                setChildDetails(childDetailsList);
@@ -163,7 +177,7 @@ function PersonalDetails() {
                                 {
                                     childDetails.map((item, index) => {
                                         return (
-                                            <List.Item as='a' onClick={() => { showChildDetails(item._id, item.first_name, index+1) }}>{item.first_name}</List.Item>)
+                                            <List.Item as='a' key={item._id} onClick={() => { showChildDetails(item._id, item.first_name, index+1) }}>{item.first_name}</List.Item>)
                                     }
                                     )
                                 }

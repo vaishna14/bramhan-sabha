@@ -332,14 +332,6 @@ function Details(props) {
         }
     }
 
-    useEffect(()=>{
-        console.log(motherAlive);
-        console.log(fatherAlive);
-        console.log(props);
-        console.log(detailsType);
-    },[motherAlive])
-
-
     useEffect(() => {
         if (occupation === "" || occupation === "None") {
             setEarnings("")
@@ -493,14 +485,20 @@ function Details(props) {
                         <div className="display-flex mb-1p">
                             <h4 className="mx-auto header-title">Maiden name</h4>
                             <div className="mx-5p">
-                                <Form.Input placeholder="First Name" type="text" id="first_name" errorText="Please enter a valid title." name="maiden_first_name" onChange={formChange} defaultValue={formDetails?.maiden_first_name} /> </div>
-                            <div className="mx-5p"> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="maiden_middle_name" onChange={formChange} defaultValue={formDetails?.maiden_middle_name} /> </div>
+                                <Form.Input placeholder="First Name" type="text" id="first_name" 
+                                // errorText="Please enter a valid title." 
+                                name="maiden_first_name" onChange={formChange} defaultValue={formDetails?.maiden_first_name} /> </div>
+                            <div className="mx-5p"> <Form.Input placeholder="Middle Name" type="text" id="middle_name" 
+                            // errorText="Please enter a valid title." 
+                            name="maiden_middle_name" onChange={formChange} defaultValue={formDetails?.maiden_middle_name} /> </div>
                             <div className="mx-5p"><Form.Input placeholder="Last Name" type="text" id="last_name" name="maiden_last_name" onChange={formChange} defaultValue={formDetails?.maiden_last_name} /> </div>
                         </div>
                         <div className="display-flex mb-1p">
                             <h4 className="mx-auto header-title">Maiden City</h4>
                             <div className="mx-5p">
-                                <Form.Input placeholder="Maiden City" type="text" errorText="Please enter a valid title." name="maiden_city" onChange={formChange} defaultValue={formDetails?.maiden_city} /> </div>
+                                <Form.Input placeholder="Maiden City" type="text" 
+                                // errorText="Please enter a valid title." 
+                                name="maiden_city" onChange={formChange} defaultValue={formDetails?.maiden_city} /> </div>
                         </div>
                     </>
                     )

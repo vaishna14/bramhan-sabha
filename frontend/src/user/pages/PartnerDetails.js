@@ -69,7 +69,9 @@ function PartnerDetails({type}) {
                 <div className="display-flex mb-1p">
                     <h4 className="mx-auto header-title">Full name</h4>
                     <div className="mx-5p">
-                        <Input placeholder="First Name" list='languages' type="text" id="first_name" errorText="Please enter a valid title." /> 
+                        <Input placeholder="First Name" list='languages' type="text" id="first_name" 
+                        // errorText="Please enter a valid title."
+                         /> 
                         {/* <Input  placeholder='Choose language...' /> */}
                         <datalist id='languages' className="abc">
                         <option value='Vaishnavi'>Vaishnavi Kishor Vaidya (Aruna)</option>
@@ -77,7 +79,9 @@ function PartnerDetails({type}) {
                         <option value='Vaishnavi'>Dutch</option>
                         </datalist>
                         </div>
-                    <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." /> </div>
+                    <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" 
+                    // errorText="Please enter a valid title."
+                     /> </div>
                     <div className="mx-5p"><Input placeholder="Last Name" type="text" id="last_name" /> </div>
                 </div>
                 <div className="display-flex mb-1p">
@@ -104,8 +108,12 @@ function PartnerDetails({type}) {
                         <div className="display-flex mb-1p">
                         <h4 className="mx-auto header-title">Maiden name</h4>
                         <div className="mx-5p">
-                            <Input placeholder="First Name" type="text" id="first_name" errorText="Please enter a valid title." /> </div>
-                        <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." /> </div>
+                            <Input placeholder="First Name" type="text" id="first_name" 
+                            // errorText="Please enter a valid title." 
+                            /> </div>
+                        <div className="mx-5p"> <Input placeholder="Middle Name" type="text" id="middle_name" 
+                        // errorText="Please enter a valid title." 
+                        /> </div>
                         <div className="mx-5p"><Input placeholder="Last Name" type="text" id="last_name" /> </div>
                     </div>
                     )
