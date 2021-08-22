@@ -208,7 +208,7 @@ const addUserDetails = async (req, res, next) => {
   exist = await User.find({ "_id": req.userData.userId });
   let dbValue = exist[0];
   console.log(req.body)
-  if (!dbValue[req.body.type] || (req.body.type == "kids" && req.body.isExist == "")) {
+  if (!dbValue[req.body.type] || (req.body.type == "kids" && !req.body.kidId )) {
     console.log("Create Value");
     let user;
     try {
