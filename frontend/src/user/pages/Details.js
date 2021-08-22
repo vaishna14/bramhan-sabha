@@ -386,7 +386,7 @@ function Details(props) {
             {
                 !(formDetails?.approve) && (
                     <Message negative>
-                        <Message.Header>Admin needs to approve in order to edit your data</Message.Header>
+                        <Message.Header>Admin needs to approve in order to edit your data.</Message.Header>
                         {/* <p>That offer has expired</p> */}
                     </Message>
 

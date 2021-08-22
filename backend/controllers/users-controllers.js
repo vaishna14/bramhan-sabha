@@ -652,17 +652,10 @@ const getUserDetails = async (req, res, next) => {
     var type = req.params.detailsType;
     var findId;
     if (type === "kids") {
-      // var childCount = req.params.childCount;
-      // console.log(userVal[0].kids[childCount - 1]);
-      // findId = userVal[0].kids[childCount - 1];
       findId = req.params.childId
     }
     else if (type === "kids_spouse") {
       console.log("kids_spouse");
-      // var childCount = req.params.childCount;
-      // console.log(userVal[0].kids[childCount - 1]);
-      // findId = userVal[0].kids[childCount - 1];
-      // console.log(findId);
       let childId = req.params.childId
       console.log(req.params.childId);
       let child;
