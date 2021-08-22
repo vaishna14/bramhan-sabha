@@ -96,7 +96,7 @@ function Details(props) {
             });
         axios({
             method: "get",
-            url: `http://localhost:4000/api/users/getUserDetails/${props.type}/${child_count}`,
+            url: `http://localhost:4000/api/users/getUserDetails/${props.type}/${childId}`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }

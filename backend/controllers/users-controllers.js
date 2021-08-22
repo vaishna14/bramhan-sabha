@@ -652,12 +652,33 @@ const getUserDetails = async (req, res, next) => {
     var type = req.params.detailsType;
     var findId;
     if (type === "kids") {
-      var childCount = req.params.childCount;
-      console.log(userVal[0].kids[childCount - 1]);
-      findId = userVal[0].kids[childCount - 1];
+      // var childCount = req.params.childCount;
+      // console.log(userVal[0].kids[childCount - 1]);
+      // findId = userVal[0].kids[childCount - 1];
+      findId = req.params.childId
     }
     else if (type === "kids_spouse") {
-      console.log("kids_spouse")
+      console.log("kids_spouse");
+      // var childCount = req.params.childCount;
+      // console.log(userVal[0].kids[childCount - 1]);
+      // findId = userVal[0].kids[childCount - 1];
+      // console.log(findId);
+      let childId = req.params.childId
+      console.log(req.params.childId);
+      let child;
+      child = await Male.find({ "_id": toId(childId) })
+      if(child.length >0){
+        findId = child.partnerId
+        console.log(child);
+        console.log("Male");
+      }else{
+        child = await Female.find({ "_id": toId(childId) });
+        console.log(child);
+        console.log("Female");
+        findId = child[0].partnerId
+        console.log(findId)
+      }
+
     }
     else {
       findId = userVal[0][type];
