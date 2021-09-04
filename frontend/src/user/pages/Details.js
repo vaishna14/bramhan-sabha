@@ -40,6 +40,7 @@ function Details(props) {
     const [gotra, setGotra] = useState("");
     const [educationDetails, setEDucationDetails] = useState("");
     const [occupationDetails, setOccupationDetails]= useState("");
+    const [marriage, setMarriage] = useState("");
     const [wardName, setWardName] = useState("");
 
 
@@ -330,6 +331,9 @@ function Details(props) {
         }
         if(name == "address_ward"){
             setWardName(value)
+        }
+        if (name == "marital_status"){
+            setMarriage(value)
         }
         setFormDetails(form);
         if (name === "gender" && detailsType === "parent") {
