@@ -842,7 +842,7 @@ function Details(props) {
                 </div>
 
                 <Form.Button 
-                // disabled={!(formDetails?.approve)} 
+                disabled={!(formDetails?.approve)} 
                 content='Submit' />
                 {
                     detailsType !== "personal" && (
