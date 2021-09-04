@@ -11,7 +11,7 @@ const INITIAL_STATE = {
   partnerMotherAlive: "Yes",
   loading: false,
   child_count:1,
-  child_id:""
+  child_id:"abc"
 };
 
 const reducer = (state = INITIAL_STATE, action) => {

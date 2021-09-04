@@ -29,10 +29,18 @@ function Details(props) {
     const [occupation, setOccupation] = useState("");
     const [earning, setEarnings] = useState("");
     const [suggestions, setSuggestions] = useState([]);
+    const [gotraSuggestions, setGotraSuggestions] = useState([]);
+    const [educationSuggestions, setEducationSuggestions] = useState([]);
+    const [occupationSuggestions, setEOccupationSuggestions] = useState([]);
+    const [wardNameSuggestions, setWardNameSuggestions] = useState([]);
     const [dataListSelect, setDataListSelect] = useState(false);
     const [firstName, setFirstName] = useState("");
     const [middleName, setMiddleValue] = useState("");
     const [lastName, setLastValue] = useState("");
+    const [gotra, setGotra] = useState("");
+    const [educationDetails, setEDucationDetails] = useState("");
+    const [occupationDetails, setOccupationDetails]= useState("");
+    const [wardName, setWardName] = useState("");
 
 
     const aliveOptions = [
@@ -84,9 +92,6 @@ function Details(props) {
 
     ]
 
-
-
-
     useEffect(() => {
         // setIsLoading(true);
         dispatch(
@@ -129,16 +134,60 @@ function Details(props) {
             }
         }).then((response) => {
             let arr = [];
+            let gotra = [];
+            let occupation = [];
+            let education = [];
+            let ward = [];
             response.data.list.map(item => {
                 let obj = {};
+                let objGotra = {};
+                let occupationObj = {};
+                let educationObj = {};
+                let wardObj = {};
                 obj.key = item._id;
                 obj.text = item.first_name + " " + item.middle_name + " " + item.last_name
                 obj.value = item.first_name + " " + item.middle_name + " " + item.last_name
-                obj.first_name = item.first_name
+                obj.first_name = item.first_name;
+
+                objGotra.key = item.gotra;
+                objGotra.text = item.gotra;
+                objGotra.value = item.gotra;
+
+                occupationObj.key = item.occupation_detail;
+                occupationObj.text = item.occupation_detail;
+                occupationObj.value = item.occupation_detail;
+
+                educationObj.key = item.education_detail;
+                educationObj.text = item.education_detail;
+                educationObj.value = item.education_detail;
+
+                wardObj.key = item.address_ward;
+                wardObj.text = item.address_ward;
+                wardObj.value = item.address_ward;
+
                 arr.push(obj);
+                
+                if(item.gotra){
+                gotra.push(objGotra);
+                }
+                if(item.occupation_detail){
+                    occupation.push(occupationObj);
+                }
+                if (item.education_detail){
+                    education.push(educationObj);
+                }
+                console.log(item)
+                if (item.address_ward && (ward.filter(e => e.text == item.address_ward)).length == 0  ){
+                    ward.push(wardObj);
+                }
+
                 return;
             })
             setSuggestions(arr);
+            setGotraSuggestions(gotra);
+            setEducationSuggestions(education);
+            setEOccupationSuggestions(occupation);
+            setWardNameSuggestions(ward);
 
         }).catch((err) => {
             console.log(err);
@@ -271,6 +320,18 @@ function Details(props) {
                 form[x] = newForm[x]
             })
         }
+        if(name == "gotra"){
+            setGotra(value)
+        }
+        if(name == "occupation_detail"){
+            setOccupation(value)
+        }
+        if(name == "education_detail"){
+            setEducation(value)
+        }
+        if(name == "address_ward"){
+            setWardName(value)
+        }
         setFormDetails(form);
         if (name === "gender" && detailsType === "parent") {
             (props.type === "father") ? form[name] = "M" : form[name] = "F"
@@ -364,14 +425,27 @@ function Details(props) {
             });
     }
 
-    const datListClicked = (e, { name, value }) => {
-        setDataListSelect(true);
-        // setCurrentValue(value)
-    }
-
     const handleAddition = (e, { name, value }) => {
-        let suggList = suggestions;
+        console.log(name)
+        
+        if(name === "gotra"){
+            let suggList = gotraSuggestions;
+            setGotraSuggestions([{ text: value, value }, ...suggList],);
+        }else if (name == "occupation_detail"){
+            let suggList = occupationSuggestions;
+            setEOccupationSuggestions([{ text: value, value }, ...suggList],)
+        }else if (name == "education_detail"){
+            let suggList = educationSuggestions;
+            setEducationSuggestions([{ text: value, value }, ...suggList],)
+        }else if (name == "address_ward"){
+            let suggList = wardNameSuggestions;
+            setWardNameSuggestions([{ text: value, value }, ...suggList],)
+            console.log([{ text: value, value }, ...suggList],)
+        }
+        else{
+            let suggList = suggestions;
         setSuggestions([{ text: value, value }, ...suggList],);
+        }
     }
 
 
@@ -478,7 +552,22 @@ function Details(props) {
                     </div>
                     <div className="display-flex mx-5p">
                         <h4>Gotra</h4>
-                        <Form.Input type="text" placeholder="Gotra" className="mx-5p" onChange={formChange} name="gotra" defaultValue={formDetails?.gotra} />
+                        <Form.Dropdown
+                                options={gotraSuggestions}
+                                placeholder='Gotra'
+                                search
+                                selection
+                                fluid
+                                allowAdditions
+                                value={formDetails?.gotra}
+                                text={formDetails?.gotra || ""}
+                                id="gotra"
+                                name="gotra"
+                                onAddItem={handleAddition}
+                                onChange={formChange}
+                                className="mx-5p"
+                            />
+                        {/* <Form.Input type="text" placeholder="Gotra" className="mx-5p" onChange={formChange} name="gotra" defaultValue={formDetails?.gotra} /> */}
                     </div>
                 </div>
                 {
@@ -620,14 +709,46 @@ function Details(props) {
                     <h4 className="header-title">Education</h4>
                     <Form.Dropdown disabled={alive === "No"} placeholder='Select Latest Education' clearable search selection options={educationOptions} name="education" onChange={formChange} value={education} />
                     <div className="display-flex mx-5p "><h4> Details</h4>
-                        <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Education-detail" type="text" name="education_detail" onChange={formChange} defaultValue={education === "" ? "" : formDetails?.education_detail} />
+                    <Form.Dropdown
+                                options={educationSuggestions}
+                                placeholder='Education Details'
+                                search
+                                selection
+                                fluid
+                                allowAdditions
+                                value={formDetails?.education_detail}
+                                text={formDetails?.education_detail || ""}
+                                id="education_detail"
+                                name="education_detail"
+                                onAddItem={handleAddition}
+                                onChange={formChange}
+                                disabled={alive === "No"}
+                                className="mx-5p"
+                            />
+                        {/* <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Education-detail" type="text" name="education_detail" onChange={formChange} defaultValue={education === "" ? "" : formDetails?.education_detail} /> */}
                     </div>
                 </div>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Occupation/Business</h4>
                     <Form.Dropdown disabled={alive === "No"} placeholder='Select Type' clearable search selection options={occupationOptions} name="occupation" onChange={formChange} value={occupation} />
                     <div className="display-flex mx-5p"><h4 > Name</h4>
-                        <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Name of Occupation/Business " type="text" name="occupation_detail" onChange={formChange} defaultValue={occupation === "" ? "" : formDetails?.occupation_detail} />
+                    <Form.Dropdown
+                                options={occupationSuggestions}
+                                placeholder='Occupation Name'
+                                search
+                                selection
+                                fluid
+                                allowAdditions
+                                value={formDetails?.occupation_detail}
+                                text={formDetails?.occupation_detail || ""}
+                                id="occupation_detail"
+                                name="occupation_detail"
+                                onAddItem={handleAddition}
+                                onChange={formChange}
+                                disabled={alive === "No"}
+                                className="mx-5p"
+                            />
+                        {/* <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Name of Occupation/Business " type="text" name="occupation_detail" onChange={formChange} defaultValue={occupation === "" ? "" : formDetails?.occupation_detail} /> */}
                     </div>
                 </div>
                 <div className="display-flex mb-1p">
@@ -650,7 +771,23 @@ function Details(props) {
                             <Form.Group>
                                 {
                                     // detailsType === "personal" && (
-                                        <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange} defaultValue={formDetails?.address_ward} />
+                                        <Form.Dropdown
+                                options={wardNameSuggestions}
+                                placeholder='WardName'
+                                search
+                                selection
+                                fluid
+                                allowAdditions
+                                value={formDetails?.address_ward}
+                                text={formDetails?.address_ward || ""}
+                                id="address_ward"
+                                name="address_ward"
+                                onAddItem={handleAddition}
+                                onChange={formChange}
+                                disabled={alive === "No"}
+                                className="mx-5p"
+                            />
+                                        // <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange} defaultValue={formDetails?.address_ward} />
 
                                     // )
                                 }

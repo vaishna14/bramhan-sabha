@@ -705,7 +705,7 @@ const getUserDetails = async (req, res, next) => {
 const getSuggestions = async (req, res, next) => {
   let arr = [];
   try {
-    male = Male.find({}).select("first_name middle_name last_name");
+    male = Male.find({}).select("first_name middle_name last_name gotra education_detail occupation_detail address_ward");
     male.exec(function (err, someValue) {
       if (err) return next(err);
       arr = someValue
