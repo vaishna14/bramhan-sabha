@@ -176,7 +176,6 @@ function Details(props) {
                 if (item.education_detail){
                     education.push(educationObj);
                 }
-                console.log(item)
                 if (item.address_ward && (ward.filter(e => e.text == item.address_ward)).length == 0  ){
                     ward.push(wardObj);
                 }
@@ -440,7 +439,6 @@ function Details(props) {
         }else if (name == "address_ward"){
             let suggList = wardNameSuggestions;
             setWardNameSuggestions([{ text: value, value }, ...suggList],)
-            console.log([{ text: value, value }, ...suggList],)
         }
         else{
             let suggList = suggestions;
@@ -478,6 +476,7 @@ function Details(props) {
                         <h4 className="mx-auto header-title">Full name</h4>
                         <div className="mx-5p">
                             <Form.Dropdown
+                            required
                                 options={suggestions}
                                 placeholder='FirstName'
                                 search
@@ -492,6 +491,7 @@ function Details(props) {
                             />
                         </div>
                         <div className="mx-5p"> <Form.Dropdown
+                        required
                             options={suggestions}
                             placeholder='Middle Name'
                             search
@@ -510,6 +510,7 @@ function Details(props) {
                         <div className="mx-5p">
                             {/* <Form.Input placeholder="Last Name" type="text" id="last_name" name="last_name" onChange={formChange} defaultValue={formDetails?.last_name} />  */}
                             <Form.Dropdown
+                            required
                                 options={suggestions}
                                 placeholder='Last Name'
                                 search
@@ -530,6 +531,7 @@ function Details(props) {
                     <h4 className="header-title">Gender</h4>
                     <div className="display-flex" style={{ "width": "200px" }}>
                         <Form.Radio
+                        required
                             className="mx-5p"
                             label='Male'
                             name='gender'
@@ -540,6 +542,7 @@ function Details(props) {
 
                         />
                         <Form.Radio
+                        required
                             className="mx-5p"
                             label='Female'
                             name='gender'
@@ -575,18 +578,18 @@ function Details(props) {
                         <div className="display-flex mb-1p">
                             <h4 className="mx-auto header-title">Maiden name</h4>
                             <div className="mx-5p">
-                                <Form.Input placeholder="First Name" type="text" id="first_name" 
+                                <Form.Input required placeholder="First Name" type="text" id="first_name" 
                                 // errorText="Please enter a valid title." 
                                 name="maiden_first_name" onChange={formChange} defaultValue={formDetails?.maiden_first_name} /> </div>
-                            <div className="mx-5p"> <Form.Input placeholder="Middle Name" type="text" id="middle_name" 
+                            <div className="mx-5p"> <Form.Input required placeholder="Middle Name" type="text" id="middle_name" 
                             // errorText="Please enter a valid title." 
                             name="maiden_middle_name" onChange={formChange} defaultValue={formDetails?.maiden_middle_name} /> </div>
-                            <div className="mx-5p"><Form.Input placeholder="Last Name" type="text" id="last_name" name="maiden_last_name" onChange={formChange} defaultValue={formDetails?.maiden_last_name} /> </div>
+                            <div className="mx-5p"><Form.Input required placeholder="Last Name" type="text" id="last_name" name="maiden_last_name" onChange={formChange} defaultValue={formDetails?.maiden_last_name} /> </div>
                         </div>
                         <div className="display-flex mb-1p">
                             <h4 className="mx-auto header-title">Maiden City</h4>
                             <div className="mx-5p">
-                                <Form.Input placeholder="Maiden City" type="text" 
+                                <Form.Input required placeholder="Maiden City" type="text" 
                                 // errorText="Please enter a valid title." 
                                 name="maiden_city" onChange={formChange} defaultValue={formDetails?.maiden_city} /> </div>
                         </div>
@@ -595,11 +598,11 @@ function Details(props) {
                 }
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Alive</h4>
-                    <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="alive" onChange={formChange} value={alive} />
+                    <Form.Dropdown required placeholder='Select' search selection options={aliveOptions} name="alive" onChange={formChange} value={alive} />
                     {
                         alive === "No" && (
                             <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="date_of_death" onChange={formChange} defaultValue={formDetails?.date_of_death} />
+                                <Form.Input required className="mx-5p" type="date" placeholder='Date of Death' name="date_of_death" onChange={formChange} defaultValue={formDetails?.date_of_death} />
                             </div>
                         )
 
@@ -609,14 +612,14 @@ function Details(props) {
                 </div>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Marrital Status</h4>
-                    <Form.Dropdown placeholder='Select' search selection options={maritalStatus} name="marital_status" onChange={formChange} value={formDetails?.marital_status} />
+                    <Form.Dropdown required placeholder='Select' search selection options={maritalStatus} name="marital_status" onChange={formChange} value={formDetails?.marital_status} />
                    
                    {
                        formDetails.marital_status !== "Single" && (
 
                        
                     <div className="display-flex mx-5p"><h4> Date of Marriage</h4>
-                                <Form.Input className="mx-5p" type="date" placeholder='Date of Marriage' name="date_of_marriage" onChange={formChange} defaultValue={formDetails?.date_of_marriage} />
+                                <Form.Input required className="mx-5p" type="date" placeholder='Date of Marriage' name="date_of_marriage" onChange={formChange} defaultValue={formDetails?.date_of_marriage} />
                             </div>
                             ) 
                         }
@@ -627,7 +630,7 @@ function Details(props) {
 
                             <div className="display-flex mb-1p">
                                 <h4 className="header-title">Father Alive</h4>
-                                <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="father_alive" onChange={formChange} value={props.type === "partner" ? partnerFatherAlive : fatherAlive} />
+                                <Form.Dropdown required placeholder='Select' search selection options={aliveOptions} name="father_alive" onChange={formChange} value={props.type === "partner" ? partnerFatherAlive : fatherAlive} />
                                 {
                                     props.type === "personal" ? 
                                     
@@ -636,14 +639,14 @@ function Details(props) {
                                     {
                                         formDetails?.father_alive == "Yes"  && formDetails?.mother_alive == "Yes" && (
                                             <div className="mx-5p display-flex"><h4> Mother Alive</h4>
-                                                <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange}  />
+                                                <Form.Dropdown required className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange}  />
                                             </div>
                                          )} 
 
                                         {formDetails?.father_alive === "No" && (
                                             <>
                                             <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                                <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
+                                                <Form.Input required className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
                                             </div>
                                          </>
                                         )}
@@ -651,13 +654,13 @@ function Details(props) {
                                     : (<>{
                                             partnerFatherAlive === "Yes" && partnerMotherAlive === "Yes" && (
                                                 <div className="mx-5p display-flex"><h4> Mother Alive</h4>
-                                                    <Form.Dropdown className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
+                                                    <Form.Dropdown required className="mx-5p" placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
                                                 </div>
                                             )}
 
                                             {partnerFatherAlive === "No" && (
                                                 <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                                    <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
+                                                    <Form.Input required className="mx-5p" type="date" placeholder='Date of Death' name="father_death" onChange={formChange} defaultValue={formDetails?.father_death} />
                                                 </div>
                                             )}</>)
                                 }
@@ -668,11 +671,11 @@ function Details(props) {
                                     (fatherAlive === "No" || motherAlive === "No") && (
                                         <div className="display-flex mb-1p">
                                             <h4 className="header-title">Mother Alive</h4>
-                                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
+                                            <Form.Dropdown required placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
                                             {
                                                 motherAlive === "No" && (
                                                     <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                                        <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="mother_death" onChange={formChange} defaultValue={formDetails?.mother_death} />
+                                                        <Form.Input required className="mx-5p" type="date" placeholder='Date of Death' name="mother_death" onChange={formChange} defaultValue={formDetails?.mother_death} />
                                                     </div>
                                                 )}
                                         </div>
@@ -682,11 +685,11 @@ function Details(props) {
                                     (partnerFatherAlive === "No" || partnerMotherAlive === "No") && (
                                         <div className="display-flex mb-1p">
                                             <h4 className="header-title">Mother Alive</h4>
-                                            <Form.Dropdown placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
+                                            <Form.Dropdown required placeholder='Select' search selection options={aliveOptions} name="mother_alive" onChange={formChange} value={props.type === "partner" ? partnerMotherAlive : motherAlive} />
                                             {
                                                 partnerMotherAlive === "No" && (
                                                     <div className="display-flex mx-5p"><h4> Date of Death</h4>
-                                                        <Form.Input className="mx-5p" type="date" placeholder='Date of Death' name="mother_death" onChange={formChange} defaultValue={formDetails?.mother_death} />
+                                                        <Form.Input required className="mx-5p" type="date" placeholder='Date of Death' name="mother_death" onChange={formChange} defaultValue={formDetails?.mother_death} />
                                                     </div>
                                                 )}
                                         </div>
@@ -698,18 +701,19 @@ function Details(props) {
                         </>)}
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Blood Group</h4>
-                    <Form.Dropdown placeholder='Select Blood Group' disabled={alive === "No"} clearable search selection options={bloodGroupOptions} name="blood_group" onChange={formChange} value={bloodGroup} />
+                    <Form.Dropdown required placeholder='Select Blood Group' disabled={alive === "No"} clearable search selection options={bloodGroupOptions} name="blood_group" onChange={formChange} value={bloodGroup} />
 
                     <div className="display-flex mx-5p"><h4> Birth Date</h4>
-                        <Input className="mx-5p" type="date" name="birth_date" onChange={formChange} defaultValue={formDetails?.birth_date} />
+                        <Input required className="mx-5p" type="date" name="birth_date" onChange={formChange} defaultValue={formDetails?.birth_date} />
 
                     </div>
                 </div>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Education</h4>
-                    <Form.Dropdown disabled={alive === "No"} placeholder='Select Latest Education' clearable search selection options={educationOptions} name="education" onChange={formChange} value={education} />
+                    <Form.Dropdown required disabled={alive === "No"} placeholder='Select Latest Education' clearable search selection options={educationOptions} name="education" onChange={formChange} value={education} />
                     <div className="display-flex mx-5p "><h4> Details</h4>
                     <Form.Dropdown
+                    required
                                 options={educationSuggestions}
                                 placeholder='Education Details'
                                 search
@@ -730,9 +734,10 @@ function Details(props) {
                 </div>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Occupation/Business</h4>
-                    <Form.Dropdown disabled={alive === "No"} placeholder='Select Type' clearable search selection options={occupationOptions} name="occupation" onChange={formChange} value={occupation} />
+                    <Form.Dropdown required disabled={alive === "No"} placeholder='Select Type' clearable search selection options={occupationOptions} name="occupation" onChange={formChange} value={occupation} />
                     <div className="display-flex mx-5p"><h4 > Name</h4>
                     <Form.Dropdown
+                    required
                                 options={occupationSuggestions}
                                 placeholder='Occupation Name'
                                 search
@@ -753,25 +758,26 @@ function Details(props) {
                 </div>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Earnings</h4>
-                    <Form.Dropdown disabled={alive === "No"} placeholder='Select Type' clearable search selection options={earningsOptions} name="earning" onChange={formChange} value={earning} />
+                    <Form.Dropdown required disabled={alive === "No"} placeholder='Select Type' clearable search selection options={earningsOptions} name="earning" onChange={formChange} value={earning} />
 
                 </div>
                 {
                     <>
                         <div className="display-flex mb-1p">
                             <h4 className="header-title">Address</h4>
-                            <Form.TextArea className="current-address" placeholder='Add your address' style={{ minHeight: 100 }} name="address" onChange={formChange} defaultValue={formDetails?.address} />
+                            <Form.TextArea required className="current-address" placeholder='Add your address' style={{ minHeight: 100 }} name="address" onChange={formChange} defaultValue={formDetails?.address} />
                         </div>
 
                         <div className="margin-title ">
                             <Form.Group>
-                                <Form.Input type="text" className="mx-5p" label="City" placeholder="City" name="address_city" onChange={formChange} defaultValue={formDetails?.address_city} />
-                                <Form.Input type="number" className="mx-5p" label="Pin Code" placeholder="Pin-Code" name="address_pincode" onChange={formChange} defaultValue={formDetails?.address_pincode} />
+                                <Form.Input required type="text" className="mx-5p" label="City" placeholder="City" name="address_city" onChange={formChange} defaultValue={formDetails?.address_city} />
+                                <Form.Input required type="number" className="mx-5p" label="Pin Code" placeholder="Pin-Code" name="address_pincode" onChange={formChange} defaultValue={formDetails?.address_pincode} />
                             </Form.Group>
                             <Form.Group>
                                 {
                                     // detailsType === "personal" && (
                                         <Form.Dropdown
+                                        required
                                 options={wardNameSuggestions}
                                 placeholder='WardName'
                                 search
@@ -793,7 +799,7 @@ function Details(props) {
                                 }
                                 {
                                     alive === "Yes" && (
-                                        <Form.Checkbox label='Add Permanent Address' onChange={() => { setAddPermanent(!addPermanent) }} />
+                                        <Form.Checkbox  label='Add Permanent Address' onChange={() => { setAddPermanent(!addPermanent) }} />
                                     )}
                             </Form.Group>
                         </div>
@@ -805,11 +811,11 @@ function Details(props) {
                         <div className="display-flex mt-1p">
                             <h4 className="header-title">Permanent Address</h4>
 
-                            <Form.TextArea className="current-address" placeholder='Add your permanent address' style={{ minHeight: 100 }} name="permanent_address" onChange={formChange} defaultValue={formDetails?.permanent_address} />
+                            <Form.TextArea required className="current-address" placeholder='Add your permanent address' style={{ minHeight: 100 }} name="permanent_address" onChange={formChange} defaultValue={formDetails?.permanent_address} />
                         </div>
                         <div className="margin-title mb-1p mt-1p">
-                            <Form.Input type="text" className="mx-5p" label="City" placeholder="City" name="permanent_city" onChange={formChange} defaultValue={formDetails?.permanent_city} />
-                            <Form.Input type="number" className="mx-5p" label="Pin Code" placeholder="000-000" name="permanent_pincode" onChange={formChange} defaultValue={formDetails?.permanent_pincode} />
+                            <Form.Input required type="text" className="mx-5p" label="City" placeholder="City" name="permanent_city" onChange={formChange} defaultValue={formDetails?.permanent_city} />
+                            <Form.Input required type="number" className="mx-5p" label="Pin Code" placeholder="000-000" name="permanent_pincode" onChange={formChange} defaultValue={formDetails?.permanent_pincode} />
                         </div>
                     </>
                 )}
@@ -817,11 +823,11 @@ function Details(props) {
                     <div className="display-flex mb-1p mt-1p">
                         <h4 className="header-title">Contact no.</h4>
 
-                        <Form.Input disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='Personal no.' type="number" name="personal_number" onChange={formChange} defaultValue={formDetails?.personal_number}>
+                        <Form.Input  disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='Personal no.' type="number" name="personal_number" onChange={formChange} defaultValue={formDetails?.personal_number}>
                             <Icon name='phone' />
                             <input />
                         </Form.Input>
-                        <Form.Input disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='WhatsApp no.' type="number" name="whatsapp_number" onChange={formChange} defaultValue={formDetails?.whatsapp_number}>
+                        <Form.Input required disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='WhatsApp no.' type="number" name="whatsapp_number" onChange={formChange} defaultValue={formDetails?.whatsapp_number}>
                             <Icon className="mx-5p" name='whatsapp' />
                             <input className="mx-5p" />
                         </Form.Input>
@@ -829,7 +835,7 @@ function Details(props) {
                 </Form.Group>
                 <div className="display-flex mb-1p">
                     <h4 className="header-title">Email address</h4>
-                    <Form.Input disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='Email' type="email" name="email" onChange={formChange} defaultValue={formDetails?.email}>
+                    <Form.Input  disabled={alive === "No"} iconPosition='left' className="mx-5p" placeholder='Email' type="email" name="email" onChange={formChange} defaultValue={formDetails?.email}>
                         <Icon name='at' />
                         <input className="mx-5p" />
                     </Form.Input>
