@@ -1,0 +1,8 @@
+{
+    "env":{
+        "DB_USER":"root",
+        "DB_PASS":"root",
+        "DB_NAME":"myFirstDatabase",
+        "JWT_TOKEN":"supersecret_dont_share"
+    }
+}
