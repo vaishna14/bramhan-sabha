@@ -102,7 +102,7 @@ function Details(props) {
             });
         axios({
             method: "get",
-            url: `http://localhost:4000/api/users/getUserDetails/${props.type}/${childId}`,
+            url: `https://test05092021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }
@@ -129,7 +129,7 @@ function Details(props) {
     useEffect(() => {
         axios({
             method: "get",
-            url: `http://localhost:4000/api/users/suggestions`,
+            url: `https://test05092021.herokuapp.com/api/users/suggestions`,
             headers: {
                 Authorization: 'Bearer ' + auth.token
             }

@@ -16,7 +16,7 @@ export const FormData = (props)=>{
     }
     axios({
         method: 'post',
-        url: 'http://localhost:4000/api/users/addUserDetails',
+        url: 'https://test05092021.herokuapp.com/api/users/addUserDetails',
         data: body,
         headers: {
             Authorization: 'Bearer ' + token
@@ -33,7 +33,7 @@ export const FormData = (props)=>{
 
     // axios({
     //     method: 'post',
-    //     url: 'http://localhost:4000/api/users/userDetails',
+    //     url: 'https://test05092021.herokuapp.com/api/users/userDetails',
     //     ...body
     //   })
     //     .then(function (response) {

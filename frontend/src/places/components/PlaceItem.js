@@ -32,7 +32,7 @@ const PlaceItem = props => {
     setShowConfirmModal(false);
     try {
       await sendRequest(
-        `http://localhost:4000/api/places/${props.id}`,
+        `https://test05092021.herokuapp.com/api/places/${props.id}`,
         'DELETE',
         null,
         {

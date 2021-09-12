@@ -13,7 +13,7 @@ const Users = () => {
     const fetchUsers = async () => {
       try {
         const responseData = await sendRequest(
-          'http://localhost:4000/api/users'
+          'https://test05092021.herokuapp.com/api/users'
         );
 
         setLoadedUsers(responseData.users);
