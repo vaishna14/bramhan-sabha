@@ -25,6 +25,7 @@ function Details(props) {
     const isLoading = useSelector((state) => state.personal.loading);
     const child_count = useSelector((state) => state.personal.child_count);
     const childId = useSelector((state) => state.personal.child_id);
+    const [submitDisable, setSubmitDisable] = useState(true);
     const [bloodGroup, setBloodGroup] = useState("");
     const [occupation, setOccupation] = useState("");
     const [earning, setEarnings] = useState("");
@@ -110,6 +111,7 @@ function Details(props) {
             if (props.type === response.data.type) {
                 if (response?.data?.detail) {
                     setFormDetails(response?.data?.detail);
+                    setSubmitDisable(false);
                 }
             }
         }).catch((err) => {
@@ -450,6 +452,21 @@ function Details(props) {
         }
     }
 
+    useEffect(()=>{
+        console.log(formDetails);
+        console.log(!(formDetails?.approve));
+        console.log(formDetails.approve == undefined);
+        // if(Object.entries){
+        //     setSubmitDisable()
+        // }
+        console.log(Object.entries(formDetails))
+        if(Object.entries(formDetails).length ==0){
+            setSubmitDisable(false);
+        }else{
+            setSubmitDisable(!(formDetails?.approve))
+        }
+    },[formDetails])
+
 
     return (
         <div>
@@ -460,7 +477,7 @@ function Details(props) {
 
             <Form onSubmit={formSubmit}>
             {
-                !(formDetails?.approve) && (
+                submitDisable && (
                     <Message negative>
                         <Message.Header>Admin needs to approve in order to edit your data.</Message.Header>
                         {/* <p>That offer has expired</p> */}
@@ -846,7 +863,7 @@ function Details(props) {
                 </div>
 
                 <Form.Button 
-                disabled={!(formDetails?.approve)} 
+                disabled={submitDisable} 
                 content='Submit' />
                 {
                     detailsType !== "personal" && (

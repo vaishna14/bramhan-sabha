@@ -646,7 +646,7 @@ const getUserKids = async (req, res, next) => {
 
 const getUserDetails = async (req, res, next) => {
   let detail;
-
+  console.log("getUserDetails")
   try {
     userVal = await User.find({ "_id": toId(req.userData.userId) });
     var type = req.params.detailsType;
@@ -704,9 +704,30 @@ const getUserDetails = async (req, res, next) => {
 
 const getSuggestions = async (req, res, next) => {
   let arr = [];
+  console.log("here");
   try {
     male = Male.find({}).select("first_name middle_name last_name gotra education_detail occupation_detail address_ward");
     male.exec(function (err, someValue) {
+      if (err) return next(err);
+      arr = someValue
+      res.status(200).json({ list: someValue });
+    });
+  } catch (err) {
+    const error = new HttpError(
+      'No data found.',
+      500
+    );
+    return next(error);
+  }
+}
+
+const getSuggestionsFemale = async (req, res, next) => {
+  let arr = [];
+  console.log("here");
+  console.log("getSuggestionsFemale");
+  try {
+    female = Female.find({}).select("first_name middle_name last_name gotra education_detail occupation_detail address_ward");
+    female.exec(function (err, someValue) {
       if (err) return next(err);
       arr = someValue
       res.status(200).json({ list: someValue });
@@ -868,4 +889,5 @@ exports.getApprovals = getApprovals;
 exports.getApprovalsFemale = getApprovalsFemale;
 exports.getShowDetails = getShowDetails;
 exports.approveUser = approveUser;
+exports.getSuggestionsFemale = getSuggestionsFemale;
 

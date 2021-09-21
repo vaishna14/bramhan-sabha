@@ -30,6 +30,7 @@ router.use(checkAuth);
 router.post('/addUserDetails', usersController.addUserDetails);
 router.get('/getUserDetails/:detailsType/:childId', usersController.getUserDetails);
 router.get('/suggestions', usersController.getSuggestions);
+router.get('/suggestions_female', usersController.getSuggestionsFemale);
 router.get('/kids', usersController.getUserKids);
 router.get('/requests', usersController.getApprovals);
 router.get('/requestsFemale', usersController.getApprovalsFemale);
