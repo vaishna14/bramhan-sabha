@@ -16,7 +16,7 @@ export const FormData = (props)=>{
     }
     axios({
         method: 'post',
-        url: 'https://test05092021.herokuapp.com/api/users/addUserDetails',
+        url: 'http://localhost:4000/api/users/addUserDetails',
         data: body,
         headers: {
             Authorization: 'Bearer ' + token

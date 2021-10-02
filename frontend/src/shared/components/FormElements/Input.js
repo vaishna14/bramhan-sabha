@@ -95,7 +95,7 @@ const Input = props => {
     >
       <label htmlFor={props.id}>{props.label} &nbsp;&nbsp;
       {props.label == "Password" && (
-       <Icon name={!show?"eye":"eye slash"} onClick={()=>{setShow(!show)}}/> 
+       <Icon name={show?"eye":"eye slash"} onClick={()=>{setShow(!show)}}/> 
       )}</label>
       {element}
       {!inputState.isValid && inputState.isTouched && <p>{props.errorText}</p>}

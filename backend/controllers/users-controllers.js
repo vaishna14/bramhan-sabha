@@ -230,18 +230,34 @@ const addUserDetails = async (req, res, next) => {
       if (req.body.isExist === "") {
         console.log("Does not exist");
         let abc;
+        let reqFormId ;
+        if(req.body.formId){
+          reqFormId = req.body.formId;
+        }else{
+          await User.countDocuments({}).exec((err, count) => {
+            if (err) {
+                res.send(err);
+                return;
+            }
+        
+            console.log("count "+ count);
+            reqFormId = count+1;
+            console.log("reqFormId"+ reqFormId)
+        });
+        console.log("reqFormId " + reqFormId)
+        }
         console.log(req.body.type)
         if (req.body.type == "personal") {
-          abc = req.body.formId + "/1"
+          abc = reqFormId + "/1"
         }
         if (req.body.type == "partner") {
-          abc = req.body.formId + "/2"
+          abc = reqFormId + "/2"
         }
         if (req.body.type == "father") {
-          abc = req.body.formId + "/3"
+          abc = reqFormId + "/3"
         }
         if (req.body.type == "mother") {
-          abc = req.body.formId + "/4"
+          abc = reqFormId + "/4"
         }
         let createPerson;
         console.log(abc);
@@ -324,22 +340,37 @@ const addUserDetails = async (req, res, next) => {
       else {
         console.log("Already exist");
         let abc;
-
+        let reqFormId ;
+        if(req.body.formId){
+          reqFormId = req.body.formId;
+        }else{
+          await User.countDocuments({}).exec((err, count) => {
+            if (err) {
+                res.send(err);
+                return;
+            };        
+            console.log("count "+ count);
+            reqFormId = count+1;
+            console.log("reqFormId"+ reqFormId)
+        });
+        console.log("reqFormId " + reqFormId)
+        }
         if (req.body.type == "personal") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist), "approve": false });
-          abc = req.body.formId + "/1"
+         console.log(reqFormId);
+          abc = reqFormId + "/1"
         }
         if (req.body.type == "partner") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "partner": toId(req.body.isExist) });
-          abc = req.body.formId + "/2"
+          abc = reqFormId + "/2"
         }
         if (req.body.type == "father") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "father": toId(req.body.isExist) });
-          abc = req.body.formId + "/3"
+          abc = reqFormId + "/3"
         }
         if (req.body.type == "mother") {
           place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "mother": toId(req.body.isExist) });
-          abc = req.body.formId + "/4"
+          abc = reqFormId + "/4"
         }
         let reqType = req.body.type;
         if (reqType.includes("kids")) {
@@ -373,23 +404,37 @@ const addUserDetails = async (req, res, next) => {
     console.log("Update Value");
     var abc;
     console.log(req.body.type);
-
+    let reqFormId ;
+    if(req.body.formId){
+      reqFormId = req.body.formId;
+    }else{
+      await User.countDocuments({}).exec((err, count) => {
+        if (err) {
+            res.send(err);
+            return;
+        }
+    
+        console.log("count "+ count);
+        reqFormId = count+1;
+        console.log("reqFormId"+ reqFormId)
+    });
+    }
     if (req.body.type == "personal") {
-      abc = req.body.formId + "/1"
+      abc = reqFormId + "/1"
     }
     if (req.body.type == "partner") {
-      abc = req.body.formId + "/2"
+      abc = reqFormId + "/2"
     }
     if (req.body.type == "father") {
-      abc = req.body.formId + "/3"
+      abc = reqFormId + "/3"
     }
     if (req.body.type == "mother") {
-      abc = req.body.formId + "/4"
+      abc = reqFormId + "/4"
     }
     if (req.body.type == "kids") {
       var childCount = req.body.kidCount;
       console.log(childCount);
-      abc = req.body.formId + "/1/" + childCount
+      abc = reqFormId + "/1/" + childCount
     }
 
     console.log(abc);
