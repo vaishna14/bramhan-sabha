@@ -632,7 +632,7 @@ function Details(props) {
 
                 </div>
                 <div className="display-flex mb-1p">
-                    <h4 className="header-title">Marrital Status</h4>
+                    <h4 className="header-title">Marital Status</h4>
                     <Form.Dropdown required placeholder='Select' search selection options={maritalStatus} name="marital_status" onChange={formChange} value={formDetails?.marital_status} />
                    
                    {

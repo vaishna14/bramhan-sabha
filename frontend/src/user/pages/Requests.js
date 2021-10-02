@@ -249,7 +249,7 @@ function Requests() {
         {/* <Table.Cell>None</Table.Cell> */}
       </Table.Row>
       <Table.Row>
-        <Table.Cell>Marrital Status</Table.Cell>
+        <Table.Cell>Marital Status</Table.Cell>
         <Table.Cell>{formDetails.marital_status}</Table.Cell>
         {/* <Table.Cell warning>Requires call</Table.Cell> */}
       </Table.Row>

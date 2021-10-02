@@ -1,4 +1,5 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
+import { Icon } from 'semantic-ui-react';
 
 import { validate } from '../../util/validators';
 import './Input.css';
@@ -23,6 +24,7 @@ const inputReducer = (state, action) => {
 };
 
 const Input = props => {
+  const [show, setShow] = useState(false);
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: props.initialValue || '',
     isTouched: false,
@@ -52,7 +54,18 @@ const Input = props => {
 
   const element =
     props.element === 'input' ? (
-      <input
+      <>{
+        props.type == "password" ? (
+          <input
+        id={props.id}
+        type={show ? "text" : "password"}
+        placeholder={props.placeholder}
+        onChange={changeHandler}
+        onBlur={touchHandler}
+        value={inputState.value}
+      />
+        ):(
+          <input
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}
@@ -60,6 +73,10 @@ const Input = props => {
         onBlur={touchHandler}
         value={inputState.value}
       />
+        )
+      }
+      
+      </>
     ) : (
       <textarea
         id={props.id}
@@ -76,7 +93,10 @@ const Input = props => {
         inputState.isTouched &&
         'form-control--invalid'}`}
     >
-      <label htmlFor={props.id}>{props.label}</label>
+      <label htmlFor={props.id}>{props.label} &nbsp;&nbsp;
+      {props.label == "Password" && (
+       <Icon name={!show?"eye":"eye slash"} onClick={()=>{setShow(!show)}}/> 
+      )}</label>
       {element}
       {!inputState.isValid && inputState.isTouched && <p>{props.errorText}</p>}
     </div>
