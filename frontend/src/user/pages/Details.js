@@ -25,7 +25,7 @@ function Details(props) {
     const isLoading = useSelector((state) => state.personal.loading);
     const child_count = useSelector((state) => state.personal.child_count);
     const childId = useSelector((state) => state.personal.child_id);
-    const [submitDisable, setSubmitDisable] = useState(true);
+    const [submitDisable, setSubmitDisable] = useState(false);
     const [bloodGroup, setBloodGroup] = useState("");
     const [occupation, setOccupation] = useState("");
     const [earning, setEarnings] = useState("");
