@@ -3,7 +3,7 @@ import React from 'react';
 // import { pure } from 'recompose';
 import axios from "axios";
 
-export const FormData = (props)=>{  
+export const FormData = async (props)=>{  
     console.log(props);
     props.form["type"] = props.type;
     props.form["isExist"] = props.isExist
@@ -14,45 +14,24 @@ export const FormData = (props)=>{
       props.form["kidId"] = props.kidId
       props.form["kidCount"] = props.kidCount
     }
-    axios({
+   const response = await axios({
         method: 'post',
-        url: 'http://localhost:4000/api/users/addUserDetails',
+        url: 'https://test03102021.herokuapp.com/api/users/addUserDetails',
         data: body,
         headers: {
             Authorization: 'Bearer ' + token
           }
         // Authorization: 'Bearer ' + token
       }).then(function (response) {
-        return(response.data)
+        console.log(response.data)
+        return response.data;
     //   response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
     }).catch((e)=>{
         console.log(e)
-        return;
+        return e;
     });
 
-
-    // axios({
-    //     method: 'post',
-    //     url: 'https://test05092021.herokuapp.com/api/users/userDetails',
-    //     ...body
-    //   })
-    //     .then(function (response) {
-    //         return(response.data)
-    //     //   response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
-    //     }).catch((e)=>{
-    //         console.log(e)
-    //         return;
-    //     });
+return response;
+  
 
 }
-
-// function FormData() {
-
-//     // GET request for remote image in node.js
-   
-
-  
-// }
-
-// // Wrap component using the `pure` HOC from recompose
-// export default FormData;

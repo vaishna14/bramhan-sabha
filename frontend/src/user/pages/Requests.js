@@ -2,10 +2,12 @@ import React, { useEffect, useContext, useState } from 'react';
 import { Table, Menu, Icon, Button, Modal } from "semantic-ui-react";
 import axios from 'axios';
 import { AuthContext } from '../../shared/context/auth-context';
-import "./Requests.css"
+import "./Requests.css";
+import {useDispatch} from "react-redux"
 
 function Requests() {
   const auth = useContext(AuthContext);
+  const dispatch = useDispatch();
   const [requestUser, setRequestUser] = useState([]);
   const [requestUserFemale, setRequestUserFemale] = useState([]);
   const [open, setOpen] = useState(false);
@@ -18,9 +20,13 @@ function Requests() {
 
 
   const getRequests = async ()=>{
+    dispatch({
+      type: "message",
+      message: [],
+    });
     await axios({
       method: "get",
-      url: `https://test05092021.herokuapp.com/api/users/requests`,
+      url: `https://test03102021.herokuapp.com/api/users/requests`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
@@ -33,7 +39,7 @@ function Requests() {
 
     await axios({
       method: "get",
-      url: `https://test05092021.herokuapp.com/api/users/requestsFemale`,
+      url: `https://test03102021.herokuapp.com/api/users/requestsFemale`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
@@ -50,7 +56,7 @@ function Requests() {
   //   if (requestUser.length > 0) {
   //     axios({
   //       method: "post",
-  //       url: `https://test05092021.herokuapp.com/api/users/requestsUsers`,
+  //       url: `https://test03102021.herokuapp.com/api/users/requestsUsers`,
   //       data: requestUser,
   //       headers: {
   //         Authorization: 'Bearer ' + auth.token
@@ -67,10 +73,14 @@ function Requests() {
   const showDetails = (id)=>{
     console.log(id);
     setOpen(true);
-    setId(id)
+    setId(id);
+    dispatch({
+      type: "message",
+      message: [],
+    });
     axios({
       method: "get",
-      url: `https://test05092021.herokuapp.com/api/users/showDetails/${id}`,
+      url: `https://test03102021.herokuapp.com/api/users/showDetails/${id}`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
@@ -84,10 +94,14 @@ function Requests() {
 
 
   const approveUser = ()=>{
-    setOpen(false)
+    setOpen(false);
+    dispatch({
+      type: "message",
+      message: [],
+    });
     axios({
       method: "post",
-      url: `https://test05092021.herokuapp.com/api/users/approveUser/${id}`,
+      url: `https://test03102021.herokuapp.com/api/users/approveUser/${id}`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }

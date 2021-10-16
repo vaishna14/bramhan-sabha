@@ -48,10 +48,14 @@ function PersonalDetails() {
     },[childCount])
 
     useEffect(()=>{
+        dispatch({
+            type: "message",
+            message: [],
+          });
         if(detailsType=== "family"){
             axios({
                 method: "get",
-                url: `https://test05092021.herokuapp.com/api/users/kids`,
+                url: `https://test03102021.herokuapp.com/api/users/kids`,
                 headers: {
                     Authorization: 'Bearer ' + auth.token
                 }

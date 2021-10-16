@@ -11,7 +11,10 @@ const INITIAL_STATE = {
   partnerMotherAlive: "Yes",
   loading: false,
   child_count:1,
-  child_id:"abc"
+  child_id:"abc",
+  message:[],
+  marital_status:"",
+  gender:""
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -61,6 +64,28 @@ const reducer = (state = INITIAL_STATE, action) => {
         ...state, loading: action.loading,
 
       };
+
+      case "message":
+
+        return {
+  
+          ...state, message: action.message,
+  
+        };
+        case "gender":
+
+          return {
+    
+            ...state, gender: action.gender,
+    
+          };
+        case "marital_status":
+
+          return {
+    
+            ...state, marital_status: action.marital_status,
+    
+          };
     
       case "child_count":
 
