@@ -1,260 +1,276 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
-    Button,
-    Grid,
-    Header,
-    Icon,
-    Menu,
-    Segment,
-    Sidebar,
-    Divider,
-    List
-
-} from 'semantic-ui-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { AuthContext } from '../../shared/context/auth-context';
+  Button,
+  Grid,
+  Header,
+  Icon,
+  Menu,
+  Segment,
+  Sidebar,
+  Divider,
+  List,
+} from "semantic-ui-react";
+import { useSelector, useDispatch } from "react-redux";
+import { AuthContext } from "../../shared/context/auth-context";
 import "./PersonalDetails.css";
 import "./App.css";
-import Details from './Details';
+import Details from "./Details";
 import axios from "axios";
-
+import Dashboard from "../components/Dashboard";
 
 function PersonalDetails() {
-    const dispatch = useDispatch();
-    const auth = useContext(AuthContext);
-    const detailsType = useSelector((state) => state.personal.displayType);
-    const [childCount, setChildCount] = useState([]);
-    const [child, setChild] = useState([]);
-    const [childDetails, setChildDetails] = useState([]);
-    const [childHead, setChildHead] = useState(1);
+  const dispatch = useDispatch();
+  const auth = useContext(AuthContext);
+  const detailsType = useSelector((state) => state.personal.displayType);
+  const [childCount, setChildCount] = useState([]);
+  const [child, setChild] = useState([]);
+  const [childDetails, setChildDetails] = useState([]);
+  const [childHead, setChildHead] = useState(1);
 
-    const addChild = () => {
-        setChildCount(childCount + 1);
-        let newChild = child
-        newChild.push(childCount + 1);
-        console.log(child)
-        console.log(childDetails);
-        let childDetailsList = childDetails;
-        let count = childCount+1
-        let obj = {first_name: "Child"+ count,
-                    _id:"" }
-        childDetailsList.push(obj);
-        console.log(childDetailsList);
+  const addChild = () => {
+    setChildCount(childCount + 1);
+    let newChild = child;
+    newChild.push(childCount + 1);
+    console.log(child);
+    console.log(childDetails);
+    let childDetailsList = childDetails;
+    let count = childCount + 1;
+    let obj = { first_name: "Child" + count, _id: "" };
+    childDetailsList.push(obj);
+    console.log(childDetailsList);
+  };
 
-    }
+  useEffect(() => {
+    console.log(childCount);
+  }, [childCount]);
 
-    useEffect(()=>{
-        console.log(childCount)
-    },[childCount])
-
-    useEffect(()=>{
-        dispatch({
-            type: "message",
-            message: [],
+  useEffect(() => {
+    dispatch({
+      type: "message",
+      message: [],
+    });
+    if (detailsType === "family") {
+      axios({
+        method: "get",
+        url: `https://test03102021.herokuapp.com/api/users/kids`,
+        headers: {
+          Authorization: "Bearer " + auth.token,
+        },
+      })
+        .then((response) => {
+          console.log(response.data);
+          setChild(response.data.kidCount);
+          setChildCount(response.data.kidCount.length);
+          let kids = response.data.kidCount;
+          let maleChild = response.data.kidsListMale;
+          let femalChild = response.data.kidsListFemale;
+          let childDetailsList = [];
+          console.log(kids);
+          kids.map((item) => {
+            maleChild.map((male) => {
+              if (item == male._id) {
+                childDetailsList.push(male);
+              }
+              return;
+            });
+            femalChild.map((female) => {
+              if (item == female._id) {
+                childDetailsList.push(female);
+              }
+              return;
+            });
           });
-        if(detailsType=== "family"){
-            axios({
-                method: "get",
-                url: `https://test03102021.herokuapp.com/api/users/kids`,
-                headers: {
-                    Authorization: 'Bearer ' + auth.token
-                }
-            }).then((response) => {
-               console.log(response.data); 
-               setChild(response.data.kidCount);
-               setChildCount(response.data.kidCount.length);
-                let kids = response.data.kidCount;
-                let maleChild = response.data.kidsListMale;
-                let femalChild = response.data.kidsListFemale;
-                let childDetailsList =[];
-                console.log(kids)
-                kids.map(item =>{
-                    maleChild.map(male =>{
-                        if(item == male._id){
-                            childDetailsList.push(male);
-                        }
-                        return;
-                    })
-                    femalChild.map(female =>{
-                        if (item == female._id){
-                        childDetailsList.push(female); 
-                        }
-                        return;
-                    })
-                })
-               setChildDetails(childDetailsList);
-                console.log(childDetailsList);
-
-
-            }).catch((err) => {
-                console.log(err);
-            }) 
-        }
-
-    },[detailsType])
-
-    const showChildDetails = (childId, childName, childCount) => {
-        dispatch({
-            type: 'display_type',
-            "displayType": "kids"
+          setChildDetails(childDetailsList);
+          console.log(childDetailsList);
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        dispatch({
-            type: 'child_count',
-            "child_count": childCount
-        });
-        dispatch({
-            type: 'child_id',
-            "child_id": childId
-        });
-        console.log(childName)
-        setChildHead(childName);
     }
+  }, [detailsType]);
 
-    return (
-        <div className="personal_sidebar">
-            <Sidebar.Pushable as={Segment} style={{ overflow: 'hidden' }}>
-                <Sidebar
-                    as={Menu}
-                    animation="push"
-                    direction="left"
-                    icon='labeled'
-                    inverted
-                    vertical
-                    visible={true}
-                    width='thin'
-                >
-                    <Menu.Item as='a' onClick={() => {
-                        dispatch({
-                            type: 'display_type',
-                            "displayType": "personal"
-                        });
-                    }}>
-                        <Icon name='user' />
-                        Personal
-                    </Menu.Item>
-                    <Menu.Item as='a' onClick={() => {
-                        dispatch({
-                            type: 'display_type',
-                            "displayType": "family"
-                        });
-                    }}>
-                        <Icon name='home' />
-                        Family
-                    </Menu.Item>
-                    <Menu.Item as='a' onClick={() => {
-                        dispatch({
-                            type: 'display_type',
-                            "displayType": "other"
-                        });
-                    }}>
-                        <Icon name='clipboard list' />
-                        Other
-                    </Menu.Item>
-                </Sidebar>
-                <Sidebar
-                    as={Menu}
-                    animation='push'
-                    direction='right'
-                    icon='labeled'
-                    inverted
-                    vertical
-                    visible={detailsType === "family"}
-                    width='thin'
-                >
-                    <Menu.Item as='a' onClick={() => {
-                        dispatch({
-                            type: 'display_type',
-                            "displayType": "parent"
-                        });
-                    }}>
+  const showChildDetails = (childId, childName, childCount) => {
+    dispatch({
+      type: "display_type",
+      displayType: "kids",
+    });
+    dispatch({
+      type: "child_count",
+      child_count: childCount,
+    });
+    dispatch({
+      type: "child_id",
+      child_id: childId,
+    });
+    console.log(childName);
+    setChildHead(childName);
+  };
 
-                        <Icon name='home' />
-
-                        Parent Information
-
-                    </Menu.Item>
-                    <Menu.Item as='a' >
-                        <Icon name='users' />Kids Information</Menu.Item>
-                    <Menu.Item>
-                        {
-                            childCount > 0 && (<List as='ol'>
-                                {
-                                    childDetails.map((item, index) => {
-                                        return (
-                                            <List.Item as='a' key={item._id} onClick={() => { showChildDetails(item._id, item.first_name, index+1) }}>{item.first_name}</List.Item>)
-                                    }
-                                    )
-                                }
-                            </List>)
-
-                        }
-                        <Button onClick={addChild} >Add Child Details</Button>
-
-                    </Menu.Item>
-                </Sidebar>
-
-                <Sidebar.Pusher >
-                    <Segment relaxed='very' className="form-segment">
-                        <Grid columns={2}>
-                            <Grid.Column>
-                                {
-                                    (detailsType === "personal" || detailsType === "family") && (
-                                        <div>
-                                            <Header as='h1' className="personal-info" >Personal Information</Header>
-                                            <Details type="personal" />
-                                        </div>
-                                    )
-                                }
-                                {
-                                    detailsType === "parent" && (
-                                        <div>
-                                            <Header as="h3">Father Information</Header>
-                                            <Details type="father"/>
-                                        </div>
-                                    )
-                                }
-                                {
-                                    detailsType === "kids" && (
-                                        <div>
-                                            <Header as="h3" className="personal-info">Child {childHead}</Header>
-                                            <Details type="kids"/>
-                                            <Button onClick={addChild}>Add Child</Button>
-                                        </div>
-                                    )
-                                }
-                            </Grid.Column>
-                            <Grid.Column> {
-                                (detailsType === "personal" || detailsType === "family") && (
-
-                                    <div>
-                                        <Header as='h1' className="personal-info" >Partner Information</Header>
-                                        <Details type="partner" />
-                                    </div>
-                                )
-                            }
-                                {
-                                    detailsType === "parent" && (
-                                        <div>
-                                            <Header as="h3">Mother Structure</Header>
-                                            <Details type="mother"/>
-                                        </div>
-                                    )
-                                }
-                                {
-                                    detailsType === "kids" && (
-                                        <div>
-                                            <Header as="h3" className="personal-info">Child {childHead} Spouse</Header>
-                                            <Details type="kids_spouse"/>
-                                        </div>
-                                    )
-                                }</Grid.Column>
-                        </Grid>
-                        <Divider vertical />
-                    </Segment>
-                </Sidebar.Pusher>
-            </Sidebar.Pushable>
-        </div>
-    )
+  return (
+    <div className="personal_sidebar">
+      <Sidebar.Pushable as={Segment} style={{ overflow: "hidden" }}>
+        <Sidebar
+          as={Menu}
+          animation="push"
+          direction="left"
+          icon="labeled"
+          inverted
+          vertical
+          visible={true}
+          width="thin"
+        >
+          <Menu.Item
+            as="a"
+            onClick={() => {
+              dispatch({
+                type: "display_type",
+                displayType: "personal",
+              });
+            }}
+          >
+            <Icon name="user" />
+            Personal
+          </Menu.Item>
+          <Menu.Item
+            as="a"
+            onClick={() => {
+              dispatch({
+                type: "display_type",
+                displayType: "family",
+              });
+            }}
+          >
+            <Icon name="home" />
+            Family
+          </Menu.Item>
+          <Menu.Item
+            as="a"
+            onClick={() => {
+              dispatch({
+                type: "display_type",
+                displayType: "other",
+              });
+            }}
+          >
+            <Icon name="clipboard list" />
+            Other
+          </Menu.Item>
+        </Sidebar>
+        <Sidebar
+          as={Menu}
+          animation="push"
+          direction="right"
+          icon="labeled"
+          inverted
+          vertical
+          visible={detailsType === "family"}
+          width="thin"
+        >
+          <Menu.Item
+            as="a"
+            onClick={() => {
+              dispatch({
+                type: "display_type",
+                displayType: "parent",
+              });
+            }}
+          >
+            <Icon name="home" />
+            Parent Information
+          </Menu.Item>
+          <Menu.Item as="a">
+            <Icon name="users" />
+            Kids Information
+          </Menu.Item>
+          <Menu.Item>
+            {childCount > 0 && (
+              <List as="ol">
+                {childDetails.map((item, index) => {
+                  return (
+                    <List.Item
+                      as="a"
+                      key={item._id}
+                      onClick={() => {
+                        showChildDetails(item._id, item.first_name, index + 1);
+                      }}
+                    >
+                      {item.first_name}
+                    </List.Item>
+                  );
+                })}
+              </List>
+            )}
+            <Button onClick={addChild}>Add Child Details</Button>
+          </Menu.Item>
+        </Sidebar>
+        <Sidebar.Pusher>
+          <Segment relaxed="very" className="form-segment">
+            {detailsType === "other" ? (
+              <Dashboard />
+            ) : (
+              <>
+                <Grid columns={2}>
+                  <Grid.Column>
+                    {(detailsType === "personal" ||
+                      detailsType === "family") && (
+                      <div>
+                        <Header as="h1" className="personal-info">
+                          Personal Information
+                        </Header>
+                        <Details type="personal" />
+                      </div>
+                    )}
+                    {detailsType === "parent" && (
+                      <div>
+                        <Header as="h3">Father Information</Header>
+                        <Details type="father" />
+                      </div>
+                    )}
+                    {detailsType === "kids" && (
+                      <div>
+                        <Header as="h3" className="personal-info">
+                          Child {childHead}
+                        </Header>
+                        <Details type="kids" />
+                        <Button onClick={addChild}>Add Child</Button>
+                      </div>
+                    )}
+                  </Grid.Column>
+                  <Grid.Column>
+                    {" "}
+                    {(detailsType === "personal" ||
+                      detailsType === "family") && (
+                      <div>
+                        <Header as="h1" className="personal-info">
+                          Partner Information
+                        </Header>
+                        <Details type="partner" />
+                      </div>
+                    )}
+                    {detailsType === "parent" && (
+                      <div>
+                        <Header as="h3">Mother Structure</Header>
+                        <Details type="mother" />
+                      </div>
+                    )}
+                    {detailsType === "kids" && (
+                      <div>
+                        <Header as="h3" className="personal-info">
+                          Child {childHead} Spouse
+                        </Header>
+                        <Details type="kids_spouse" />
+                      </div>
+                    )}
+                  </Grid.Column>
+                </Grid>
+                <Divider vertical />
+              </>
+            )}
+          </Segment>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
+    </div>
+  );
 }
 
-export default PersonalDetails
+export default PersonalDetails;

@@ -825,6 +825,48 @@ const getApprovalsFemale = async (req, res, next) => {
   }
 }
 
+
+const getAll = async (req, res, next)=>{
+  try {
+    let arr = [];
+    male = Male.find({}).select("first_name middle_name last_name gender address_ward whatsapp_number education_detail blood_group birth_date occupation occupation_detail address_pincode");
+    male.exec(function (err, someValue) {
+      if (err) return next(err);
+      arr = someValue
+      res.status(200).json({ list: someValue });
+    });
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'No data found.',
+      500
+    );
+    return next(error);
+  }
+}
+
+const getAllFemale = async (req, res, next)=>{
+  try {
+    let arr = [];
+    console.log(req.body.key);
+    let sel = String(req.body.key);
+    console.log(sel)
+    male = Female.find({}).select(sel);
+    male.exec(function (err, someValue) {
+      if (err) return next(err);
+      arr = someValue
+      res.status(200).json({ list: someValue });
+    });
+  } catch (err) {
+    console.log(err);
+    const error = new HttpError(
+      'No data found.',
+      500
+    );
+    return next(error);
+  }
+}
+
 // const getApprovalsList = async (req, res, next) => {
 //   try {
 //     userVal = await User.find({ "_id": toId(req.userData.userId) });
@@ -935,4 +977,6 @@ exports.getApprovalsFemale = getApprovalsFemale;
 exports.getShowDetails = getShowDetails;
 exports.approveUser = approveUser;
 exports.getSuggestionsFemale = getSuggestionsFemale;
+exports.getAll = getAll;
+exports.getAllFemale = getAllFemale;
 

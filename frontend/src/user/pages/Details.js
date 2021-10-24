@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import "./PersonalDetails.css";
 import "./App.css";
+import Dashboard from "../components/Dashboard";
 // import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
 function Details(props) {
@@ -529,7 +530,7 @@ function Details(props) {
           </Message>
     ) : (
 
-    
+    <>
       <Form onSubmit={formSubmit}>
         {submitDisable && (
           <Message negative>
@@ -1248,6 +1249,7 @@ function Details(props) {
           </Button>
         )}
       </Form>
+      </>
     )
 }
 </>

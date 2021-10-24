@@ -37,5 +37,8 @@ router.get('/requestsFemale', usersController.getApprovalsFemale);
 // router.post('/requestsUsers', usersController.getApprovalsList);
 router.get('/showDetails/:id', usersController.getShowDetails);
 router.post('/approveUser/:id', usersController.approveUser);
+router.post('/getAll', usersController.getAll);
+router.post('/getAllFemale', usersController.getAllFemale);
+
 
 module.exports = router;

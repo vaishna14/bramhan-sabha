@@ -14,7 +14,8 @@ const INITIAL_STATE = {
   child_id:"abc",
   message:[],
   marital_status:"",
-  gender:""
+  gender:"",
+  column_select:[]
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -101,6 +102,13 @@ const reducer = (state = INITIAL_STATE, action) => {
             ...state, child_id: action.child_id,
     
           };
+          case "column_select":
+
+            return {
+      
+              ...state, column_select: action.column_select,
+      
+            };
 
     case "DECREMENT":
 

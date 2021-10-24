@@ -1,0 +1,39 @@
+/* .handsontable table.htCore{
+    width: 100% !important;
+}
+
+.handsontable .wtHider{
+    width: 100% !important;
+} */
+
+.handsontable .htDimmed{
+    color: black;
+}
+
+#hot-app{
+    position: relative;
+    margin: 10px;
+    /* padding: 15px; */
+    z-index: 9;
+    /* width: 100%; */
+  }
+
+.hot-table-val{
+    width: 80%;
+    height: 20%;
+    overflow: hidden;
+}
+
+/* .menu-dropdown{
+    width: 100%;
+} */
+.ui.vertical.menu{
+width: 30%;
+height: auto;
+}
+.ui.vertical.menu .item > .label{
+    margin: 1%;
+}
+.ui.vertical.menu > .item:last-child{
+    border: unset;
+}
