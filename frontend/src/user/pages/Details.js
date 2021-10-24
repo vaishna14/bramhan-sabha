@@ -284,27 +284,27 @@ function Details(props) {
       form[name] = value;
       if (name === "first_name") {
         let val = value.split(" ");
-        form[name] = val[0];
-        setFirstName(val[0]);
+        form[name] = val[0].replace(/[^a-zA-Z ]/g, "");
+        setFirstName(val[0].replace(/[^a-zA-Z ]/g, ""));
       }
       if (name === "middle_name") {
         let val = value.split(" ");
         if (!val[1]) {
-          form[name] = value;
-          setLastValue(value);
+          form[name] = value.replace(/[^a-zA-Z ]/g, "");
+          setLastValue(value.replace(/[^a-zA-Z ]/g, ""));
         } else {
-          form[name] = val[1];
-          setMiddleValue(val[1]);
+          form[name] = val[1].replace(/[^a-zA-Z ]/g, "");
+          setMiddleValue(val[1].replace(/[^a-zA-Z ]/g, ""));
         }
       }
       if (name === "last_name") {
         let val = value.split(" ");
         if (!val[2]) {
-          form[name] = value;
-          setLastValue(value);
+          form[name] = value.replace(/[^a-zA-Z ]/g, "");
+          setLastValue(value.replace(/[^a-zA-Z ]/g, ""));
         } else {
-          form[name] = val[2];
-          setLastValue(val[2]);
+          form[name] = val[2].replace(/[^a-zA-Z ]/g, "");
+          setLastValue(val[2].replace(/[^a-zA-Z ]/g, ""));
         }
       }
     } else {
@@ -312,27 +312,27 @@ function Details(props) {
       newForm[name] = value;
       if (name === "first_name") {
         let val = value.split(" ");
-        newForm[name] = val[0];
-        setFirstName(val[0]);
+        newForm[name] = val[0].replace(/[^a-zA-Z ]/g, "");
+        setFirstName(val[0].replace(/[^a-zA-Z ]/g, ""));
       }
       if (name === "middle_name") {
         let val = value.split(" ");
         if (!val[1]) {
-          newForm[name] = value;
-          setFirstName(value);
+          newForm[name] = value.replace(/[^a-zA-Z ]/g, "");
+          setFirstName(value.replace(/[^a-zA-Z ]/g, ""));
         } else {
-          newForm[name] = val[1];
-          setFirstName(val[1]);
+          newForm[name] = val[1].replace(/[^a-zA-Z ]/g, "");
+          setFirstName(val[1].replace(/[^a-zA-Z ]/g, ""));
         }
       }
       if (name === "last_name") {
         let val = value.split(" ");
         if (!val[2]) {
-          newForm[name] = value;
-          setFirstName(value);
+          newForm[name] = value.replace(/[^a-zA-Z ]/g, "");
+          setFirstName(value.replace(/[^a-zA-Z ]/g, ""));
         } else {
-          newForm[name] = val[2];
-          setFirstName(val[2]);
+          newForm[name] = val[2].replace(/[^a-zA-Z ]/g, "");
+          setFirstName(val[2].replace(/[^a-zA-Z ]/g, ""));
         }
       }
 
@@ -343,23 +343,23 @@ function Details(props) {
       });
     }
     if (name == "gotra") {
-      setGotra(value);
+      setGotra(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "occupation_detail") {
-      setOccupation(value);
+      setOccupation(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "education_detail") {
-      setEducation(value);
+      setEducation(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "address_ward") {
-      setWardName(value);
+      setWardName(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "marital_status") {
-      setMarriage(value);
+      setMarriage(value.replace(/[^a-zA-Z ]/g, ""));
       if(props.type == "personal" || props.type == "kids" || props.type == "father"){
       dispatch({
         type: "marital_status",
-        marital_status: value,
+        marital_status: value.replace(/[^a-zA-Z ]/g, ""),
       });
     }else{
         dispatch({
@@ -374,15 +374,15 @@ function Details(props) {
     }
 
     if (name === "alive") {
-      setAlive(value);
+      setAlive(value.replace(/[^a-zA-Z ]/g, ""));
     } else if (name === "blood_group") {
-      setBloodGroup(value);
+      setBloodGroup(value.replace(/[^a-zA-Z ]/g, ""));
     } else if (name === "occupation") {
-      setOccupation(value);
+      setOccupation(value.replace(/[^a-zA-Z ]/g, ""));
     } else if (name === "education") {
-      setEducation(value);
+      setEducation(value.replace(/[^a-zA-Z ]/g, ""));
     } else if (name === "earning") {
-      setEarnings(value);
+      setEarnings(value.replace(/[^a-zA-Z ]/g, ""));
     }
 
     if (name === "mother_alive") {
