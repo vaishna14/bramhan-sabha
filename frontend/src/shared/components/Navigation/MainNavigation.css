@@ -43,3 +43,8 @@
     display: block;
   }
 }
+
+.user-profile{
+  /* border: unset !important; */
+  /* color: white !important; */
+}

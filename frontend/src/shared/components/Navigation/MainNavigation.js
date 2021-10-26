@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Icon, Label, Menu } from "semantic-ui-react";
+import MainHeader from "./MainHeader";
+import NavLinks from "./NavLinks";
+import SideDrawer from "./SideDrawer";
+import Backdrop from "../UIElements/Backdrop";
+import { useSelector, useDispatch } from "react-redux";
+import "./MainNavigation.css";
 
-import MainHeader from './MainHeader';
-import NavLinks from './NavLinks';
-import SideDrawer from './SideDrawer';
-import Backdrop from '../UIElements/Backdrop';
-import './MainNavigation.css';
-
-const MainNavigation = props => {
+const MainNavigation = (props) => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.personal.profile);
+  const displayType = useSelector((state) => state.personal.displayType);
 
   const openDrawerHandler = () => {
     setDrawerIsOpen(true);
@@ -16,6 +20,17 @@ const MainNavigation = props => {
 
   const closeDrawerHandler = () => {
     setDrawerIsOpen(false);
+  };
+
+  const profileClicked = () => {
+    dispatch({
+      type: "profile",
+      profile: !profile,
+    });
+    dispatch({
+      type: "display_type",
+      displayType: displayType,
+    });
   };
 
   return (
@@ -36,9 +51,21 @@ const MainNavigation = props => {
           <span />
           <span />
         </button>
-        <h1 className="main-navigation__title">
-          <Link to="/">Brahman Sabha Chandrapur</Link>
-        </h1>
+        <h4>
+        <ul className="nav-links">
+            {/* <li> */}
+              <button className="user-profile" onClick={profileClicked}>
+                <Icon name="user" />
+              </button>
+            {/* </li> */}
+            </ul>
+        </h4>
+        <h3 className="main-navigation__title">
+          
+
+            <Link to="/">Brahman Sabha Chandrapur</Link>
+          {/* </ul> */}
+        </h3>
         <nav className="main-navigation__header-nav">
           <NavLinks />
         </nav>

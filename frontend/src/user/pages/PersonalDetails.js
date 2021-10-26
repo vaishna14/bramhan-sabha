@@ -17,6 +17,7 @@ import "./App.css";
 import Details from "./Details";
 import axios from "axios";
 import Dashboard from "../components/Dashboard";
+import useWindowSize from "../../shared/util/useWindoSize";
 
 function PersonalDetails() {
   const dispatch = useDispatch();
@@ -26,6 +27,24 @@ function PersonalDetails() {
   const [child, setChild] = useState([]);
   const [childDetails, setChildDetails] = useState([]);
   const [childHead, setChildHead] = useState(1);
+  const [visible,setVisible] = useState(true);
+  const { width } = useWindowSize();
+  const profile = useSelector((state) => state.personal.profile);
+
+  useEffect(()=>{
+    console.log('====================================');
+    console.log(profile)
+    console.log('====================================');
+  },[profile])
+
+  useEffect(()=>{
+    console.log(width);
+    if(width <1100){
+      setVisible(false)
+    }else{
+      setVisible(true)
+    }
+  },[width])
 
   const addChild = () => {
     setChildCount(childCount + 1);
@@ -95,6 +114,10 @@ function PersonalDetails() {
       displayType: "kids",
     });
     dispatch({
+      type: "profile",
+      profile: false,
+    });
+    dispatch({
       type: "child_count",
       child_count: childCount,
     });
@@ -107,7 +130,7 @@ function PersonalDetails() {
   };
 
   return (
-    <div className="personal_sidebar">
+    <div className={`${width <500 ? "personal_sidebar_200" : "personal_sidebar_100"}`}>
       <Sidebar.Pushable as={Segment} style={{ overflow: "hidden" }}>
         <Sidebar
           as={Menu}
@@ -116,7 +139,7 @@ function PersonalDetails() {
           icon="labeled"
           inverted
           vertical
-          visible={true}
+          visible={profile}
           width="thin"
         >
           <Menu.Item
@@ -125,6 +148,10 @@ function PersonalDetails() {
               dispatch({
                 type: "display_type",
                 displayType: "personal",
+              });
+              dispatch({
+                type: "profile",
+                profile: false,
               });
             }}
           >
@@ -150,6 +177,10 @@ function PersonalDetails() {
                 type: "display_type",
                 displayType: "other",
               });
+              dispatch({
+                type: "profile",
+                profile: false,
+              });
             }}
           >
             <Icon name="clipboard list" />
@@ -172,6 +203,10 @@ function PersonalDetails() {
               dispatch({
                 type: "display_type",
                 displayType: "parent",
+              });
+              dispatch({
+                type: "profile",
+                profile: false,
               });
             }}
           >
@@ -209,8 +244,8 @@ function PersonalDetails() {
               <Dashboard />
             ) : (
               <>
-                <Grid columns={2}>
-                  <Grid.Column>
+                <Grid className={`${visible ? "" : "display-grid"}`} columns={2}>
+                  <Grid.Column className={`${visible ? "" : "width-100p"}`}>
                     {(detailsType === "personal" ||
                       detailsType === "family") && (
                       <div>
@@ -236,7 +271,7 @@ function PersonalDetails() {
                       </div>
                     )}
                   </Grid.Column>
-                  <Grid.Column>
+                  <Grid.Column className={`${visible ? "" : "width-100p"}`}>
                     {" "}
                     {(detailsType === "personal" ||
                       detailsType === "family") && (
@@ -263,7 +298,12 @@ function PersonalDetails() {
                     )}
                   </Grid.Column>
                 </Grid>
-                <Divider vertical />
+                {
+                  width >1100 && (
+                    <Divider vertical />
+
+                  )
+                }
               </>
             )}
           </Segment>

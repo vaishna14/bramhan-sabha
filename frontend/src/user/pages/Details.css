@@ -1,11 +1,20 @@
-.personal_sidebar{
-    height: 100rem;
-}
+
+
 
 .details-list{
     display: inline-grid;
     width: 30%;
 }
+
+
+.height-200r{
+    height: 200rem;
+}
+
+.height-100r{
+    height: 100rem;
+}
+
 
 .menu-item-list{
     background-color: black;
@@ -42,4 +51,8 @@
 input[list]:focus {
     outline: none;
     display: none !important;
+}
+
+.ui.form .field>.selection.dropdown{
+    width: 70%;
 }

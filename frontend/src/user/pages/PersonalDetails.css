@@ -2,6 +2,14 @@
     height: 100rem;
 }
 
+.personal_sidebar_100{
+    height: 100rem;
+}
+
+.personal_sidebar_200{
+    height: 350rem;
+}
+
 .details-list{
     display: inline-grid;
     width: 30%;
@@ -31,8 +39,16 @@
     color: wheat !important; */
 }
 
+.ui.form .field>.selection.dropdown{
+    width: 70% ;
+}
+
 .form-segment{
     height: 80rem;
+}
+
+.width-70p{
+    width: 70% !important;
 }
 
 .right-Menu{
@@ -62,4 +78,6 @@ input[list] + div[list] span:hover {
 
 .ui.segment.form-segment{
     height: 100rem;
+    border: unset;
+    box-shadow: unset;
 }

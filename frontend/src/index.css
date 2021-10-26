@@ -51,3 +51,7 @@ body {
 .display-block{
   display: block;
 }
+
+.display-grid{
+  display: grid !important;
+}

@@ -18,6 +18,7 @@ import "./PersonalDetails.css";
 import "./App.css";
 import Dashboard from "../components/Dashboard";
 // import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import useWindowSize from "../../shared/util/useWindoSize";
 
 function Details(props) {
   const dispatch = useDispatch();
@@ -59,6 +60,18 @@ function Details(props) {
   const [occupationDetails, setOccupationDetails] = useState("");
   const [marriage, setMarriage] = useState("");
   const [wardName, setWardName] = useState("");
+  const { width } = useWindowSize();
+  const [visible, setVisible] = useState("");
+
+
+  useEffect(()=>{
+
+    if(width < 500){
+      console.log("display-grid");
+      console.log("height-200rem")
+    }
+
+  },[width])
 
   const today =  new Date().getFullYear()+"-"+ (new Date().getMonth()<10 ? "0":"")+ new Date().getMonth()+"-"+(new Date().getDate()<10 ?"0":"")+ new Date().getDate()
 
@@ -265,6 +278,10 @@ function Details(props) {
       type: "fatherAlive",
       fatherAlive: value,
     });
+    dispatch({
+      type: "profile",
+      profile: false,
+    });
   };
 
   const motherSelected = (e, { name, value }) => {
@@ -276,9 +293,17 @@ function Details(props) {
       type: "motherAlive",
       motherAlive: value,
     });
+    dispatch({
+      type: "profile",
+      profile: false,
+    });
   };
 
   const formChange = (e, { name, value }) => {
+    dispatch({
+      type: "profile",
+      profile: false,
+    });
     let form = formDetails;
     if (!form[name]) {
       form[name] = value;
@@ -547,17 +572,17 @@ function Details(props) {
           </Message>
         )}
 
-        <div className="display-flex mb-1p mt-1p">
-          <h4 className="mx-auto header-title">Form No.</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p mt-1p`}>
+          <h4 className={`mx-auto ${width <1100 ? "width-30p" : "width-10p"}`}>Form No.</h4>
           <div className="mx-5p">
-            <h4 className="mx-auto header-title danger">
+            <h4 className={`mx-auto ${width <1100 ? "width-30p" : "width-10p"} danger`}>
               {formDetails?.formId || " "}
             </h4>
           </div>
         </div>
         <Form.Group>
-          <div className="display-flex mb-1p mt-1p">
-            <h4 className="mx-auto header-title">Full name</h4>
+          <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p mt-1p width-100p`}>
+            <h4 className={`mx-auto ${width <1100 ? "width-30p" : "width-10p"}`}>Full name</h4>
             <div className="mx-5p">
               <Form.Dropdown
                 required
@@ -613,9 +638,10 @@ function Details(props) {
             </div>
           </div>
         </Form.Group>
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Gender</h4>
-          <div className="display-flex" style={{ width: "200px" }}>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <div className={`width-50p ${width <500 ? "display-grid" : "display-flex"}`}>
+          <h4 className={`${width <1100 ? "width-20p" : "width-10p"}`}>Gender</h4>
+          <div className={`${width <500 ? "display-grid" : "display-flex"}`} style={{ width: "200px" }}>
             <Form.Radio
               required
               className="mx-5p"
@@ -643,8 +669,9 @@ function Details(props) {
               }}
             />
           </div>
-          <div className="display-flex mx-5p">
-            <h4>Gotra</h4>
+          </div>
+          <div className={`${width <500 ? "display-grid" : "display-flex"} mx-5p width-50p`}>
+            <h4 className={`${width <1100 ? "width-20p" : "width-10p"}`}>Gotra</h4>
             <Form.Dropdown
               options={gotraSuggestions}
               placeholder="Gotra"
@@ -665,8 +692,8 @@ function Details(props) {
         </div>
         {gender === "F" && (
           <>
-            <div className="display-flex mb-1p">
-              <h4 className="mx-auto header-title">Maiden name</h4>
+            <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mb-1p`}>
+              <h4 className={`mx-auto ${width <1100 ? "width-30p" : "width-10p"}`}>Maiden name</h4>
               <div className="mx-5p">
                 <Form.Input
                   required
@@ -704,8 +731,8 @@ function Details(props) {
                 />{" "}
               </div>
             </div>
-            <div className="display-flex mb-1p">
-              <h4 className="mx-auto header-title">Maiden City</h4>
+            <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mb-1p`}>
+              <h4 className={`mx-auto ${width <1100 ? "width-30p" : "width-10p"}`}>Maiden City</h4>
               <div className="mx-5p">
                 <Form.Input
                   required
@@ -720,8 +747,8 @@ function Details(props) {
             </div>
           </>
         )}
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Alive</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Alive</h4>
           <Form.Dropdown
             required
             placeholder="Select"
@@ -733,7 +760,7 @@ function Details(props) {
             value={alive}
           />
           {alive === "No" && (
-            <div className="display-flex mx-5p">
+            <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
               <h4> Date of Death</h4>
               <Form.Input
                 required
@@ -752,8 +779,8 @@ function Details(props) {
             props.type !== "partner" && props.type !=="mother" && props.type !== "kids_spouse" && (
 
             
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Marital Status</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Marital Status</h4>
           <Form.Dropdown
             required
             placeholder="Select"
@@ -766,7 +793,7 @@ function Details(props) {
           />
 
           {formDetails.marital_status !== "Single" && (
-            <div className="display-flex mx-5p">
+            <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
               <h4> Date of Marriage</h4>
               <Form.Input
                 required
@@ -785,8 +812,8 @@ function Details(props) {
     }
         {detailsType === "personal" && (
           <>
-            <div className="display-flex mb-1p">
-              <h4 className="header-title">Father Alive</h4>
+            <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+              <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Father Alive</h4>
               <Form.Dropdown
                 required
                 placeholder="Select"
@@ -803,7 +830,7 @@ function Details(props) {
                 <>
                   {formDetails?.father_alive == "Yes" &&
                     formDetails?.mother_alive == "Yes" && (
-                      <div className="mx-5p display-flex">
+                      <div className={`mx-5p ${width <500 ? "display-grid" : "display-flex"}`}>
                         <h4> Mother Alive</h4>
                         <Form.Dropdown
                           required
@@ -820,7 +847,7 @@ function Details(props) {
 
                   {formDetails?.father_alive === "No" && (
                     <>
-                      <div className="display-flex mx-5p">
+                      <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
                         <h4> Date of Death</h4>
                         <Form.Input
                           required
@@ -840,7 +867,7 @@ function Details(props) {
                 <>
                   {partnerFatherAlive === "Yes" &&
                     partnerMotherAlive === "Yes" && (
-                      <div className="mx-5p display-flex">
+                      <div className={`mx-5p ${width <500 ? "display-grid" : "display-flex"}`}>
                         <h4> Mother Alive</h4>
                         <Form.Dropdown
                           required
@@ -861,7 +888,7 @@ function Details(props) {
                     )}
 
                   {partnerFatherAlive === "No" && (
-                    <div className="display-flex mx-5p">
+                    <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
                       <h4> Date of Death</h4>
                       <Form.Input
                         required
@@ -881,8 +908,8 @@ function Details(props) {
             {props.type === "personal" ? (
               <>
                 {(fatherAlive === "No" || motherAlive === "No") && (
-                  <div className="display-flex mb-1p">
-                    <h4 className="header-title">Mother Alive</h4>
+                  <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+                    <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Mother Alive</h4>
                     <Form.Dropdown
                       required
                       placeholder="Select"
@@ -898,7 +925,7 @@ function Details(props) {
                       }
                     />
                     {motherAlive === "No" && (
-                      <div className="display-flex mx-5p">
+                      <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
                         <h4> Date of Death</h4>
                         <Form.Input
                           required
@@ -920,8 +947,8 @@ function Details(props) {
                 {" "}
                 {(partnerFatherAlive === "No" ||
                   partnerMotherAlive === "No") && (
-                  <div className="display-flex mb-1p">
-                    <h4 className="header-title">Mother Alive</h4>
+                  <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+                    <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Mother Alive</h4>
                     <Form.Dropdown
                       required
                       placeholder="Select"
@@ -937,7 +964,7 @@ function Details(props) {
                       }
                     />
                     {partnerMotherAlive === "No" && (
-                      <div className="display-flex mx-5p">
+                      <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
                         <h4> Date of Death</h4>
                         <Form.Input
                           required
@@ -957,8 +984,8 @@ function Details(props) {
             )}
           </>
         )}
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Blood Group</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Blood Group</h4>
           <Form.Dropdown
             required
             placeholder="Select Blood Group"
@@ -972,7 +999,7 @@ function Details(props) {
             value={bloodGroup}
           />
 
-          <div className="display-flex mx-5p">
+          <div className={`${width <500 ? "display-grid" : "display-flex"} width-70p mx-5p`}>
             <h4> Birth Date</h4>
             <Input
               required
@@ -985,8 +1012,8 @@ function Details(props) {
             />
           </div>
         </div>
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Education</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Education</h4>
           <Form.Dropdown
             required
             disabled={alive === "No"}
@@ -999,7 +1026,7 @@ function Details(props) {
             onChange={formChange}
             value={education}
           />
-          <div className="display-flex mx-5p ">
+          <div className={`${width <500 ? "display-grid" : "display-flex"} mx-5p`}>
             <h4> Details</h4>
             <Form.Dropdown
               required
@@ -1021,8 +1048,8 @@ function Details(props) {
             {/* <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Education-detail" type="text" name="education_detail" onChange={formChange} defaultValue={education === "" ? "" : formDetails?.education_detail} /> */}
           </div>
         </div>
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Occupation/Business</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Occupation/Business</h4>
           <Form.Dropdown
             required
             disabled={alive === "No"}
@@ -1035,7 +1062,7 @@ function Details(props) {
             onChange={formChange}
             value={occupation}
           />
-          <div className="display-flex mx-5p">
+          <div className={`${width <500 ? "display-grid" : "display-flex"} mx-5p`}>
             <h4> Name</h4>
             <Form.Dropdown
               required
@@ -1057,8 +1084,8 @@ function Details(props) {
             {/* <Form.Input disabled={alive === "No"} className="mx-5p" placeholder="Name of Occupation/Business " type="text" name="occupation_detail" onChange={formChange} defaultValue={occupation === "" ? "" : formDetails?.occupation_detail} /> */}
           </div>
         </div>
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Earnings</h4>
+        <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Earnings</h4>
           <Form.Dropdown
             required
             disabled={alive === "No"}
@@ -1074,8 +1101,8 @@ function Details(props) {
         </div>
         {
           <>
-            <div className="display-flex mb-1p">
-              <h4 className="header-title">Address</h4>
+            <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p`}>
+              <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Address</h4>
               <Form.TextArea
                 required
                 className="current-address"
@@ -1087,7 +1114,7 @@ function Details(props) {
               />
             </div>
 
-            <div className="margin-title ">
+            <div className={`${width <500 ? "" : "margin-title"} `}>
               <Form.Group>
                 <Form.Input
                   required
@@ -1128,7 +1155,7 @@ function Details(props) {
                     onAddItem={handleAddition}
                     onChange={formChange}
                     disabled={alive === "No"}
-                    className="mx-5p"
+                    className="mx-5p width-100p"
                   />
                   // <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange} defaultValue={formDetails?.address_ward} />
 
@@ -1148,12 +1175,12 @@ function Details(props) {
         }
         {addPermanent && (
           <>
-            <div className="display-flex mt-1p">
-              <h4 className="header-title">Permanent Address</h4>
+            <div className={`${width <500 ? "display-grid width-70p" : "display-flex"}  mt-1p`}>
+              <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Permanent Address</h4>
 
               <Form.TextArea
                 required
-                className="current-address"
+                className={`${width <500 ? "width-70p" : ""}  current-address`}
                 placeholder="Add your permanent address"
                 style={{ minHeight: 100 }}
                 name="permanent_address"
@@ -1161,7 +1188,7 @@ function Details(props) {
                 defaultValue={formDetails?.permanent_address}
               />
             </div>
-            <div className="margin-title mb-1p mt-1p">
+            <div className={`${width <500 ? "width-70p" : "margin-title"} mb-1p mt-1p `}>
               <Form.Input
                 required
                 type="text"
@@ -1186,8 +1213,8 @@ function Details(props) {
           </>
         )}
         <Form.Group>
-          <div className="display-flex mb-1p mt-1p">
-            <h4 className="header-title">Contact no.</h4>
+          <div className={`${width <500 ? "display-grid" : "display-flex"} mb-1p mt-1p`}>
+            <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Contact no.</h4>
 
             <Form.Input
               disabled={alive === "No"}
@@ -1218,8 +1245,8 @@ function Details(props) {
             </Form.Input>
           </div>
         </Form.Group>
-        <div className="display-flex mb-1p">
-          <h4 className="header-title">Email address</h4>
+        <div className={`${width <500 ? "display-grid width-70p" : "display-flex"} mb-1p`}>
+          <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Email address</h4>
           <Form.Input
             disabled={alive === "No"}
             iconPosition="left"
@@ -1242,6 +1269,10 @@ function Details(props) {
               dispatch({
                 type: "display_type",
                 displayType: "personal",
+              });
+              dispatch({
+                type: "profile",
+                profile: false,
               });
             }}
           >

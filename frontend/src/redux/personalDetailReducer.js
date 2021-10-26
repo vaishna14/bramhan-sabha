@@ -109,7 +109,13 @@ const reducer = (state = INITIAL_STATE, action) => {
               ...state, column_select: action.column_select,
       
             };
+            case "profile":
 
+              return {
+        
+                ...state, profile: action.profile,
+        
+              };
     case "DECREMENT":
 
       return {

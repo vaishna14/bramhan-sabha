@@ -23,3 +23,23 @@
 .width-100{
     width: 100%;
 }
+
+.width-10p{
+    width: 10%;
+}
+
+.width-30p{
+    width: 20%;
+}
+
+.width-100p{
+    width: 100% !important  ;
+}
+
+.width-20p{
+    width: 20% !important  ;
+}
+
+.width-50p{
+    width: 50% !important;
+}
