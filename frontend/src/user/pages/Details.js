@@ -597,6 +597,7 @@ function Details(props) {
                 name="first_name"
                 onAddItem={handleAddition}
                 onChange={formChange}
+                className="mb-1p mt-1p"
               />
             </div>
             <div className="mx-5p">
@@ -615,6 +616,7 @@ function Details(props) {
                 name="middle_name"
                 onAddItem={handleAddition}
                 onChange={formChange}
+                className="mb-1p mt-1p"
               />
             </div>
             {/* /> <Form.Input placeholder="Middle Name" type="text" id="middle_name" errorText="Please enter a valid title." name="middle_name" onChange={formChange} defaultValue={formDetails?.middle_name} /> </div> */}
@@ -634,6 +636,7 @@ function Details(props) {
                 name="last_name"
                 onAddItem={handleAddition}
                 onChange={formChange}
+                className="mb-1p mt-1p"
               />
             </div>
           </div>
@@ -1105,7 +1108,7 @@ function Details(props) {
               <h4 className={`${width <1100 ? "width-30p" : "width-10p"}`}>Address</h4>
               <Form.TextArea
                 required
-                className="current-address"
+                className={`current-address ${width <500 ? "width-70p" : ""}`}
                 placeholder="Add your address"
                 style={{ minHeight: 100 }}
                 name="address"
@@ -1129,7 +1132,7 @@ function Details(props) {
                 <Form.Input
                   required
                   type="number"
-                  className="mx-5p"
+                  className="mx-5p mb-1p mt-1p"
                   label="Pin Code"
                   placeholder="Pin-Code"
                   name="address_pincode"
@@ -1155,7 +1158,7 @@ function Details(props) {
                     onAddItem={handleAddition}
                     onChange={formChange}
                     disabled={alive === "No"}
-                    className="mx-5p width-100p"
+                    className="mx-5p width-100p mb-1p mt-1p"
                   />
                   // <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange} defaultValue={formDetails?.address_ward} />
 
@@ -1219,12 +1222,13 @@ function Details(props) {
             <Form.Input
               disabled={alive === "No"}
               iconPosition="left"
-              className="mx-5p"
+              className="mx-5p mb-1p mt-1p"
               placeholder="Personal no."
               type="number"
               name="personal_number"
               onChange={formChange}
               defaultValue={formDetails?.personal_number}
+             
             >
               <Icon name="phone" />
               <input />
@@ -1233,7 +1237,7 @@ function Details(props) {
               required
               disabled={alive === "No"}
               iconPosition="left"
-              className="mx-5p"
+              className="mx-5p mb-1p mt-1p"
               placeholder="WhatsApp no."
               type="number"
               name="whatsapp_number"
