@@ -16,12 +16,13 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import { AuthContext } from "../../shared/context/auth-context";
 import {  Icon } from "semantic-ui-react";
 import "./Auth.css";
+import Recaptcha from "react-recaptcha"
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
+  const [verified, setVerified] = useState(false);
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -67,7 +68,7 @@ const Auth = () => {
 
   const authSubmitHandler = async (event) => {
     event.preventDefault();
-
+    if(verified){
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
@@ -110,8 +111,22 @@ const Auth = () => {
           responseData.adminArea
         );
       } catch (err) {}
+    }}else{
+      alert("PLease verify you are not a robot !")
     }
   };
+
+  const callback = ()=>{
+    console.log("called")
+  }
+
+  const verifyCallback = (response)=>{
+    if(response){
+      setVerified(true);
+    }else{
+      setVerified(false);
+    }
+  }
 
   return (
     <React.Fragment>
@@ -159,9 +174,17 @@ const Auth = () => {
             errorText="Please enter a valid password, at least 6 characters."
             onInput={inputHandler}
           />
+
+<Recaptcha
+    sitekey="6LfsLfgcAAAAAMXdYlWrVzhxaNwuZy-NbWRHiHDq"
+    render="explicit"
+    onloadCallback={callback}
+    verifyCallback={verifyCallback}
+  />  <div className="mt-1p" >
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? "LOGIN" : "SIGNUP"}
           </Button>
+          </div>
         </form>
         <Button inverse onClick={switchModeHandler}>
           SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}

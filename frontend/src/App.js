@@ -15,6 +15,7 @@ import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
 import Requests from './user/pages/Requests';
+import Recaptcha from "react-recaptcha"
 
 const App = () => {
   const { token, login, logout, userId, admin, formId , adminArea } = useAuth();
