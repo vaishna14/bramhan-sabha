@@ -71,7 +71,7 @@ function PersonalDetails() {
     if (detailsType === "family") {
       axios({
         method: "get",
-        url: `https://test03102021.herokuapp.com/api/users/kids`,
+        url: `https://test27102021.herokuapp.com/api/users/kids`,
         headers: {
           Authorization: "Bearer " + auth.token,
         },

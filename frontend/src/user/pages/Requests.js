@@ -26,7 +26,7 @@ function Requests() {
     });
     await axios({
       method: "get",
-      url: `https://test03102021.herokuapp.com/api/users/requests`,
+      url: `https://test27102021.herokuapp.com/api/users/requests`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
@@ -39,7 +39,7 @@ function Requests() {
 
     await axios({
       method: "get",
-      url: `https://test03102021.herokuapp.com/api/users/requestsFemale`,
+      url: `https://test27102021.herokuapp.com/api/users/requestsFemale`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
@@ -56,7 +56,7 @@ function Requests() {
   //   if (requestUser.length > 0) {
   //     axios({
   //       method: "post",
-  //       url: `https://test03102021.herokuapp.com/api/users/requestsUsers`,
+  //       url: `https://test27102021.herokuapp.com/api/users/requestsUsers`,
   //       data: requestUser,
   //       headers: {
   //         Authorization: 'Bearer ' + auth.token
@@ -80,7 +80,7 @@ function Requests() {
     });
     axios({
       method: "get",
-      url: `https://test03102021.herokuapp.com/api/users/showDetails/${id}`,
+      url: `https://test27102021.herokuapp.com/api/users/showDetails/${id}`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }
@@ -101,7 +101,7 @@ function Requests() {
     });
     axios({
       method: "post",
-      url: `https://test03102021.herokuapp.com/api/users/approveUser/${id}`,
+      url: `https://test27102021.herokuapp.com/api/users/approveUser/${id}`,
       headers: {
         Authorization: 'Bearer ' + auth.token
       }

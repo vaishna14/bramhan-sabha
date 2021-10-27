@@ -16,7 +16,7 @@ const UserPlaces = () => {
     const fetchPlaces = async () => {
       try {
         const responseData = await sendRequest(
-          `https://test03102021.herokuapp.com/api/places/user/${userId}`
+          `https://test27102021.herokuapp.com/api/places/user/${userId}`
         );
         setLoadedPlaces(responseData.places);
       } catch (err) {}

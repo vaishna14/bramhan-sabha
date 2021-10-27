@@ -135,7 +135,7 @@ function Details(props) {
       });
     axios({
       method: "get",
-      url: `https://test03102021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
+      url: `https://test27102021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
       headers: {
         Authorization: "Bearer " + auth.token,
       },
@@ -174,7 +174,7 @@ function Details(props) {
       });
     axios({
       method: "get",
-      url: `https://test03102021.herokuapp.com/api/users/suggestions`,
+      url: `https://test27102021.herokuapp.com/api/users/suggestions`,
       headers: {
         Authorization: "Bearer " + auth.token,
       },

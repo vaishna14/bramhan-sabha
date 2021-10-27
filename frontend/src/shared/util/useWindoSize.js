@@ -1,6 +1,6 @@
 // utils/useWindowSize.js
 
-import React from "react";
+import React,{useEffect} from "react";
 
 export default function useWindowSize() {
   const isSSR = typeof window !== "undefined";

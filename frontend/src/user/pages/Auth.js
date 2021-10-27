@@ -72,7 +72,7 @@ const Auth = () => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          "https://test03102021.herokuapp.com/api/users/login",
+          "https://test27102021.herokuapp.com/api/users/login",
           "POST",
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -98,7 +98,7 @@ const Auth = () => {
         formData.append("password", formState.inputs.password.value);
         formData.append("image", formState.inputs.image.value);
         const responseData = await sendRequest(
-          "https://test03102021.herokuapp.com/api/users/signup",
+          "https://test27102021.herokuapp.com/api/users/signup",
           "POST",
           formData
         );
