@@ -176,11 +176,12 @@ const Auth = () => {
           />
 
 <Recaptcha
-    sitekey="6LfsLfgcAAAAAMXdYlWrVzhxaNwuZy-NbWRHiHDq"
+    sitekey="6Lc5gP4cAAAAAPSb6m5dke2p7DVTooOlXv47Gz6F"
     render="explicit"
     onloadCallback={callback}
     verifyCallback={verifyCallback}
-  />  <div className="mt-1p" >
+  />  
+  <div className="mt-1p" >
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? "LOGIN" : "SIGNUP"}
           </Button>
