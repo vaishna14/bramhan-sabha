@@ -55,3 +55,8 @@ body {
 .display-grid{
   display: grid !important;
 }
+
+
+.font-smaller{
+  font-size: smaller;
+}

@@ -39,7 +39,7 @@ function PersonalDetails() {
 
   useEffect(()=>{
     console.log(width);
-    if(width <1100){
+    if(width <1200){
       setVisible(false)
     }else{
       setVisible(true)
@@ -299,7 +299,7 @@ function PersonalDetails() {
                   </Grid.Column>
                 </Grid>
                 {
-                  width >1100 && (
+                  width >1200 && (
                     <Divider vertical />
 
                   )
