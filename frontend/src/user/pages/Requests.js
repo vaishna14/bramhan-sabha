@@ -3,7 +3,8 @@ import { Table, Menu, Icon, Button, Modal } from "semantic-ui-react";
 import axios from 'axios';
 import { AuthContext } from '../../shared/context/auth-context';
 import "./Requests.css";
-import {useDispatch} from "react-redux"
+import {useDispatch} from "react-redux";
+import "./Requests.css"
 
 function Requests() {
   const auth = useContext(AuthContext);
@@ -204,18 +205,6 @@ function Requests() {
         <Table.Footer>
           <Table.Row>
             <Table.HeaderCell colSpan='3'>
-              {/* <Menu floated='right' pagination>
-                <Menu.Item as='a' icon>
-                  <Icon name='chevron left' />
-                </Menu.Item>
-                <Menu.Item as='a'>1</Menu.Item>
-                <Menu.Item as='a'>2</Menu.Item>
-                <Menu.Item as='a'>3</Menu.Item>
-                <Menu.Item as='a'>4</Menu.Item>
-                <Menu.Item as='a' icon>
-                  <Icon name='chevron right' />
-                </Menu.Item>
-              </Menu> */}
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
@@ -223,6 +212,7 @@ function Requests() {
     </div>
 <div>
      <Modal
+    
       closeIcon
       closeOnEscape
         size="large"
