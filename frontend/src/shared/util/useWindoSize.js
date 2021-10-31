@@ -1,13 +1,15 @@
 // utils/useWindowSize.js
 
-import React,{useEffect} from "react";
+import React from "react";
 
 export default function useWindowSize() {
   const isSSR = typeof window !== "undefined";
   const [windowSize, setWindowSize] = React.useState({
-    width: isSSR ? 1200 : window.innerWidth,
+    // width: isSSR ? 1200 : window.innerWidth,
     height: isSSR ? 800 : window.innerHeight,
+    width:  window.innerWidth,
   });
+
 
   function changeWindowSize() {
     setWindowSize({ width: window.innerWidth, height: window.innerHeight });

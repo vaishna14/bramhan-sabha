@@ -62,6 +62,8 @@ function Details(props) {
   const [wardName, setWardName] = useState("");
   const { width } = useWindowSize();
   const [visible, setVisible] = useState("");
+  const [phoneError, setPhoneError] = useState(false);
+  const [whatsappError, seWhatsappError] = useState(false)
 
 
   useEffect(()=>{
@@ -235,10 +237,18 @@ function Details(props) {
           return;
         });
         setSuggestions(arr);
-        setGotraSuggestions(gotra);
-        setEducationSuggestions(education);
-        setEOccupationSuggestions(occupation);
-        setWardNameSuggestions(ward);
+        const set = new Set(gotra.map(item => JSON.stringify(item)));
+        const gotra1 = [...set].map(item => JSON.parse(item));
+        setGotraSuggestions(gotra1);
+        const set1 = new Set(education.map(item => JSON.stringify(item)));
+        const education1 = [...set1].map(item => JSON.parse(item));
+        setEducationSuggestions(education1);
+        const set2 = new Set(occupation.map(item => JSON.stringify(item)));
+        const occupation1 = [...set2].map(item => JSON.parse(item));
+        setEOccupationSuggestions(occupation1);
+        const set3 = new Set(ward.map(item => JSON.stringify(item)));
+        const ward1 = [...set3].map(item => JSON.parse(item));
+        setWardNameSuggestions(ward1);
       })
       .catch((err) => {
         console.log(err);
@@ -305,6 +315,13 @@ function Details(props) {
       profile: false,
     });
     let form = formDetails;
+    if(name == "personal_number"){
+      value.length !== 10 && value.length !== 0 ? setPhoneError("Phone number should be equal to 10") : setPhoneError(false);
+    }
+    if(name == "whatsapp_number"){
+      value.length !== 10 && value.length !== 0? seWhatsappError("Phone number should be equal to 10") : seWhatsappError(false);
+    }
+    
     if (!form[name]) {
       form[name] = value;
       if (name === "first_name") {
@@ -454,6 +471,8 @@ function Details(props) {
 
   const formSubmit = async (e) => {
     e.preventDefault();
+    if(!phoneError && !whatsappError){
+
     let existId = "";
     // console.log("here");
     let Name =
@@ -504,6 +523,7 @@ function Details(props) {
         message: ["Something went wrong. Please contact admin."],
       });
     }
+  }
   };
 
   const handleAddition = (e, { name, value }) => {
@@ -1228,7 +1248,8 @@ function Details(props) {
               name="personal_number"
               onChange={formChange}
               defaultValue={formDetails?.personal_number}
-             
+              error={phoneError || (formDetails.personal_number||[]).length != 10}
+             required
             >
               <Icon name="phone" />
               <input />
@@ -1243,6 +1264,8 @@ function Details(props) {
               name="whatsapp_number"
               onChange={formChange}
               defaultValue={formDetails?.whatsapp_number}
+              error={whatsappError || (formDetails.whatsapp_number||[]).length != 10}
+
             >
               <Icon className="mx-5p" name="whatsapp" />
               <input className="mx-5p" />

@@ -31,11 +31,6 @@ function PersonalDetails() {
   const { width } = useWindowSize();
   const profile = useSelector((state) => state.personal.profile);
 
-  useEffect(()=>{
-    console.log('====================================');
-    console.log(profile)
-    console.log('====================================');
-  },[profile])
 
   useEffect(()=>{
     console.log(width);
