@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect } from 'react';
-
 let logoutTimer;
 
 export const useAuth = () => {
@@ -30,6 +29,7 @@ export const useAuth = () => {
         expiration: tokenExpirationDate.toISOString()
       })
     );
+    
   }, []);
 
   const logout = useCallback(() => {

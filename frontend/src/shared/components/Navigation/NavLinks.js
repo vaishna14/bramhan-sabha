@@ -2,14 +2,21 @@ import React, { useContext, useEffect } from 'react';
 import { NavLink} from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 import './NavLinks.css';
+import { useHistory } from "react-router-dom";
 
 const NavLinks = props => {
   const auth = useContext(AuthContext);
+  const history = useHistory();
 
+  useEffect(()=>{
+    if(auth.admin){
+    history.push("/request");
+    }
+  })
 
   return (
     <ul className="nav-links">
-      {auth.isLoggedIn  && (
+      {auth.isLoggedIn && !auth.admin  && (
       <li>
         <NavLink to="/" exact>
           HOME
