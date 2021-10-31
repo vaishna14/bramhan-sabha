@@ -42,6 +42,8 @@ function Details(props) {
   const child_count = useSelector((state) => state.personal.child_count);
   const childId = useSelector((state) => state.personal.child_id);
   const marital_status = useSelector((state) => state.personal.marital_status);
+  const second_gender = useSelector((state) => state.personal.second_gender);
+  const first_gender = useSelector((state) => state.personal.first_gender);
   const [submitDisable, setSubmitDisable] = useState(false);
   const [bloodGroup, setBloodGroup] = useState("");
   const [occupation, setOccupation] = useState("");
@@ -415,6 +417,21 @@ function Details(props) {
       props.type === "father" ? (form[name] = "M") : (form[name] = "F");
     }
 
+    if(name === "gender"){
+      if((props.type === "personal" || props.type === "kids") ){
+      dispatch({
+        type: "first_gender",
+        first_gender: value,
+      });
+    }
+    if((props.type == "partner" || props.type == "kids_spouse")){
+      dispatch({
+        type: "second_gender",
+        second_gender: value,
+      });
+    }
+    }
+
     if (name === "alive") {
       setAlive(value.replace(/[^a-zA-Z ]/g, ""));
     } else if (name === "blood_group") {
@@ -671,7 +688,7 @@ function Details(props) {
               label="Male"
               name="gender"
               value="M"
-              disabled={detailsType === "parent"}
+              disabled={detailsType === "parent" || ((props.type === "personal" || props.type === "kids") && second_gender == "M") || ((props.type == "partner" || props.type == "kids_spouse")&& first_gender == "M")}
               checked={gender === "M" || props.type === "father"}
               onChange={() => {
                 setGender("M");
@@ -684,7 +701,7 @@ function Details(props) {
               label="Female"
               name="gender"
               value="F"
-              disabled={detailsType === "parent"}
+              disabled={detailsType === "parent" || ((props.type === "personal" || props.type === "kids") && second_gender == "F") || ((props.type == "partner" || props.type == "kids_spouse")&& first_gender == "F")}
               checked={gender === "F" || props.type === "mother"}
               onChange={() => {
                 setGender("F");

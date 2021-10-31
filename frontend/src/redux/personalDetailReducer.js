@@ -15,7 +15,9 @@ const INITIAL_STATE = {
   message:[],
   marital_status:"",
   gender:"",
-  column_select:[]
+  column_select:[],
+  second_gender:"",
+  first_gender:"",
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -27,6 +29,19 @@ const reducer = (state = INITIAL_STATE, action) => {
         ...state, displayType: action.displayType,
 
       };
+
+      case "first_gender":
+
+        return {
+          ...state, first_gender: action.first_gender,
+  
+        };
+        case "second_gender":
+
+          return {
+            ...state, second_gender: action.second_gender,
+    
+          };
 
     case "fatherAlive":
 
