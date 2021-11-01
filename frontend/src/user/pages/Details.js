@@ -69,6 +69,13 @@ function Details(props) {
 
 
   useEffect(()=>{
+    if((props.type == "partner" || props.type == "kids_spouse")){
+    setGender("");
+    formChange("e", { name: "gender", value: "" })
+    };
+  },[first_gender])
+
+  useEffect(()=>{
 
     if(width < 500){
       console.log("display-grid");
@@ -488,7 +495,7 @@ function Details(props) {
 
   const formSubmit = async (e) => {
     e.preventDefault();
-    if(!phoneError && !whatsappError){
+    if(!phoneError && !whatsappError && gender){
 
     let existId = "";
     // console.log("here");
@@ -688,12 +695,13 @@ function Details(props) {
               label="Male"
               name="gender"
               value="M"
-              disabled={detailsType === "parent" || ((props.type === "personal" || props.type === "kids") && second_gender == "M") || ((props.type == "partner" || props.type == "kids_spouse")&& first_gender == "M")}
+              disabled={detailsType === "parent" || ((props.type == "partner" || props.type == "kids_spouse")&& first_gender == "M")}
               checked={gender === "M" || props.type === "father"}
               onChange={() => {
                 setGender("M");
                 formChange("e", { name: "gender", value: "M" });
               }}
+              error={gender == ""}
             />
             <Form.Radio
               required
@@ -701,12 +709,14 @@ function Details(props) {
               label="Female"
               name="gender"
               value="F"
-              disabled={detailsType === "parent" || ((props.type === "personal" || props.type === "kids") && second_gender == "F") || ((props.type == "partner" || props.type == "kids_spouse")&& first_gender == "F")}
+              disabled={detailsType === "parent"  || ((props.type == "partner" || props.type == "kids_spouse")&& first_gender == "F")}
               checked={gender === "F" || props.type === "mother"}
               onChange={() => {
                 setGender("F");
                 formChange("e", { name: "gender", value: "F" });
               }}
+              error={gender == ""}
+
             />
           </div>
           </div>
