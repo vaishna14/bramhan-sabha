@@ -19,6 +19,8 @@ function Dashboard() {
   const auth = useContext(AuthContext);
   const dispatch = useDispatch();
   const [columnSelect, setColumnSelect] = useState([]);
+  const [maleData,setMaleData] = useState([]);
+  const [femaleData, setFemaleData] = useState([]);
 
   const headOptions = {
     first_name:"First Name",
@@ -97,7 +99,7 @@ function Dashboard() {
 }
 
   const onFetch = ()=>{
-    // setData([]);
+    setData([]);
     setHeaders([]);
     fetchTableDetails("getAll");
     fetchTableDetails("getAllFemale");
@@ -152,11 +154,12 @@ function Dashboard() {
           dataVal.push(row);
         });
         //  console.log(dataVal);
-        let maleData = data;
-        maleData.push(dataVal);
+        // let addData = [];
+        // maleData.push(dataVal);
+        val == "getAll"? setMaleData(dataVal) :setFemaleData(dataVal);
         // console.log(maleData);
-        maleData = maleData[0].concat(maleData[1]);
-        setData(maleData);
+        // maleData = maleData[0].concat(maleData[1]);
+        // setData(maleData);
         setHeaders(headers);
       })
       .catch((err) => {
@@ -171,6 +174,12 @@ function Dashboard() {
       });
   }
 
+
+  useEffect(()=>{
+    const dataNew = [...maleData,...femaleData];
+    setData(dataNew);
+
+  },[maleData, femaleData])
 
   useEffect(()=>{
     let columnType = [];
