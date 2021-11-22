@@ -6,42 +6,51 @@ import "./Dashboard.css";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import MenuList from "./Menu";
-import { Dropdown,Message, Icon, Input, Menu, Checkbox } from "semantic-ui-react";
-
+import {
+  Dropdown,
+  Message,
+  Icon,
+  Input,
+  Menu,
+  Checkbox,
+  Dimmer,
+  Loader,
+} from "semantic-ui-react";
 
 function Dashboard() {
   const key = useSelector((state) => state.personal.column_select);
   const [columns, setColumn] = useState([]);
-  const [headers, setHeaders] = useState([
-   
-  ]);
+  const [headers, setHeaders] = useState([]);
   const [data, setData] = useState([]);
   const auth = useContext(AuthContext);
   const dispatch = useDispatch();
   const [columnSelect, setColumnSelect] = useState([]);
-  const [maleData,setMaleData] = useState([]);
+  const [maleData, setMaleData] = useState([]);
   const [femaleData, setFemaleData] = useState([]);
+  const [fetchDisabled, setFetchDisabled] = useState(false);
+  const [displayHeaders, setDisplayHeaders] = useState([]);
+  const isLoading = useSelector((state) => state.personal.loading);
 
   const headOptions = {
-    first_name:"First Name",
-    middle_name:"Middle Name",
-    last_name:"Last Name",
-    gender:"Gender", 
-    gotra:"Gotra", 
-    alive:"Alive", 
-    marital_status:"Marital Status",
-    earning:"Earnings",
-    address_ward:"WardName", 
-    personal_number:"Contact",
-    email:"Email", 
-    education:"Education", 
-    education_detail:"Education Details",
-    blood_group:"Blood Group", 
-    birth_date:"Birth Date",
-    address_city:"City", 
-    address_district:"District", 
-    permanent_pincode:"Pin Code"
-  }
+    first_name: "First Name",
+    middle_name: "Middle Name",
+    last_name: "Last Name",
+    gender: "Gender",
+    gotra: "Gotra",
+    alive: "Alive",
+    marital_status: "Marital Status",
+    earning: "Earnings",
+    address_ward: "WardName",
+    personal_number: "Contact",
+    email: "Email",
+    education: "Education",
+    education_detail: "Education Details",
+    blood_group: "Blood Group",
+    birth_date: "Birth Date",
+    address_city: "City",
+    address_district: "District",
+    permanent_pincode: "Pin Code",
+  };
 
   const options = [
     { key: "first_name", text: "First Name", value: "first_name" },
@@ -73,18 +82,18 @@ function Dashboard() {
     //   console
     // console.log(value);
     // console.log(value.join(" "));
-    let text = value.length -1;
+    let text = value.length - 1;
     // console.log(headOptions[value[text]]);
     let head = headers;
     head.push(headOptions[value[text]]);
     // console.log(head)
     setHeaders(head);
     setColumnSelect(value);
-    
+    setFetchDisabled(false);
     dispatch({
-        type: "column_select",
-        column_select: value.join(" "),
-      });
+      type: "column_select",
+      column_select: value.join(" "),
+    });
   };
 
   function getAge(dateString) {
@@ -93,19 +102,20 @@ function Dashboard() {
     var age = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+      age--;
     }
     return age;
-}
-
-  const onFetch = ()=>{
-    setData([]);
-    setHeaders([]);
-    fetchTableDetails("getAll");
-    fetchTableDetails("getAllFemale");
   }
 
-  const fetchTableDetails = (val)=>{
+  const onFetch = () => {
+    setData([]);
+    setHeaders([]);
+    setDisplayHeaders([]);
+    fetchTableDetails("getAll");
+    fetchTableDetails("getAllFemale");
+  };
+
+  const fetchTableDetails = (val) => {
     dispatch({
       type: "loading",
       loading: true,
@@ -120,7 +130,7 @@ function Dashboard() {
       headers: {
         Authorization: "Bearer " + auth.token,
       },
-      data: {"key":key},
+      data: { key: key },
     })
       .then((response) => {
         //  console.log(response.data);
@@ -132,7 +142,7 @@ function Dashboard() {
             // console.log(keys);
             if (keys === "gender") {
               console.log(keys);
-              val == "getAll"? row.push("M"):row.push("F");
+              val == "getAll" ? row.push("M") : row.push("F");
             } else if (keys === "birth_date") {
               // console.log(item[keys]);
               if (item[keys]) {
@@ -156,7 +166,7 @@ function Dashboard() {
         //  console.log(dataVal);
         // let addData = [];
         // maleData.push(dataVal);
-        val == "getAll"? setMaleData(dataVal) :setFemaleData(dataVal);
+        val == "getAll" ? setMaleData(dataVal) : setFemaleData(dataVal);
         // console.log(maleData);
         // maleData = maleData[0].concat(maleData[1]);
         // setData(maleData);
@@ -167,36 +177,36 @@ function Dashboard() {
       })
       .finally(() => {
         // setIsLoading(false);
-        dispatch({
-          type: "loading",
-          loading: false,
-        });
+        setFetchDisabled(true);
+        setDisplayHeaders(headers);
       });
-  }
+  };
 
-
-  useEffect(()=>{
-    const dataNew = [...maleData,...femaleData];
+  useEffect(() => {
+    const dataNew = [...maleData, ...femaleData];
     setData(dataNew);
+    dispatch({
+      type: "loading",
+      loading: false,
+    });
+  }, [maleData, femaleData]);
 
-  },[maleData, femaleData])
-
-  useEffect(()=>{
+  useEffect(() => {
     let columnType = [];
-    if(data.length >0 && columnSelect.length > 0){
-      columnSelect.map(item =>{
-       if(item == "earning" || item == "personal_number"){
-         columnType.push({ type: "numeric" })
-       }else if (item == "birth_date"){
-        columnType.push({ type: "date" })
-       }else {
-        columnType.push({ type: "text" })
-       }
-      })
+    if (data.length > 0 && columnSelect.length > 0) {
+      columnSelect.map((item) => {
+        if (item == "earning" || item == "personal_number") {
+          columnType.push({ type: "numeric" });
+        } else if (item == "birth_date") {
+          columnType.push({ type: "date" });
+        } else {
+          columnType.push({ type: "text" });
+        }
+      });
     }
     // console.log(columnType);
     setColumn(columnType);
-  },[key, data])
+  }, [key, data]);
 
   return (
     <>
@@ -212,42 +222,50 @@ function Dashboard() {
           onChange={changeSelection}
         />
         <Menu.Item>
-            <button onClick={onFetch}>Fetch Data</button>
+          <button onClick={onFetch} disabled={fetchDisabled}>
+            Fetch Data
+          </button>
         </Menu.Item>
       </Menu>
       <>
-      {
-        columnSelect.length == 0 && data.length == 0 ? (
-          <Message error
-          header='Please select above columns to display table'
-        />
-        ): (
-          <div id="hot-app" className="hot-table-val">
-          <HotTable
-            data={data}
-            colHeaders={headers}
-            rowHeaders={true}
-            columns={columns}
-            columnSorting={true}
-            filters={true}
-            filter={true}
-            dropdownMenu={true}
-            licenseKey={"non-commercial-and-evaluation"}
-            readOnly={true}
-            dragToScroll={true}
-            // width="500"
-            // height="200"
-            // stretchH='all'
-            // height="100"
-            manualColumnResize={true}
-            // colWidths= {120}
-            // width= '2000'
-            // height='100%'
+        {columnSelect.length == 0 && data.length == 0 ? (
+          <Message
+            error
+            header="Please select above columns to display table"
           />
-        </div>
-        )
-      }
-     </>
+        ) : (
+          <>
+            {isLoading && (
+              <Dimmer active={isLoading} inverted>
+                <Loader size="large">Loading</Loader>
+              </Dimmer>
+            )}
+            <div id="hot-app" className="hot-table-val">
+              <HotTable
+                data={data}
+                colHeaders={displayHeaders}
+                rowHeaders={true}
+                columns={columns}
+                columnSorting={true}
+                filters={true}
+                filter={true}
+                dropdownMenu={true}
+                licenseKey={"non-commercial-and-evaluation"}
+                readOnly={true}
+                dragToScroll={true}
+                // width="500"
+                // height="200"
+                // stretchH='all'
+                // height="100"
+                manualColumnResize={true}
+                // colWidths= {120}
+                // width= '2000'
+                // height='100%'
+              />
+            </div>
+          </>
+        )}
+      </>
     </>
   );
 }
