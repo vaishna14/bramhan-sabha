@@ -6,6 +6,7 @@ import "./Dashboard.css";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import MenuList from "./Menu";
+import { CSVLink, CSVDownload } from "react-csv";
 import {
   Dropdown,
   Message,
@@ -15,9 +16,17 @@ import {
   Checkbox,
   Dimmer,
   Loader,
+  Button,
 } from "semantic-ui-react";
 
 function Dashboard() {
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
+
   const key = useSelector((state) => state.personal.column_select);
   const [columns, setColumn] = useState([]);
   const [headers, setHeaders] = useState([]);
@@ -29,7 +38,21 @@ function Dashboard() {
   const [femaleData, setFemaleData] = useState([]);
   const [fetchDisabled, setFetchDisabled] = useState(false);
   const [displayHeaders, setDisplayHeaders] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
   const isLoading = useSelector((state) => state.personal.loading);
+
+
+  useEffect(()=>{
+  const check=  data.sort(function(a, b){
+    console.log(a);
+      if(a[0] < b[0]) { return -1; }
+      if(a[0] > b[0]) { return 1; }
+      return 0;
+  });
+  console.log('===========check=========================');
+  console.log(check);
+  console.log('===========check=========================');
+  },[data])
 
   const headOptions = {
     first_name: "First Name",
@@ -116,6 +139,7 @@ function Dashboard() {
   };
 
   const fetchTableDetails = (val) => {
+    setDisplayHeaders([]);
     dispatch({
       type: "loading",
       loading: true,
@@ -133,6 +157,7 @@ function Dashboard() {
       data: { key: key },
     })
       .then((response) => {
+        setDisplayHeaders(headers);
         //  console.log(response.data);
         let dataVal = [];
         (response.data?.list || []).map((item) => {
@@ -178,7 +203,6 @@ function Dashboard() {
       .finally(() => {
         // setIsLoading(false);
         setFetchDisabled(true);
-        setDisplayHeaders(headers);
       });
   };
 
@@ -210,8 +234,8 @@ function Dashboard() {
 
   return (
     <>
-      <Menu vertical>
-        <Dropdown
+      <Menu>
+        {/* <Dropdown
           className="menu-dropdown"
           multiple
           selection
@@ -220,27 +244,52 @@ function Dashboard() {
           options={options}
           text="Choose an option"
           onChange={changeSelection}
+        /> */}
+        <Dropdown
+          placeholder="Please select below columns..."
+          fluid
+          multiple
+          selection
+          options={options}
+          onChange={changeSelection}
         />
         <Menu.Item>
-          <button onClick={onFetch} disabled={fetchDisabled}>
-            Fetch Data
-          </button>
+          <Button
+            color="facebook"
+            onClick={onFetch}
+            disabled={fetchDisabled || headers.length == 0}
+          >
+            <Icon name="table" /> Fetch data
+          </Button>
+        </Menu.Item>
+        <Menu.Item>
+          <Button color="instagram" disabled={displayHeaders.length == 0}>
+            <Icon name="download" />{" "}
+            <CSVLink
+              data={data}
+              headers={headers}
+              filename="BramhanSabha_Report.csv"
+            >
+              Export data
+            </CSVLink>
+          </Button>
         </Menu.Item>
       </Menu>
       <>
-        {columnSelect.length == 0 && data.length == 0 ? (
+        {(columnSelect.length == 0 && data.length == 0) ? (
           <Message
             error
             header="Please select above columns to display table"
           />
         ) : (
           <>
+            
+            <div id="hot-app" className="hot-table-val">
             {isLoading && (
               <Dimmer active={isLoading} inverted>
                 <Loader size="large">Loading</Loader>
               </Dimmer>
             )}
-            <div id="hot-app" className="hot-table-val">
               <HotTable
                 data={data}
                 colHeaders={displayHeaders}

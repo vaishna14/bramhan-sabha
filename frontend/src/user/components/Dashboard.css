@@ -20,8 +20,13 @@
 
 .hot-table-val{
     width: 80%;
-    height: 20%;
+    height: 50%;
     overflow: hidden;
+    margin: auto;
+}
+
+.button.ui.instagram.button>a{
+    color: white !important;
 }
 
 /* .menu-dropdown{
