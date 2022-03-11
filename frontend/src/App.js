@@ -46,9 +46,6 @@ const App = () => {
   } else {
     routes = (
       <Switch>
-        <Route path="/:userId/places" exact>
-          <UserPlaces />
-        </Route>
         <Route path="/auth">
           <Auth />
         </Route>

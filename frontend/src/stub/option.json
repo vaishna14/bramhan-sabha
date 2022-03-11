@@ -1,0 +1,45 @@
+{
+     "bloodGroupOptions" : [
+        { "key": "A+", "text": "A+", "value": "A+" },
+        { "key": "A-", "text": "A-", "value": "A-" },
+        { "key": "B+", "text": "B+", "value": "B+" },
+        { "key": "B-", "text": "B-", "value": "B-" },
+        { "key": "AB+", "text": "AB+", "value": "AB+" },
+        { "key": "AB-", "text": "AB-", "value": "AB-" },
+        { "key": "O+", "text": "O+", "value": "O+" },
+        { "key": "O-", "text": "O-", "value": "O-" }
+      ],
+    
+       "occupationOptions" : [
+        { "key": "Occupation", "text": "Occupation", "value": "Occupation" },
+        { "key": "Business", "text": "Business", "value": "Business" },
+        { "key": "Retired", "text": "Retired", "value": "Retired" },
+        { "key": "Other", "text": "Other", "value": "Other" },
+        { "key": "None", "text": "None", "value": "None" }
+      ],
+    
+       "earningsOptions" : [
+        { "key": "<5", "text": "<5LPA", "value": "<5" },
+        { "key": "5-10", "text": "5-10LPA", "value": "5-10" },
+        { "key": "10-20", "text": "10-20LPA", "value": "10-20" },
+        { "key": ">20", "text": ">20LPA", "value": ">20" }
+      ],
+    
+       "educationOptions" : [
+        { "key": "<SSC", "text": "Below SSC", "value": "<SSC" },
+        { "key": "SSC", "text": "SSC", "value": "SSC" },
+        { "key": "HSC", "text": "HSC", "value": "HSC" },
+        { "key": "Diploma", "text": "Diploma", "value": "Diploma" },
+        { "key": "Graduation", "text": "Graduation", "value": "Graduation" },
+        { "key": "PG", "text": "Post-Graduation", "value": "PG" },
+        { "key": "PhD", "text": "PhD", "value": "PhD" },
+        { "key": "Other", "text": "Other", "value": "Other" }
+      ],
+    
+       "maritalStatus" : [
+        { "key": "Single", "text": "Single", "value": "Single" },
+        { "key": "Married", "text": "Married", "value": "Married" },
+        { "key": "Widow", "text": "Widow", "value": "Widow" },
+        { "key": "Divorced", "text": "Divorced", "value": "Divorced" }
+      ]
+}

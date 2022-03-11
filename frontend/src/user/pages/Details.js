@@ -7,18 +7,16 @@ import {
   Dimmer,
   Loader,
   Message,
-  Dropdown,
 } from "semantic-ui-react";
 import { FormData } from "../Services/FormData";
 import { AuthContext } from "../../shared/context/auth-context";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import "./PersonalDetails.css";
 import "./App.css";
-import Dashboard from "../components/Dashboard";
 // import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import useWindowSize from "../../shared/util/useWindoSize";
+import { earningsOptions,educationOptions, maritalStatus, bloodGroupOptions, occupationOptions } from "../../stub/option.json"
 
 function Details(props) {
   const dispatch = useDispatch();
@@ -63,7 +61,6 @@ function Details(props) {
   const [marriage, setMarriage] = useState("");
   const [wardName, setWardName] = useState("");
   const { width } = useWindowSize();
-  const [visible, setVisible] = useState("");
   const [phoneError, setPhoneError] = useState(false);
   const [whatsappError, seWhatsappError] = useState(false)
 
@@ -75,64 +72,13 @@ function Details(props) {
     };
   },[first_gender])
 
-  useEffect(()=>{
-
-    if(width < 500){
-      console.log("display-grid");
-      console.log("height-200rem")
-    }
-
-  },[width])
-
   const today =  new Date().getFullYear()+"-"+ (new Date().getMonth()<10 ? "0":"")+ new Date().getMonth()+"-"+(new Date().getDate()<10 ?"0":"")+ new Date().getDate()
 
   const aliveOptions = [
     { text: "Yes", value: "Yes" },
     { text: "No", value: "No" },
   ];
-  const bloodGroupOptions = [
-    { key: "A+", text: "A+", value: "A+" },
-    { key: "A-", text: "A-", value: "A-" },
-    { key: "B+", text: "B+", value: "B+" },
-    { key: "B-", text: "B-", value: "B-" },
-    { key: "AB+", text: "AB+", value: "AB+" },
-    { key: "AB-", text: "AB-", value: "AB-" },
-    { key: "O+", text: "O+", value: "O+" },
-    { key: "O-", text: "O-", value: "O-" },
-  ];
 
-  const occupationOptions = [
-    { key: "Occupation", text: "Occupation", value: "Occupation" },
-    { key: "Business", text: "Business", value: "Business" },
-    { key: "Retired", text: "Retired", value: "Retired" },
-    { key: "Other", text: "Other", value: "Other" },
-    { key: "None", text: "None", value: "None" },
-  ];
-
-  const earningsOptions = [
-    { key: "<5", text: "<5LPA", value: "<5" },
-    { key: "5-10", text: "5-10LPA", value: "5-10" },
-    { key: "10-20", text: "10-20LPA", value: "10-20" },
-    { key: ">20", text: ">20LPA", value: ">20" },
-  ];
-
-  const educationOptions = [
-    { key: "<SSC", text: "Below SSC", value: "<SSC" },
-    { key: "SSC", text: "SSC", value: "SSC" },
-    { key: "HSC", text: "HSC", value: "HSC" },
-    { key: "Diploma", text: "Diploma", value: "Diploma" },
-    { key: "Graduation", text: "Graduation", value: "Graduation" },
-    { key: "PG", text: "Post-Graduation", value: "PG" },
-    { key: "PhD", text: "PhD", value: "PhD" },
-    { key: "Other", text: "Other", value: "Other" },
-  ];
-
-  const maritalStatus = [
-    { key: "Single", text: "Single", value: "Single" },
-    { key: "Married", text: "Married", value: "Married" },
-    { key: "Widow", text: "Widow", value: "Widow" },
-    { key: "Divorced", text: "Divorced", value: "Divorced" },
-  ];
 
   useEffect(() => {
     // setIsLoading(true);
@@ -146,7 +92,8 @@ function Details(props) {
       });
     axios({
       method: "get",
-      url: `https://test27102021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
+      // url: `https://test27102021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
+      url: `http://localhost:4000/api/users/getUserDetails/${props.type}/${childId}`,
       headers: {
         Authorization: "Bearer " + auth.token,
       },
@@ -155,14 +102,13 @@ function Details(props) {
         if (props.type === response.data.type) {
           if (response?.data?.detail) {
             setFormDetails(response?.data?.detail);
-            console.log(response?.data?.detail);
             if(props.type !== "partner" && props.type !=="mother" && props.type !== "kids_spouse"){
             dispatch({
                 type: "marital_status",
                 marital_status: response?.data?.detail?.marital_status,
               });
             }
-            setSubmitDisable(false);
+            // setSubmitDisable(false);
           }
         }
       })
@@ -268,7 +214,6 @@ function Details(props) {
   }, []);
 
   useEffect(() => {
-    // console.log(formDetails);
     setGender(formDetails?.gender);
     setAlive(formDetails?.alive);
     setBloodGroup(formDetails?.blood_group);
@@ -288,35 +233,35 @@ function Details(props) {
     });
   }, [formDetails]);
 
-  const fatherSelected = (e, { name, value }) => {
-    dispatch({
-      type: "display_type",
-      displayType: "parent",
-    });
-    dispatch({
-      type: "fatherAlive",
-      fatherAlive: value,
-    });
-    dispatch({
-      type: "profile",
-      profile: false,
-    });
-  };
+  // const fatherSelected = (e, { name, value }) => {
+  //   dispatch({
+  //     type: "display_type",
+  //     displayType: "parent",
+  //   });
+  //   dispatch({
+  //     type: "fatherAlive",
+  //     fatherAlive: value,
+  //   });
+  //   dispatch({
+  //     type: "profile",
+  //     profile: false,
+  //   });
+  // };
 
-  const motherSelected = (e, { name, value }) => {
-    dispatch({
-      type: "display_type",
-      displayType: "parent",
-    });
-    dispatch({
-      type: "motherAlive",
-      motherAlive: value,
-    });
-    dispatch({
-      type: "profile",
-      profile: false,
-    });
-  };
+  // const motherSelected = (e, { name, value }) => {
+  //   dispatch({
+  //     type: "display_type",
+  //     displayType: "parent",
+  //   });
+  //   dispatch({
+  //     type: "motherAlive",
+  //     motherAlive: value,
+  //   });
+  //   dispatch({
+  //     type: "profile",
+  //     profile: false,
+  //   });
+  // };
 
   const formChange = (e, { name, value }) => {
     dispatch({
@@ -420,8 +365,11 @@ function Details(props) {
     }
     }
     setFormDetails(form);
-    if (name === "gender" && detailsType === "parent") {
+    if ( detailsType === "parent") {
       props.type === "father" ? (form[name] = "M") : (form[name] = "F");
+    }
+    if ( detailsType === "parent") {
+      props.type === "father" ? setGender("M") : setGender("F")
     }
 
     if(name === "gender"){
@@ -494,11 +442,13 @@ function Details(props) {
 
 
   const formSubmit = async (e) => {
+    console.log("called");
+    console.log(phoneError);
+    console.log(whatsappError);
+    console.log(gender);
     e.preventDefault();
     if(!phoneError && !whatsappError && gender){
-
     let existId = "";
-    // console.log("here");
     let Name =
       formDetails.first_name +
       " " +
@@ -514,8 +464,6 @@ function Details(props) {
       type: "loading",
       loading: true,
     });
-    // console.log(formDetails);
-    // console.log(childId);
     const val = await FormData({
       form: formDetails,
       type: props.type,
@@ -525,9 +473,7 @@ function Details(props) {
       kidId: childId,
       kidCount: child_count,
     });
-    //    console.log(val);
     if (val) {
-    //   console.log(val);
       dispatch({
         type: "message",
         message: [val,props.type]
@@ -537,7 +483,6 @@ function Details(props) {
         loading: false,
       });
     } else {
-    //   console.log("no datya");
       dispatch({
         type: "loading",
         loading: false,
@@ -551,8 +496,6 @@ function Details(props) {
   };
 
   const handleAddition = (e, { name, value }) => {
-    // console.log(name);
-
     if (name === "gotra") {
       let suggList = gotraSuggestions;
       setGotraSuggestions([{ text: value, value }, ...suggList]);
@@ -572,19 +515,12 @@ function Details(props) {
   };
 
   useEffect(() => {
-    // console.log(formDetails);
-    // console.log(!formDetails?.approve);
-    // console.log(formDetails.approve == undefined);
-    // if(Object.entries){
-    //     setSubmitDisable()
-    // }
-    // console.log(Object.entries(formDetails));
     if (Object.entries(formDetails).length == 0) {
-      setSubmitDisable(false);
+      // setSubmitDisable(false);
     } else {
-      setSubmitDisable(!formDetails?.approve);
+      // setSubmitDisable(!formDetails?.approve);
     }
-  }, [formDetails]);
+  }, [formDetails, props]);
 
   return (
     <div>
@@ -598,7 +534,6 @@ function Details(props) {
             <Message.Header> No partner details. As user is not Married.</Message.Header>
           </Message>
     ) : (
-
     <>
       <Form onSubmit={formSubmit}>
         {submitDisable && (
@@ -701,6 +636,7 @@ function Details(props) {
                 setGender("M");
                 formChange("e", { name: "gender", value: "M" });
               }}
+                          de
               error={gender == ""}
             />
             <Form.Radio
@@ -1204,7 +1140,6 @@ function Details(props) {
                     name="address_ward"
                     onAddItem={handleAddition}
                     onChange={formChange}
-                    disabled={alive === "No"}
                     className="mx-5p width-100p mb-1p mt-1p"
                   />
                   // <Form.Input type="text" className="mx-5p mt-1p" label="WardName" placeholder="Ward Name" name="address_ward" onChange={formChange} defaultValue={formDetails?.address_ward} />

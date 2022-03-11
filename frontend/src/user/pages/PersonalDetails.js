@@ -33,7 +33,6 @@ function PersonalDetails() {
 
 
   useEffect(()=>{
-    console.log(width);
     if(width <1200){
       setVisible(false)
     }else{
@@ -45,8 +44,6 @@ function PersonalDetails() {
     setChildCount(childCount + 1);
     let newChild = child;
     newChild.push(childCount + 1);
-    console.log(child);
-    console.log(childDetails);
     let childDetailsList = childDetails;
     let count = childCount + 1;
     let obj = { first_name: "Child" + count, _id: "" };
@@ -66,7 +63,8 @@ function PersonalDetails() {
     if (detailsType === "family") {
       axios({
         method: "get",
-        url: `https://test27102021.herokuapp.com/api/users/kids`,
+        // url: `https://test27102021.herokuapp.com/api/users/kids`,
+        url: `http://localhost:4000/api/users/kids`,
         headers: {
           Authorization: "Bearer " + auth.token,
         },
@@ -165,7 +163,8 @@ function PersonalDetails() {
             <Icon name="home" />
             Family
           </Menu.Item>
-          <Menu.Item
+          {auth.adminArea && (
+            <Menu.Item
             as="a"
             onClick={() => {
               dispatch({
@@ -181,6 +180,9 @@ function PersonalDetails() {
             <Icon name="clipboard list" />
             Other
           </Menu.Item>
+          )
+          }
+          
         </Sidebar>
         <Sidebar
           as={Menu}
@@ -279,7 +281,7 @@ function PersonalDetails() {
                     )}
                     {detailsType === "parent" && (
                       <div>
-                        <Header as="h3">Mother Structure</Header>
+                        <Header as="h3">Mother Information</Header>
                         <Details type="mother" />
                       </div>
                     )}
