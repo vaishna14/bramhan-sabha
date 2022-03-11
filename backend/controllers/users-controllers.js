@@ -181,6 +181,7 @@ const login = async (req, res, next) => {
 };
 
 const addUserDetails = async (req, res, next) => {
+  console.log(req);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -258,6 +259,11 @@ const addUserDetails = async (req, res, next) => {
         }
         if (req.body.type == "mother") {
           abc = reqFormId + "/4"
+        }
+        if (req.body.type == "kids") {
+          userVal = await User.find({ "_id": toId(req.userData.userId) });
+          kids = (userVal[0].kids).length + 1;
+          abc = reqFormId + "/1/" +kids;
         }
         let createPerson;
         console.log(abc);
