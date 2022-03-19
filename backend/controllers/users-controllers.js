@@ -180,8 +180,212 @@ const login = async (req, res, next) => {
   });
 };
 
+const getUserCount = async () => {
+  let val = await User.find()
+  let returnCount = Object.entries(val).length + 1;
+  return returnCount;
+}
+
+const getFormId = async (type, reqFormId, kidCount, exist, userData) => {
+  let abc;
+  console.log(type);
+  if (exist !== "" && type !== "kids" && type !== "kids_spouse") {
+    console.log("here");
+    console.log(exist !== "");
+    console.log(type !== "kids");
+    console.log(type !== "kids_spouse")
+    console.log(exist !== "" && (type !== "kids" || type !== "kids_spouse"))
+    console.log("here");
+
+    place = await User.findOneAndUpdate({ "_id": userData }, { [type]: toId(exist), "approve": false });
+  }
+  if (type == "personal") {
+    abc = reqFormId + "/1"
+  }
+  if (type == "partner") {
+    abc = reqFormId + "/2"
+  }
+  if (type == "father") {
+    abc = reqFormId + "/3"
+  }
+  if (type == "mother") {
+    abc = reqFormId + "/4"
+  }
+  if (type == "kids" || type == "kids_spouse") {
+    console.log("there");
+
+    let childCount = kidCount;
+    if (!kidCount) {
+      let userVal
+      userVal = await User.find({ "_id": toId(userData) });
+      console.log(userData)
+      console.log(userVal);
+      childCount = (userVal[0].kids).length + 1;
+    }
+    abc = reqFormId + "/1/" +childCount;
+  }
+  return abc;
+}
+
+const getCreatePerson = async (gender, type, newBody) => {
+  let createPerson;
+  if (gender === "F" || type == "mother") {
+    createPerson = await new Female(newBody)
+  }
+  if (gender === "M" || type == "father") {
+    createPerson = await new Male(newBody)
+  }
+  return createPerson;
+}
+
+const addNewUser = async (req, user) => {
+  console.log("Does not exist");
+        let abc;
+        let reqFormId;
+        let reqType = req.body.type
+        if (!req.body.formId) {
+          reqFormId =  await getUserCount()
+        }else{
+          reqFormId = req.body.formId;
+        }
+        abc = await getFormId(reqType, reqFormId, req.body?.kidCount,req.body?.isExist, req.userData.userId);
+        let createPerson;
+        console.log(abc);
+        let newBody = {
+          ...req.body,
+          approve: false,
+          userId: req.userData.userId,
+          creator: req.userData.userId,
+          formId: abc,
+        }
+        user = await User.findById(req.userData.userId);
+        createPerson = await getCreatePerson(req.body.gender, reqType, newBody)
+        const sess = await mongoose.startSession();
+        sess.startTransaction();
+        await createPerson.save({ session: sess });
+        if (reqType == ("kids")) {
+          console.log("includes kids")
+          console.log(user.kids);
+          user.kids.push(createPerson);
+          console.log(user.kids);
+        }
+
+        // If the new data is for kids partner 
+          else if (reqType == "kids_spouse") {
+          if (req.body.gender === "F" || reqType == "mother") {
+            console.log("Here")
+            place = await Male.findById(req.body.kidId);
+            place["partnerId"] = createPerson;
+          }
+          if (req.body.gender === "M" || reqType == "father") {
+            place = await Female.findById(req.body.kidId);
+            place["partnerId"] = createPerson;
+          }
+            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            console.log(place);
+            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        await place.save({ session: sess });
+        }
+        else {
+          user[reqType] = createPerson;
+        }
+        await user.save({ session: sess });
+        await sess.commitTransaction();
+}
+
+const updateExistingUser = async (req, res, next) => {
+  console.log("Update Value");
+    var abc;
+    console.log(req.body.type);
+    let reqFormId ;
+    if(req.body.formId){
+      reqFormId = req.body.formId;
+    } else {
+      reqFormId = await getUserCount();
+    }
+    abc = await getFormId(req.body.type, reqFormId, req.body?.kidCount,req.body?.isExist)
+    // if (req.body.type == "personal") {
+    //   abc = reqFormId + "/1"
+    // }
+    // if (req.body.type == "partner") {
+    //   abc = reqFormId + "/2"
+    // }
+    // if (req.body.type == "father") {
+    //   abc = reqFormId + "/3"
+    // }
+    // if (req.body.type == "mother") {
+    //   abc = reqFormId + "/4"
+    // }
+    // if (req.body.type == "kids") {
+    //   var childCount = req.body.kidCount;
+    //   console.log(childCount);
+    //   abc = reqFormId + "/1/" + childCount
+    // }
+    let updateDetails = {
+      ...req.body,
+      approve: false,
+      email: req.body.email || "",
+      formId: abc,
+    }
+
+    let place;
+    try {
+      // if (req.body.type === "personal") {
+        if (req.body.isExist !== "") {
+          console.log("Does exist");
+          let type = req.body.type;
+          if (type == "kids" || type == "kids_spouse") {
+            place = await User.find({ "_id": req.userData.userId });
+          }else {
+              place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { [req.body.type]: toId(req.body.isExist), "approve": false });
+              user2 = await User.findOne({ "_id": req.userData.userId });
+            }
+          if (req.body.gender == "M") {
+            let checkPartner = await Male.findOne({ "_id": user2[req.body.type] });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Male.findOneAndUpdate({ "_id": user2[req.body.type] }, updateDetails);
+            }
+          }
+          if (req.body.gender == "F") {
+            let reqType = req.body.type;
+            let checkPartner = await Female.findOne({ "_id": user2[req.body.type] });
+            if (!checkPartner) {
+              return;
+            } else {
+              updateValue = await Female.findOneAndUpdate({ "_id": user2[req.body.type] }, updateDetails);
+            }
+          }
+        } else {
+          user2 = await User.findOne({ "_id": req.userData.userId });
+          updateUser = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false })
+          let checkPartner = await Male.findOne({ "_id": user2[req.body.type] });
+          if (!checkPartner) {
+            updateValue = await Female.findOneAndUpdate({ "_id": user2[req.body.type] }, updateDetails);
+          } else {
+            updateValue = await Male.findOneAndUpdate({ "_id": user2[req.body.type] }, updateDetails);
+          }
+        }
+    } catch (err) {
+      console.log(err)
+      const error = new HttpError(
+        'Something went wrong, could not update place.',
+        500
+      );
+      return next(error);
+    }
+
+    res
+      .status(201)
+      .json("Data Updated successfully ");
+}
+
+const addDbUser = async () => {
+  
+}
+
 const addUserDetails = async (req, res, next) => {
-  console.log(req);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -189,26 +393,9 @@ const addUserDetails = async (req, res, next) => {
     );
   }
 
-  try {
-    detail = await Person.find({ 'userId': req.userData.userId });
-  } catch (err) {
-    const error = new HttpError(
-      'Something went wrong, could not update place.',
-      500
-    );
-    return next(error);
-  }
-
-  // Add this from User table
-  // if (detail.creator.toString() !== userId) {
-  //  const error = new HttpError('You are not allowed to edit this place.', 401);
-  //  return next(error);
-  // }
-
   let exist;
   exist = await User.find({ "_id": req.userData.userId });
   let dbValue = exist[0];
-  console.log(req.body)
   if (!dbValue[req.body.type] || (req.body.type == "kids" && !req.body.kidId )) {
     console.log("Create Value");
     let user;
@@ -229,170 +416,90 @@ const addUserDetails = async (req, res, next) => {
 
     try {
       if (req.body.isExist === "") {
-        console.log("Does not exist");
-        let abc;
-        let reqFormId ;
-        if(req.body.formId){
-          reqFormId = req.body.formId;
-        }else{
-          await User.countDocuments({}).exec((err, count) => {
-            if (err) {
-                res.send(err);
-                return;
-            }
-        
-            console.log("count "+ count);
-            reqFormId = count+1;
-            console.log("reqFormId"+ reqFormId)
-        });
-        console.log("reqFormId " + reqFormId)
-        }
-        console.log(req.body.type)
-        if (req.body.type == "personal") {
-          abc = reqFormId + "/1"
-        }
-        if (req.body.type == "partner") {
-          abc = reqFormId + "/2"
-        }
-        if (req.body.type == "father") {
-          abc = reqFormId + "/3"
-        }
-        if (req.body.type == "mother") {
-          abc = reqFormId + "/4"
-        }
-        if (req.body.type == "kids") {
-          userVal = await User.find({ "_id": toId(req.userData.userId) });
-          kids = (userVal[0].kids).length + 1;
-          abc = reqFormId + "/1/" +kids;
-        }
-        let createPerson;
-        console.log(abc);
-        let newBody = {
-          first_name: req.body.first_name,
-          middle_name: req.body.middle_name,
-          last_name: req.body.last_name,
-          gender: req.body.gender,
-          gotra: req.body.gotra,
-          maiden_first_name: req.body.maiden_first_name,
-          maiden_middle_name: req.body.maiden_middle_name,
-          maiden_last_name: req.body.maiden_last_name,
-          maiden_city: req.body.maiden_city,
-          alive: req.body.alive,
-          date_of_death: req.body.date_of_death,
-          date_of_marriage: req.body.date_of_marriage,
-          marital_status: req.body.marital_status,
-          father_alive: req.body.father_alive,
-          father_death: req.body.father_death,
-          mother_alive: req.body.mother_alive,
-          mother_death: req.body.mother_death,
-          blood_group: req.body.blood_group,
-          birth_date: req.body.birth_date,
-          education: req.body.education,
-          education_detail: req.body.education_detail,
-          occupation: req.body.occupation,
-          occupation_detail: req.body.occupation_detail,
-          earning: req.body.earning,
-          address: req.body.address,
-          address_city: req.body.address_city,
-          address_pincode: req.body.address_pincode,
-          address_ward: req.body.address_ward,
-          permanent_address: req.body.permanent_address,
-          permanent_city: req.body.permanent_city,
-          permanent_pincode: req.body.permanent_pincode,
-          personal_number: req.body.personal_number,
-          whatsapp_number: req.body.whatsapp_number,
-          email: req.body.email,
-          approve: false,
-          userId: req.userData.userId,
-          creator: req.userData.userId,
-          formId: abc
-        }
-        console.log(newBody);
-        console.log(req.body.type);
-        if (req.body.gender === "F" || req.body.type == "mother") {
-          createPerson = new Female(newBody)
-        }
-        if (req.body.gender === "M" || req.body.type == "father") {
-          createPerson = new Male(newBody)
-        }
-        const sess = await mongoose.startSession();
-        sess.startTransaction();
-        await createPerson.save({ session: sess });
-        let reqType = req.body.type
-        if (reqType == ("kids")) {
-          console.log("includes kids")
-          user.kids.push(createPerson);
-        }
-        else if (reqType == "kids_spouse") {
-          console.log("includes spouse");
-          if (req.body.gender === "F" || req.body.type == "mother") {
-            console.log("Here")
-            place = await Male.findById(req.body.kidId);
-            place["partnerId"] = createPerson;
-          }
-          if (req.body.gender === "M" || req.body.type == "father") {
-            place = await Female.findById(req.body.kidId);
-            place["partnerId"] = createPerson;
-          }
-        await place.save({ session: sess });
-
-        }
-        else {
-          user[req.body.type] = createPerson;
-        }
-        await user.save({ session: sess });
-        await sess.commitTransaction();
+        await addNewUser(req, user)
       }
       else {
         console.log("Already exist");
         let abc;
-        let reqFormId ;
+        let reqFormId;
+        let reqType = req.body.type;
         if(req.body.formId){
           reqFormId = req.body.formId;
-        }else{
-          await User.countDocuments({}).exec((err, count) => {
-            if (err) {
-                res.send(err);
-                return;
-            };        
-            console.log("count "+ count);
-            reqFormId = count+1;
-            console.log("reqFormId"+ reqFormId)
-        });
-        console.log("reqFormId " + reqFormId)
+        } else {
+          reqFormId = await getUserCount();
+          console.log("reqFormId" + reqFormId);
         }
-        if (req.body.type == "personal") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist), "approve": false });
-         console.log(reqFormId);
-          abc = reqFormId + "/1"
-        }
-        if (req.body.type == "partner") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "partner": toId(req.body.isExist) });
-          abc = reqFormId + "/2"
-        }
-        if (req.body.type == "father") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "father": toId(req.body.isExist) });
-          abc = reqFormId + "/3"
-        }
-        if (req.body.type == "mother") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "mother": toId(req.body.isExist) });
-          abc = reqFormId + "/4"
-        }
-        let reqType = req.body.type;
-        if (reqType.includes("kids")) {
-          console.log("includes kids")
-          // user.kids.push(createPerson);
-          // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "kids": toId(req.body.isExist) });
-          place = await User.find({ "_id": req.userData.userId });
-        }
+        console.log(req.body.type);
+        console.log(reqType);
+        abc = await getFormId(reqType, reqFormId, req.body?.kidCount,req.body?.isExist, req.userData.userId);
+
+        // if (req.body.type == "personal") {
+        //   place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "personal": toId(req.body.isExist), "approve": false });
+        //  console.log(reqFormId);
+        //   abc = reqFormId + "/1"
+        // }
+        // if (req.body.type == "partner") {
+        //   place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "partner": toId(req.body.isExist) });
+        //   abc = reqFormId + "/2"
+        // }
+        // if (req.body.type == "father") {
+        //   place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "father": toId(req.body.isExist) });
+        //   abc = reqFormId + "/3"
+        // }
+        // if (req.body.type == "mother") {
+        //   place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "mother": toId(req.body.isExist) });
+        //   abc = reqFormId + "/4"
+        // }
+        
+        // if (reqType.includes("kids")) {
+        //   console.log("includes kids")
+        //   // user.kids.push(createPerson);
+        //   // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "kids": toId(req.body.isExist) });
+        //   place = await User.find({ "_id": req.userData.userId });
+        // }
+        let user = await User.findById(req.userData.userId);
+
         let checkPartner = await Male.findOne({ "_id": req.body.isExist });
+        console.log("-------------------------------checkPartner-------------------------------");
+        console.log(user);
+        console.log("-------------------------------checkPartner-------------------------------");
+
         if (!checkPartner) {
           let checkPartner = await Female.findOne({ "_id": req.body.isExist });
+          console.log("checkPartner Female");
+          console.log((checkPartner));
+          console.log("checkPartner Female");
           updateValue = await Female.findOneAndUpdate({ "_id": req.body.isExist }, { formId: abc });
+          console.log(updateValue);
           return;
         } else {
           updateValue = await Male.findOneAndUpdate({ "_id": req.body.isExist }, { formId: abc });
+          
+          
+          if (reqType == "kids") {
+            let kuds = user.kids;
+            console.log("kuds");
+            console.log(kuds);
+            console.log("kuds");
+            kuds.push(req.body.isExist);
+            console.log(kuds);
+            await User.findOneAndUpdate({ "_id": req.userData.userId }, { kids: kuds });
+            console.log(await User.findById(req.userData.userId));
+            // console.log("nuser")
+            // console.log(user);
+            // console.log("nuser")
+            // const sess = await mongoose.startSession();
+            // sess.startTransaction();
+            // await updateValue.save({ session: sess });
+            //   console.log("includes kids")
+            //   console.log(user.kids);
+            //   user.kids.push(updateValue);
+            //   console.log(user.kids);
+            // await user.save({ session: sess });
+            // await sess.commitTransaction();
+              }
         }
+        console.log(user);
 
       }
     } catch (err) {
@@ -407,262 +514,7 @@ const addUserDetails = async (req, res, next) => {
       .status(201)
       .json("Data Added successfully ");
   } else {
-    console.log("Update Value");
-    var abc;
-    console.log(req.body.type);
-    let reqFormId ;
-    if(req.body.formId){
-      reqFormId = req.body.formId;
-    }else{
-      await User.countDocuments({}).exec((err, count) => {
-        if (err) {
-            res.send(err);
-            return;
-        }
-    
-        console.log("count "+ count);
-        reqFormId = count+1;
-        console.log("reqFormId"+ reqFormId)
-    });
-    }
-    if (req.body.type == "personal") {
-      abc = reqFormId + "/1"
-    }
-    if (req.body.type == "partner") {
-      abc = reqFormId + "/2"
-    }
-    if (req.body.type == "father") {
-      abc = reqFormId + "/3"
-    }
-    if (req.body.type == "mother") {
-      abc = reqFormId + "/4"
-    }
-    if (req.body.type == "kids") {
-      var childCount = req.body.kidCount;
-      console.log(childCount);
-      abc = reqFormId + "/1/" + childCount
-    }
-
-    console.log(abc);
-    let updateDetails = {
-      first_name: req.body.first_name || "",
-      middle_name: req.body.middle_name || "",
-      last_name: req.body.last_name || "",
-      gender: req.body.gender || "",
-      gotra: req.body.gotra || "",
-      maiden_first_name: req.body.maiden_first_name || "",
-      maiden_middle_name: req.body.maiden_middle_name || "",
-      maiden_last_name: req.body.maiden_last_name || "",
-      maiden_city: req.body.maiden_city || "",
-      alive: req.body.alive || "",
-      date_of_death: req.body.date_of_death || "",
-      date_of_marriage: req.body.date_of_marriage || "",
-      marital_status: req.body.marital_status || "",
-      father_alive: req.body.father_alive || "",
-      father_death: req.body.father_death || "",
-      mother_alive: req.body.mother_alive || "",
-      mother_death: req.body.mother_death || "",
-      blood_group: req.body.blood_group || "",
-      birth_date: req.body.birth_date || "",
-      education: req.body.education || "",
-      education_detail: req.body.education_detail || "",
-      occupation: req.body.occupation || "",
-      occupation_detail: req.body.occupation_detail || "",
-      earning: req.body.earning || "",
-      address: req.body.address || "",
-      address_city: req.body.address_city || "",
-      address_pincode: req.body.address_pincode || "",
-      address_ward: req.body.address_ward || "",
-      permanent_address: req.body.permanent_address || "",
-      permanent_city: req.body.permanent_city || "",
-      permanent_pincode: req.body.permanent_pincode || "",
-      personal_number: req.body.personal_number || "",
-      whatsapp_number: req.body.whatsapp_number || "",
-      approve: false,
-      email: req.body.email || "",
-      formId: abc,
-    }
-    console.log(abc)
-    // console.log(req.userData);
-
-    let place;
-    try {
-      if (req.body.type === "personal") {
-        if (req.body.isExist !== "") {
-          console.log("Does not exist");
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { personal: toId(req.body.isExist), "approve": false });
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          if (req.body.gender == "M") {
-            let checkPartner = await Male.findOne({ "_id": user2.personal });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-
-            }
-
-          }
-          if (req.body.gender == "F") {
-            let checkPartner = await Female.findOne({ "_id": user2.personal });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-            }
-          }
-        } else {
-          console.log("Does exist");
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          updateUser = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false })
-          let checkPartner = await Male.findOne({ "_id": user2.personal });
-          if (!checkPartner) {
-            updateValue = await Female.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-          } else {
-            updateValue = await Male.findOneAndUpdate({ "_id": user2.personal }, updateDetails);
-          }
-        }
-      }
-      if (req.body.type === "partner") {
-        if (req.body.isExist !== "") {
-          place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { partner: toId(req.body.isExist), "approve": false });
-          user2 = await User.findOne({ "_id": req.userData.userId });
-
-          if (req.body.gender == "M") {
-            let checkPartner = await Male.findOne({ "_id": user2.partner });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-            }
-
-          }
-          if (req.body.gender == "F") {
-            let checkPartner = await Female.findOne({ "_id": user2.partner });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-            }
-          }
-        } else {
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
-          let checkPartner = await Male.findOne({ "_id": user2.partner });
-          if (!checkPartner) {
-            updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-          } else {
-            updateValue = await Male.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-          }
-        }
-
-      }
-      if (req.body.type === "father") {
-        // console.log(updateDetails)
-        if (req.body.isExist !== "") {
-          console.log("Does not exist");
-          // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { father: toId(req.body.isExist), "approve": false });
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          let updateValue;
-          // if (req.body.gender == "M") {
-          let checkPartner = await Male.findOne({ "_id": user2.father });
-          if (!checkPartner) {
-            console.log("not ava")
-            return;
-          } else {
-            updateValue = await Male.findOneAndUpdate({ "_id": user2.father }, updateDetails);
-          }
-
-          // }
-          // if (req.body.gender == "F") {
-          //   let checkPartner = await Female.findOne({ "_id": user2.father });
-          //   if (!checkPartner) {
-          //     return;
-          //   } else {
-          //     updateValue = await Female.findOneAndUpdate({ "_id": user2.partner }, updateDetails);
-          //   }
-          // }
-        } else {
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
-          let checkPartner = await Male.findOne({ "_id": user2.father });
-          if (!checkPartner) {
-            return;
-          } else {
-            updateValue = await Male.findOneAndUpdate({ "_id": user2.father }, updateDetails);
-          }
-        }
-      }
-      if (req.body.type === "mother") {
-        if (req.body.isExist !== "") {
-          let checkPartner = await Female.findOne({ "_id": user2.mother });
-          if (!checkPartner) {
-            return;
-          } else {
-            updateValue = await Female.findOneAndUpdate({ "_id": user2.mother }, updateDetails);
-          }
-        } else {
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
-          let checkPartner = await Female.findOne({ "_id": user2.mother });
-          if (!checkPartner) {
-            return;
-          } else {
-            updateValue = await Female.findOneAndUpdate({ "_id": user2.mother }, updateDetails);
-          }
-        }
-      }
-      let reqType = req.body.type;
-      if (reqType.includes("kids")) {
-        if (req.body.isExist !== "") {
-          console.log("Does Exist");
-          // place = await User.findOneAndUpdate({ "_id": req.userData.userId }, { mother: toId(req.body.isExist),"approve":false });
-          // user2 = await User.findOne({ "_id": req.userData.userId });
-          // console.log(place);
-          // console.log(user2);
-          if (req.body.gender == "M") {
-            let checkPartner = await Male.findOne({ "_id": req.body.kidId });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Male.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
-            }
-          }
-          if (req.body.gender == "F") {
-            let checkPartner = await Female.findOne({ "_id": req.body.kidId });
-            if (!checkPartner) {
-              return;
-            } else {
-              updateValue = await Female.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
-            }
-          }
-        } else {
-          user2 = await User.findOne({ "_id": req.userData.userId });
-          user3 = await User.findOneAndUpdate({ "_id": req.userData.userId }, { "approve": false });
-          console.log("not exists");
-          // console.log(req.body);
-          let checkPartner = await Male.findOne({ "_id": req.body.kidId });
-          if (!checkPartner) {
-            updateValue = await Female.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
-          } else {
-            updateValue = await Male.findOneAndUpdate({ "_id": req.body.kidId }, updateDetails);
-          }
-        }
-      }
-
-
-
-    } catch (err) {
-      console.log(err)
-      const error = new HttpError(
-        'Something went wrong, could not update place.',
-        500
-      );
-      return next(error);
-    }
-
-    res
-      .status(201)
-      .json("Data Updated successfully ");
+    await updateExistingUser(req, res, next);
   }
 }
 
@@ -712,15 +564,10 @@ const getUserDetails = async (req, res, next) => {
       let child;
       child = await Male.find({ "_id": toId(childId) })
       if(child.length >0){
-        findId = child.partnerId
-        console.log(child);
-        console.log("Male");
+        findId = child[0].partnerId
       }else{
         child = await Female.find({ "_id": toId(childId) });
-        console.log(child);
-        console.log("Female");
-        findId = child[0].partnerId
-        console.log(findId)
+        findId = child[0].partnerId;
       }
 
     }
