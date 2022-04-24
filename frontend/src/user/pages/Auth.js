@@ -10,6 +10,7 @@ import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
+  VALIDATOR_PASSWORD
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
@@ -37,8 +38,23 @@ const Auth = () => {
     false
   );
 
+    const errorDisplay = () => {
+    return (<>
+      <ul  style={{"text-align": "left"}}>
+        <li>Length more than 8 characters.</li>
+        <li>Should include one Upper case</li>
+        <li>Should include one Upper case</li>
+        <li>Should include one Special Character</li>
+        <li>Should include one digit</li>
+        {/* <p>duh</p>
+        <p>duh</p>
+        <p>duh</p> */}
+    </ul>
+  </>)}
+
   const switchModeHandler = () => {
     if (!isLoginMode) {
+      console.log(formState)
       setFormData(
         {
           ...formState.inputs,
@@ -170,8 +186,9 @@ const Auth = () => {
             id="password"
             type="password"
             label="Password"
-            validators={[VALIDATOR_MINLENGTH(6)]}
-            errorText="Please enter a valid password, at least 6 characters."
+            validators={[VALIDATOR_MINLENGTH(8), VALIDATOR_PASSWORD()]}
+            // errorText="Password should contain uppercase, lowercase, special characters and numeric values and length should be more than 8 characters."
+            errorText={errorDisplay()}
             onInput={inputHandler}
           />
 

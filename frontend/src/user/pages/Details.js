@@ -110,7 +110,7 @@ function Details(props) {
     axios({
       method: "get",
       // url: `https://test27102021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
-      url: `http://localhost:4000/api/users/getUserDetails/${props.type}/${childId}`,
+      url: `https://test1803bs.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
       headers: {
         Authorization: "Bearer " + auth.token,
       },
@@ -163,7 +163,7 @@ var suggestionsCal= ["suggestions","suggestions_female"]
     suggestionsCal.map((item) => {
       axios({
         method: "get",
-        url: `http://localhost:4000/api/users/${item}`,
+        url: `https://test1803bs.herokuapp.com/api/users/${item}`,
         headers: {
           Authorization: "Bearer " + auth.token,
         },

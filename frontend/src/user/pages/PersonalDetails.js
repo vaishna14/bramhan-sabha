@@ -64,7 +64,7 @@ function PersonalDetails() {
       axios({
         method: "get",
         // url: `https://test27102021.herokuapp.com/api/users/kids`,
-        url: `http://localhost:4000/api/users/kids`,
+        url: `https://test1803bs.herokuapp.com/api/users/kids`,
         headers: {
           Authorization: "Bearer " + auth.token,
         },

@@ -84,7 +84,7 @@ const PlaceItem = props => {
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img
-              src={`http://localhost:4000/${props.image}`}
+              src={`https://test1803bs.herokuapp.com/${props.image}`}
               alt={props.title}
             />
           </div>
