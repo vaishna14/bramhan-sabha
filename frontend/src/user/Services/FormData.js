@@ -16,8 +16,8 @@ export const FormData = async (props)=>{
     }
    const response = await axios({
         method: 'post',
-        // url: 'https://test27102021.herokuapp.com/api/users/addUserDetails',
-        url: 'https://test1803bs.herokuapp.com/api/users/addUserDetails',
+        // url: 'https://test03072022.herokuapp.com/api/users/addUserDetails',
+        url: 'https://test03072022.herokuapp.com/api/users/addUserDetails',
         data: body,
         headers: {
             Authorization: 'Bearer ' + token

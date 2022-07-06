@@ -109,8 +109,8 @@ function Details(props) {
     });
     axios({
       method: "get",
-      // url: `https://test27102021.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
-      url: `https://test1803bs.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
+      // url: `https://test03072022.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
+      url: `https://test03072022.herokuapp.com/api/users/getUserDetails/${props.type}/${childId}`,
       headers: {
         Authorization: "Bearer " + auth.token,
       },
@@ -144,17 +144,16 @@ function Details(props) {
       });
   }, []);
 
-
   useEffect(() => {
     if (formDetails._id && formDetails.approve == false) {
-      setSubmitDisable(true)
+      setSubmitDisable(true);
     } else {
       setSubmitDisable(false);
     }
-  },[formDetails])
+  }, [formDetails]);
 
   useEffect(() => {
-var suggestionsCal= ["suggestions","suggestions_female"]
+    var suggestionsCal = ["suggestions", "suggestions_female"];
 
     dispatch({
       type: "message",
@@ -163,7 +162,7 @@ var suggestionsCal= ["suggestions","suggestions_female"]
     suggestionsCal.map((item) => {
       axios({
         method: "get",
-        url: `https://test1803bs.herokuapp.com/api/users/${item}`,
+        url: `https://test03072022.herokuapp.com/api/users/${item}`,
         headers: {
           Authorization: "Bearer " + auth.token,
         },
@@ -186,25 +185,25 @@ var suggestionsCal= ["suggestions","suggestions_female"]
             obj.value =
               item.first_name + " " + item.middle_name + " " + item.last_name;
             obj.first_name = item.first_name;
-  
+
             objGotra.key = item.gotra;
             objGotra.text = item.gotra;
             objGotra.value = item.gotra;
-  
+
             occupationObj.key = item.occupation_detail;
             occupationObj.text = item.occupation_detail;
             occupationObj.value = item.occupation_detail;
-  
+
             educationObj.key = item.education_detail;
             educationObj.text = item.education_detail;
             educationObj.value = item.education_detail;
-  
+
             wardObj.key = item.address_ward;
             wardObj.text = item.address_ward;
             wardObj.value = item.address_ward;
-  
+
             arr.push(obj);
-  
+
             if (item.gotra) {
               gotra.push(objGotra);
             }
@@ -220,25 +219,25 @@ var suggestionsCal= ["suggestions","suggestions_female"]
             ) {
               ward.push(wardObj);
             }
-  
+
             return;
           });
           let suggestion = suggestions.concat(arr);
-          if(item == "suggestions_female"){
+          if (item == "suggestions_female") {
             setFemaleSuggestion(arr);
           } else {
             setMaleSuggestion(arr);
           }
-          
+
           console.log("arr");
           console.log(suggestion);
           console.log("arr");
           const set = new Set(gotra.map((item) => JSON.stringify(item)));
           const gotra1 = [...set].map((item) => JSON.parse(item));
           let gotraSuggestion = gotraSuggestions.concat(gotra1);
-          console.log("gotraSuggestion")
-          console.log(gotraSuggestion)
-          console.log("gotraSuggestion")
+          console.log("gotraSuggestion");
+          console.log(gotraSuggestion);
+          console.log("gotraSuggestion");
           setGotraSuggestions(gotraSuggestion);
           const set1 = new Set(education.map((item) => JSON.stringify(item)));
           const education1 = [...set1].map((item) => JSON.parse(item));
@@ -253,8 +252,8 @@ var suggestionsCal= ["suggestions","suggestions_female"]
         .catch((err) => {
           console.log(err);
         });
-    })
-    
+    });
+
     // .finally(() => {
     //     setIsLoading(false);
     // })
@@ -271,7 +270,7 @@ var suggestionsCal= ["suggestions","suggestions_female"]
     setMiddleValue(formDetails?.middle_name);
     setLastValue(formDetails?.last_name);
     setFatherAlive(formDetails?.father_alive);
-    setMotherAlive(formDetails?.mother_alive)
+    setMotherAlive(formDetails?.mother_alive);
     // dispatch({
     //   type: "fatherAlive",
     //   fatherAlive: formDetails?.father_alive,
@@ -283,10 +282,10 @@ var suggestionsCal= ["suggestions","suggestions_female"]
   }, [formDetails]);
 
   useEffect(() => {
-    let arr = maleSuggestion.concat(femaleSuggestion); 
-    setSuggestions(arr);  
+    let arr = maleSuggestion.concat(femaleSuggestion);
+    setSuggestions(arr);
     console.log(arr);
-  },[maleSuggestion, femaleSuggestion])
+  }, [maleSuggestion, femaleSuggestion]);
 
   const list = [
     "Make sure to add valid name and select above checkbox to confirm the data",
@@ -434,7 +433,7 @@ var suggestionsCal= ["suggestions","suggestions_female"]
     } else if (name === "earning") {
       setEarnings(value);
     }
-    
+
     if (name === "mother_alive") {
       setMotherAlive(value);
     }
@@ -442,7 +441,7 @@ var suggestionsCal= ["suggestions","suggestions_female"]
       setFatherAlive(value);
     }
     setFormDetails(form);
-    console.log(form)
+    console.log(form);
   };
 
   useEffect(() => {
@@ -592,40 +591,38 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                     {formDetails?.formId || " "}
                   </h4>
                 </div>
-                </div>
-                {
-                  (formDetails._id == "" || !formDetails._id) && (
-<Message info close floating list={list}>
-                <Message.Header>
-                  <Checkbox
-                    onChange={() => {
-                      setExisting(!existing);
-                    }}
-                    label="Use Existing Data"
-                  />
-                </Message.Header>
+              </div>
+              {(formDetails._id == "" || !formDetails._id) && (
+                <Message info close floating list={list}>
+                  <Message.Header>
+                    <Checkbox
+                      onChange={() => {
+                        setExisting(!existing);
+                      }}
+                      label="Use Existing Data"
+                    />
+                  </Message.Header>
 
-                <Message.List>
-                  <Message.Item>
-                    Make sure to add valid name and select above checkbox to confirm the
-                    data
-                  </Message.Item>
-                  {/* <Message.Item>If you check the above box then all the other information will be automatically updated. Once admin approves the data.</Message.Item> */}
-                </Message.List>
-                <Message.Content>
-                  <p>
-                    <i>
-                      {" "}
-                      If you check the above box then all the other information
-                      will be automatically updated. Once admin approves the
-                      data.{" "}
-                    </i>
-                  </p>
-                </Message.Content>
-              </Message>
-                  )
-                }
-              
+                  <Message.List>
+                    <Message.Item>
+                      Make sure to add valid name and select above checkbox to
+                      confirm the data
+                    </Message.Item>
+                    {/* <Message.Item>If you check the above box then all the other information will be automatically updated. Once admin approves the data.</Message.Item> */}
+                  </Message.List>
+                  <Message.Content>
+                    <p>
+                      <i>
+                        {" "}
+                        If you check the above box then all the other
+                        information will be automatically updated. Once admin
+                        approves the data.{" "}
+                      </i>
+                    </p>
+                  </Message.Content>
+                </Message>
+              )}
+
               <Form.Group>
                 <div
                   className={`${
@@ -979,11 +976,10 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                       </div>
                     )}
                   </div>
-                  )}
-                {
-                  (detailsType === ("personal" || "partner")) && (
-                    <>
-                    <div
+                )}
+              {detailsType === ("personal" || "partner") && (
+                <>
+                  <div
                     className={`${
                       width < 500 ? "display-grid" : "display-flex"
                     } mb-1p`}
@@ -1004,41 +1000,38 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                       name="father_alive"
                       onChange={formChange}
                       disabled={existing}
-                      value={ fatherAlive }
+                      value={fatherAlive}
                     />
-                   
 
-                        {formDetails?.father_alive === "No" && (
-                          <>
-                            <div
-                              className={`${
-                                width < 500 ? "display-grid" : "display-flex"
-                              } width-70p mx-5p`}
-                            >
-                              <h4
-                                className={` ${
-                                  width < 1500 && width > 1200
-                                    ? "font-smaller"
-                                    : ""
-                                }`}
-                              >
-                                {" "}
-                                Date of Death
-                              </h4>
-                              <Form.Input
-                                required
-                                className="mx-5p"
-                                type="date"
-                                max={today}
-                                placeholder="Date of Death"
-                                name="father_death"
-                                onChange={formChange}
-                                disabled={existing}
-                                defaultValue={formDetails?.father_death}
-                              />
-                            </div>
-                          </>
-                        )}
+                    {formDetails?.father_alive === "No" && (
+                      <>
+                        <div
+                          className={`${
+                            width < 500 ? "display-grid" : "display-flex"
+                          } width-70p mx-5p`}
+                        >
+                          <h4
+                            className={` ${
+                              width < 1500 && width > 1200 ? "font-smaller" : ""
+                            }`}
+                          >
+                            {" "}
+                            Date of Death
+                          </h4>
+                          <Form.Input
+                            required
+                            className="mx-5p"
+                            type="date"
+                            max={today}
+                            placeholder="Date of Death"
+                            name="father_death"
+                            onChange={formChange}
+                            disabled={existing}
+                            defaultValue={formDetails?.father_death}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                   <div
                     className={`${
@@ -1052,56 +1045,51 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                     >
                       Mother Alive
                     </h4>
-                        <Form.Dropdown
-                          required
-                          className="mx-5p"
-                          placeholder="Select"
-                          search
-                          selection
-                          options={aliveOptions}
-                          disabled={existing}
-                          name="mother_alive"
-                          onChange={formChange}
-                          value={motherAlive }
+                    <Form.Dropdown
+                      required
+                      className="mx-5p"
+                      placeholder="Select"
+                      search
+                      selection
+                      options={aliveOptions}
+                      disabled={existing}
+                      name="mother_alive"
+                      onChange={formChange}
+                      value={motherAlive}
                     />
-                    
 
-                        {formDetails?.mother_alive === "No" && (
-                          <>
-                            <div
-                              className={`${
-                                width < 500 ? "display-grid" : "display-flex"
-                              } width-70p mx-5p`}
-                            >
-                              <h4
-                                className={` ${
-                                  width < 1500 && width > 1200
-                                    ? "font-smaller"
-                                    : ""
-                                }`}
-                              >
-                                {" "}
-                                Date of Death
-                              </h4>
-                              <Form.Input
-                                required
-                                className="mx-5p"
-                                type="date"
-                                max={today}
-                                placeholder="Date of Death"
-                                name="mother_death"
-                                onChange={formChange}
-                                disabled={existing}
-                                defaultValue={formDetails?.mother_death}
-                              />
-                            </div>
-                          </>
-                        )}
-                    {/* ) : ( */}
+                    {formDetails?.mother_alive === "No" && (
                       <>
-                        
-
-                        {/* {partnerFatherAlive === "No" && (
+                        <div
+                          className={`${
+                            width < 500 ? "display-grid" : "display-flex"
+                          } width-70p mx-5p`}
+                        >
+                          <h4
+                            className={` ${
+                              width < 1500 && width > 1200 ? "font-smaller" : ""
+                            }`}
+                          >
+                            {" "}
+                            Date of Death
+                          </h4>
+                          <Form.Input
+                            required
+                            className="mx-5p"
+                            type="date"
+                            max={today}
+                            placeholder="Date of Death"
+                            name="mother_death"
+                            onChange={formChange}
+                            disabled={existing}
+                            defaultValue={formDetails?.mother_death}
+                          />
+                        </div>
+                      </>
+                    )}
+                    {/* ) : ( */}
+                    <>
+                      {/* {partnerFatherAlive === "No" && (
                           <div
                             className={`${
                               width < 500 ? "display-grid" : "display-flex"
@@ -1130,13 +1118,12 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                             />
                           </div>
                         )} */}
-                      </>
+                    </>
                     {/* )} */}
                   </div>
-                    </>
-                      )
-                }
-                
+                </>
+              )}
+
               <div
                 className={`${
                   width < 500 ? "display-grid" : "display-flex"
@@ -1491,9 +1478,10 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                   name="personal_number"
                   onChange={formChange}
                   defaultValue={formDetails?.personal_number}
-                  error={ alive === "Yes" && (
-                    phoneError ||
-                    (formDetails.personal_number || []).length != 10)
+                  error={
+                    alive === "Yes" &&
+                    (phoneError ||
+                      (formDetails.personal_number || []).length != 10)
                   }
                   required={!existing && alive !== "No"}
                 >
@@ -1510,10 +1498,10 @@ var suggestionsCal= ["suggestions","suggestions_female"]
                   name="whatsapp_number"
                   onChange={formChange}
                   defaultValue={formDetails?.whatsapp_number}
-                    error={
-                      alive === "Yes" && (
-                    whatsappError ||
-                    (formDetails.whatsapp_number || []).length != 10)
+                  error={
+                    alive === "Yes" &&
+                    (whatsappError ||
+                      (formDetails.whatsapp_number || []).length != 10)
                   }
                 >
                   <Icon className="mx-5p" name="whatsapp" />

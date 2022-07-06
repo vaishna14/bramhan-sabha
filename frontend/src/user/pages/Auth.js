@@ -88,7 +88,7 @@ const Auth = () => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          "https://test27102021.herokuapp.com/api/users/login",
+          "https://test03072022.herokuapp.com/api/users/login",
           "POST",
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -114,7 +114,7 @@ const Auth = () => {
         formData.append("password", formState.inputs.password.value);
         formData.append("image", formState.inputs.image.value);
         const responseData = await sendRequest(
-          "https://test27102021.herokuapp.com/api/users/signup",
+          "https://test03072022.herokuapp.com/api/users/signup",
           "POST",
           formData
         );
@@ -187,6 +187,7 @@ const Auth = () => {
             type="password"
             label="Password"
             validators={[VALIDATOR_MINLENGTH(8), VALIDATOR_PASSWORD()]}
+            // validators={[VALIDATOR_MINLENGTH(6)]}
             // errorText="Password should contain uppercase, lowercase, special characters and numeric values and length should be more than 8 characters."
             errorText={errorDisplay()}
             onInput={inputHandler}

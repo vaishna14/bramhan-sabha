@@ -150,7 +150,7 @@ function Dashboard() {
     });
     axios({
       method: "post",
-      url: `https://test1803bs.herokuapp.com/api/users/${val}`,
+      url: `https://test03072022.herokuapp.com/api/users/${val}`,
       headers: {
         Authorization: "Bearer " + auth.token,
       },

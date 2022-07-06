@@ -63,8 +63,8 @@ function PersonalDetails() {
     if (detailsType === "family") {
       axios({
         method: "get",
-        // url: `https://test27102021.herokuapp.com/api/users/kids`,
-        url: `https://test1803bs.herokuapp.com/api/users/kids`,
+        // url: `https://test03072022.herokuapp.com/api/users/kids`,
+        url: `https://test03072022.herokuapp.com/api/users/kids`,
         headers: {
           Authorization: "Bearer " + auth.token,
         },

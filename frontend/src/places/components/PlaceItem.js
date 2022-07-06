@@ -32,7 +32,7 @@ const PlaceItem = props => {
     setShowConfirmModal(false);
     try {
       await sendRequest(
-        `https://test27102021.herokuapp.com/api/places/${props.id}`,
+        `https://test03072022.herokuapp.com/api/places/${props.id}`,
         'DELETE',
         null,
         {
@@ -84,7 +84,7 @@ const PlaceItem = props => {
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img
-              src={`https://test1803bs.herokuapp.com/${props.image}`}
+              src={`https://test03072022.herokuapp.com/${props.image}`}
               alt={props.title}
             />
           </div>
