@@ -42,10 +42,10 @@ function PartnerDetails({type}) {
     ]
 
     const earnings = [
-        { key: "<5", text: "<5LPA", value: "<5" },
+        { key: "0-5", text: "0-5LPA", value: "0-5" },
         { key: "5-10", text: "5-10LPA", value: "5-10" },
         { key: "10-20", text: "10-20LPA", value: "10-20" },
-        { key: ">20", text: ">20LPA", value: ">20" },
+        { key: "20-More", text: "20LPA-More", value: "20-More" },
     ]
 
     const education = [

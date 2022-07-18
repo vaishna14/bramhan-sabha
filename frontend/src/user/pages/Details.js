@@ -62,6 +62,7 @@ function Details(props) {
   const [educationSuggestions, setEducationSuggestions] = useState([]);
   const [occupationSuggestions, setEOccupationSuggestions] = useState([]);
   const [wardNameSuggestions, setWardNameSuggestions] = useState([]);
+  const [errorVal, setErrorVal] = useState(false);
   const [dataListSelect, setDataListSelect] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleValue] = useState("");
@@ -374,10 +375,10 @@ function Details(props) {
       setGotra(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "occupation_detail") {
-      setOccupation(value.replace(/[^a-zA-Z ]/g, ""));
+      setOccupationDetails(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "education_detail") {
-      setEducation(value.replace(/[^a-zA-Z ]/g, ""));
+      setEDucationDetails(value.replace(/[^a-zA-Z ]/g, ""));
     }
     if (name == "address_ward") {
       setWardName(value.replace(/[^a-zA-Z ]/g, ""));
@@ -449,6 +450,7 @@ function Details(props) {
       setEarnings("");
     }
   }, [occupation]);
+  
 
   const formSubmit = async (e) => {
     console.log("called");
@@ -456,7 +458,10 @@ function Details(props) {
     console.log(whatsappError);
     console.log(gender);
     e.preventDefault();
-    if (!phoneError && !whatsappError && gender) {
+    if (wardName == "" || !wardName) {
+      setErrorVal(true);
+    }
+    else if (!phoneError && !whatsappError && gender) {
       console.log("Value adding ");
       let existId = "";
       let Name =
@@ -1369,13 +1374,14 @@ function Details(props) {
                     <Form.Group>
                       {
                         // detailsType === "personal" && (
-                        <Form.Dropdown
-                          required
+                        <Form.Select
+                          required={true}
                           options={wardNameSuggestions}
                           placeholder="WardName"
                           search
                           selection
                           fluid
+                            clearable
                           allowAdditions
                           value={formDetails?.address_ward}
                           text={formDetails?.address_ward || ""}
@@ -1534,7 +1540,12 @@ function Details(props) {
                   <Icon name="at" />
                   <input className="mx-5p" />
                 </Form.Input>
-              </div>
+                </div>
+                {
+                  errorVal && (
+                    <Message negative content={"Please add Wardname"}/>
+                  )
+                }
 
               <Form.Button disabled={submitDisable} content="Submit" />
               {detailsType !== "personal" && (
